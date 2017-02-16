@@ -5,6 +5,8 @@ import jwt from 'jsonwebtoken';
 import util from 'util';
 import auth from '../config/auth';
 
+import User from './database/mongo/models/User'
+
 
 const configure = (app) => {
 
@@ -49,7 +51,7 @@ const configure = (app) => {
         } else {
           // if the user isnt in our database, create a new user
           var newUser          = new User();
-
+          newUser.email = profile.emails[0].value;
           // set all of the relevant information
           newUser.google.id    = profile.id;
           newUser.google.token = token;

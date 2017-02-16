@@ -19,7 +19,6 @@
   "homepage": "https://github.com/sunils34/matter-api#readme",
   "dependencies": {
     "babel-register": "6.18.0",
-    "bcrypt": "^1.0.2",
     "body-parser": "^1.16.1",
     "dotenv": "^4.0.0",
     "express": "^4.14.1",
@@ -29,6 +28,7 @@
     "graphql": "^0.9.1",
     "jsonwebtoken": "^7.3.0",
     "lodash": "^4.17.4",
+    "mongoose": "^4.8.3",
     "passport": "^0.3.2",
     "passport-google-oauth": "^1.0.0"
   },

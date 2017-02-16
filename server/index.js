@@ -7,9 +7,11 @@ import session from 'express-session';
 import expressGraphQL from 'express-graphql';
 import schema from './graphql/schema';
 import configureAuth from './configureAuth'
+import mongoose from 'mongoose'
 
 
 const app = express();
+mongoose.connect('mongodb://matter-db-mongo/matter');
 
 // set up middleware limits
 app.use(bodyParser({limit: '50mb'}));
