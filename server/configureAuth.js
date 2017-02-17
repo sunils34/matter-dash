@@ -24,15 +24,15 @@ const configure = (app) => {
 
   app.get('/auth/logout', (req, res) => {
     req.logout();
-    res.redirect(process.env.BASE_DOMAIN);
+    res.redirect('https://' + process.env.BASE_DOMAIN);
   });
 
 
 
   // the callback after google has authenticated the user
   app.get('/auth/google/callback', passport.authenticate('google', {
-    successRedirect : '/auth/test',
-    failureRedirect : '/'
+    successRedirect : '/api/me',
+    failureRedirect : '/signin'
   }));
 
   app.get('/api/me', (req, res) => {

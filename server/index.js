@@ -36,8 +36,21 @@ app.use(session({
   cookie: {maxAge: 86400000}
 }));
 
+app.set('views', __dirname + '/views');
+app.engine('html', require('ejs').renderFile);
+
 // set up oauth and login middleware
 configureAuth(app);
+
+app.get('/signin', (req, res) => {
+  if(req.isAuthenticated()) {
+    //redirect to the app
+    res.redirect('/');
+  }
+  else {
+    res.render('pages/signin.ejs')
+  }
+});
 
 
 app.use('/graphql', expressGraphQL(req => ({
