@@ -12,7 +12,7 @@ const configure = (app) => {
 
   function addJWT(user){
     const token = jwt.sign({ email: user.email }, auth.jwt.secret, {
-      expiresIn: 60000
+      expiresIn: 86400000 //24 hours
     });
     return Object.assign({}, user.toJSON(), {token});
   }
@@ -22,11 +22,22 @@ const configure = (app) => {
 
   app.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
 
+  app.get('/auth/logout', (req, res) => {
+    req.logout();
+    res.redirect(process.env.BASE_DOMAIN);
+  });
+
+
+
   // the callback after google has authenticated the user
   app.get('/auth/google/callback', passport.authenticate('google', {
-    successRedirect : '/profile',
+    successRedirect : '/auth/test',
     failureRedirect : '/'
   }));
+
+  app.get('/api/me', (req, res) => {
+    res.json({ user: req.user, auth: req.isAuthenticated()});
+  });
 
   passport.use(new GoogleStrategy({
     clientID        : auth.googleAuth.clientID,
@@ -47,7 +58,9 @@ const configure = (app) => {
         if (user) {
 
           // if a user is found, log them in
-          return done(null, user);
+          const userWithJWT = addJWT(user);
+
+          return done(null, userWithJWT);
         } else {
           // if the user isnt in our database, create a new user
           var newUser          = new User();
@@ -62,7 +75,7 @@ const configure = (app) => {
           newUser.save(function(err) {
             if (err)
               throw err;
-            return done(null, newUser);
+            return done(null, addJWT(newUser));
           });
         }
       });
@@ -70,6 +83,8 @@ const configure = (app) => {
 
   }));
 
+  //TODO make this more efficient than storing the entire user object in
+  //the session
   passport.serializeUser(function (user, cb) {
     cb(null, user);
   });

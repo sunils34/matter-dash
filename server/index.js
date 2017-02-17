@@ -8,23 +8,32 @@ import expressGraphQL from 'express-graphql';
 import schema from './graphql/schema';
 import configureAuth from './configureAuth'
 import mongoose from 'mongoose'
+import mongodbStore from 'connect-mongodb-session'
 
+const MongoDBStore = mongodbStore(session);
 
 const app = express();
-mongoose.connect('mongodb://matter-db-mongo/matter');
+mongoose.connect(process.env.MONGO_URI);
+
+var store = new MongoDBStore(
+  {
+    uri: process.env.MONGO_URI,
+    collection: 'sessions'
+  });
+
 
 // set up middleware limits
 app.use(bodyParser({limit: '50mb'}));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-app.use(expressJWT({ secret: process.env.JWT_SECRET}).unless({path: [/\/auth/i,  /\/graphql/i, /\/facebook/i ] }));
 
 
 app.use(session({
-  secret: process.env.JWT_SECRET,
+  secret: process.env.COOKIE_SECRET,
   resave: false,
+  store: store,
   saveUninitialized: false,
-  cookie: {maxAge: 86400}
+  cookie: {maxAge: 86400000}
 }));
 
 // set up oauth and login middleware
