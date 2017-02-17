@@ -28,6 +28,7 @@
     "express-jwt": "^5.1.0",
     "express-session": "^1.15.1",
     "graphql": "^0.9.1",
+    "graphql-date": "^1.0.3",
     "jsonwebtoken": "^7.3.0",
     "lodash": "^4.17.4",
     "mongoose": "^4.8.3",
