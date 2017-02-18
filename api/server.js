@@ -1,4 +1,3 @@
-
 import express from 'express';
 import graphqlHTTP from 'express-graphql';
 import bodyParser from 'body-parser';

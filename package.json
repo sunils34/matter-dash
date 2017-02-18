@@ -2,9 +2,8 @@
   "name": "matter-api",
   "version": "0.0.0",
   "description": "Matter API Server and Backend",
-  "main": "server/index.js",
   "scripts": {
-    "dev": "NODE_ENV=development nodemon index.js --exec babel-node --presets es2015",
+    "dev:api": "NODE_ENV=development nodemon index.api.js --exec babel-node --presets es2015",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
