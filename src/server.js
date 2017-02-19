@@ -1,3 +1,4 @@
+
 import express from 'express';
 import graphqlHTTP from 'express-graphql';
 import bodyParser from 'body-parser';
@@ -41,6 +42,8 @@ app.engine('html', require('ejs').renderFile);
 // set up oauth and login middleware
 configureAuth(app);
 
+
+
 app.get('/signin', (req, res) => {
   if(req.isAuthenticated()) {
     //redirect to the app
@@ -49,6 +52,17 @@ app.get('/signin', (req, res) => {
   else {
     res.render('pages/signin.ejs')
   }
+});
+
+app.get('/', (req, res) => {
+  if(req.isAuthenticated()) {
+    //redirect to the app
+    res.json({'bbashomepages': true});
+  }
+  else {
+    res.redirect('/signin');
+  }
+
 });
 
 
