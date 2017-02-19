@@ -1,9 +1,9 @@
 {
-  "name": "matter-api",
-  "version": "0.0.0",
-  "description": "Matter API Server and Backend",
+  "name": "matter-ap",
+  "version": "0.0.2",
+  "description": "Matter Application",
   "scripts": {
-    "dev:api": "NODE_ENV=development nodemon index.api.js --exec babel-node --presets es2015",
+    "dev": "NODE_ENV=development nodemon index.js --exec babel-node --presets es2015",
     "dev:client": "NODE_ENV=development nodemon index.client.js --exec babel-node --presets es2015",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -33,7 +33,8 @@
     "lodash": "^4.17.4",
     "mongoose": "^4.8.3",
     "passport": "^0.3.2",
-    "passport-google-oauth": "^1.0.0"
+    "passport-google-oauth": "^1.0.0",
+    "source-map-support": "^0.4.11"
   },
   "devDependencies": {
     "babel-cli": "6.18.0",

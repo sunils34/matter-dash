@@ -8,5 +8,6 @@ if(env == 'development') {
   dotenv.config();
 }
 
+
 require('babel-register');
-require('./client/server');
+require('./src/server');

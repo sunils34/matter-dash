@@ -12,7 +12,7 @@ import mongodbStore from 'connect-mongodb-session'
 const MongoDBStore = mongodbStore(session);
 
 const app = express();
-mongoose.connect(process.env.MONGO_URI);
+mongoose.connect(process.env.MONGO_URI || 'localhost:27017/matter');
 
 var store = new MongoDBStore(
   {
