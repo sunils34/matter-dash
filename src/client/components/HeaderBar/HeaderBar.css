@@ -1,4 +1,5 @@
-.app-header {
-  padding: 30px;
-  background: blue;
+.logo {
+  font-size: 30px;
+  width: 70px;
+  text-align: center;
 }
