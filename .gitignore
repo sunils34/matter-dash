@@ -43,3 +43,4 @@ webpack-assets.json
 webpack-stats.json
 npm-debug.log
 *.swp
+build

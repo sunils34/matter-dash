@@ -1,0 +1,25 @@
+.overview-section {
+  .company-logo {
+    width: 100px;
+    height: 100px;
+  }
+
+  .large-text {
+    font-size:30px;
+  }
+
+  .sub-heading {
+    border-bottom: 1px solid #ECECEC;
+  }
+
+  .sub-nav {
+    font-size: 13px;
+    display: inline;
+    margin-right: 30px;
+  }
+}
+
+.overview-section.container {
+  background: white;
+  padding: 15px 30px
+}
