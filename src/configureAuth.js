@@ -24,7 +24,7 @@ const configure = (app) => {
 
   app.get('/auth/logout', (req, res) => {
     req.logout();
-    res.redirect('https://' + process.env.BASE_DOMAIN);
+    res.redirect('/');
   });
 
 
