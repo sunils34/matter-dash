@@ -1,3 +1,4 @@
+import './app.css';
 import React from 'react'
 import { render } from 'react-dom'
 //import { Provider } from 'react-redux'
@@ -6,9 +7,9 @@ import { render } from 'react-dom'
 
 //let store = createStore(todoApp)
 //
-import Hello from './views/Partials/AppHeader'
+import App from './components/App/App'
 
 render(
-  <Hello />,
+  <App />,
   document.getElementById('react')
 )

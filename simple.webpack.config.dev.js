@@ -20,7 +20,7 @@ console.log();
 
 var config = {
     devtool: 'source-map',
-    entry: APP_DIR + '/index.jsx',
+    entry: APP_DIR + '/app.jsx',
     output: {
         path: BUILD_DIR,
         filename: 'dist/bundle.js',
