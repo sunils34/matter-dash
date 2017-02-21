@@ -47,13 +47,17 @@ class OverviewSectionHeader extends React.Component {
   }
 }
 
+
+const data = [{name: 'Male', value: 70}, {name: 'Female', value: 10},
+                    {name: 'Prefer not to disclose', value: 2}, {name: 'Non-Binary', value: 8}];
+
 class OverviewCharts extends React.Component {
 
   render() {
     return (
       <div className='row'>
         <div className='col-lg-6'>
-          <MatterPieChart />
+          <MatterPieChart data={data} title="Gender"/>
         </div>
         <div className='col-lg-6'>
 
