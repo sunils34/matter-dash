@@ -1,0 +1,14 @@
+.recharts-legend-wrapper {
+  ul {
+    list-style: none;
+  }
+  
+  .legend-value {
+    font-size: 20px;
+  }
+
+  .legend-name {
+    color: grey;
+  }
+
+}

@@ -1,5 +1,6 @@
-import React from 'react'
-import './OverviewSection.css'
+import React from 'react';
+import './OverviewSection.css';
+import MatterPieChart from '../Charts/MatterPieChart/MatterPieChart.jsx';
 
 const OverviewSectionSubNav =  ({title, active}) => {
 
@@ -22,14 +23,14 @@ class OverviewSectionHeader extends React.Component {
         </div>
         <div className='col-lg-11'>
           <div className='row sub-heading'>
-            <div className='col-md-10'>
+            <div className='col-md-5'>
               <div className='large-text company-name'>{this.props.data.company_name}</div>
             </div>
-            <div className='col-md-1'>
-              <div className='total-description'>Employee Total</div>
-            </div>
-            <div className='col-md-1'>
+            <div className='col-md-1 pull-right'>
               <div className='large-text employee-total'>{this.props.data.total_employees}</div>
+            </div>
+            <div className='col-md-1 pull-right'>
+              <div className='total-description'>Employee Total</div>
             </div>
           </div>
           <div className='row'>
@@ -46,12 +47,32 @@ class OverviewSectionHeader extends React.Component {
   }
 }
 
+class OverviewCharts extends React.Component {
+
+  render() {
+    return (
+      <div className='row'>
+        <div className='col-lg-6'>
+          <MatterPieChart />
+        </div>
+        <div className='col-lg-6'>
+
+        </div>
+      </div>
+    );
+  }
+
+}
+
+
+
 class OverviewSection extends React.Component {
 
   render () {
     return (
       <div className='container overview-section'>
-      <OverviewSectionHeader data={this.props.data}/>
+        <OverviewSectionHeader data={this.props.data}/>
+        <OverviewCharts />
       </div>
     )
   }

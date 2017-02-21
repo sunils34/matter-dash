@@ -1,6 +1,6 @@
-import React from 'react'
-import HeaderBar from '../HeaderBar/HeaderBar.jsx'
-import OverviewSection from '../OverviewSection/OverviewSection.jsx'
+import React from 'react';
+import HeaderBar from '../HeaderBar/HeaderBar.jsx';
+import OverviewSection from '../OverviewSection/OverviewSection.jsx';
 
 class App extends React.Component {
   render() {
