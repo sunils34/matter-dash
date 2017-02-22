@@ -10,4 +10,4 @@ if(env == 'development') {
 
 
 require('babel-register');
-require('./src/server');
+require('./src/server/index.js');

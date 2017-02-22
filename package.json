@@ -3,10 +3,13 @@
   "version": "0.0.2",
   "description": "Matter Application",
   "scripts": {
-    "dev": "NODE_ENV=development babel-watch -L index.js",
+    "dev": "NODE_ENV=development babel-watch -L index.js --watch src",
+    "start": "NODE_ENV=production node ./build/server/index.js",
     "watch-dev": "webpack -d --watch --config ./simple.webpack.config.dev.js",
     "build-dev": "NODE_ENV=development webpack -d --config ./simple.webpack.config.dev.js",
     "build-prod": "NODE_ENV=production webpack --config ./simple.webpack.config.prod.js",
+    "clean": "rm -rf build && mkdir build",
+    "build-server": "babel -d ./build/server ./src/server/ -s --copy-files",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -69,7 +72,7 @@
     "webpack-livereload-plugin": "0.8.1"
   },
   "devDependencies": {
-    "babel-cli": "6.18.0",
+    "babel-cli": "^6.23.0",
     "babel-watch": "^2.0.6",
     "nodemon": "^1.11.0",
     "random-weighted-choice": "^0.1.3"
