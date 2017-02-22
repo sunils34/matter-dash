@@ -7,9 +7,17 @@ ENV NODE_ENV production
 
 COPY package.json /usr/src/app/
 RUN npm install
+
 COPY . /usr/src/app
 
-ENV APP_PORT 3234
-EXPOSE 3234
+# Build client
+RUN npm run build-prod
+
+# Build server
+RUN npm run build-server
+
+
+ENV APP_PORT 80
+EXPOSE 80
 
 CMD [ "npm", "start" ]

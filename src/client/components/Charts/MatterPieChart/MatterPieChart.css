@@ -1,0 +1,22 @@
+.matter-pie-chart {
+
+  display: flex;
+ 
+  .legend {
+    display: flex;
+  }
+
+  .legend-list {
+    list-style: none;
+    margin: auto;
+  }
+
+  .legend-value {
+    font-size: 20px;
+  }
+
+  .legend-name {
+    color: #B1B1B1;
+    font-size: 12px;
+  }
+}

@@ -22,7 +22,7 @@ import expressReactViews from 'express-react-views';
 const MongoDBStore = mongodbStore(session);
 
 const env = process.env.NODE_ENV == 'production' ? 'prod' : 'dev';
-const appdir = path.resolve(__dirname + '/../build/' + env);
+const appdir = path.resolve(__dirname + '/../../build/' + env);
 
 const app = express();
 mongoose.connect(process.env.MONGO_URI || 'localhost:27017/matter');
@@ -48,7 +48,7 @@ app.use(session({
   cookie: {maxAge: 86400000}
 }));
 
-app.set('views', __dirname + '/client/views');
+app.set('views', __dirname + '/views');
 app.engine('html', require('ejs').renderFile);
 
 // set up server side react view engine
@@ -105,8 +105,14 @@ app.get('/dist/bundle*.js.map', function (req, res) {
 
 
 app.get('*', function (req, res) {
-  var indexPath = appdir + '/index.html';
-  res.sendFile(indexPath);
+
+  if(!req.isAuthenticated()) {
+    res.redirect('/signin');
+  }
+  else {
+    var indexPath = appdir + '/index.html';
+    res.sendFile(indexPath);
+  }
 });
 
 const port = process.env.PORT || 4000;

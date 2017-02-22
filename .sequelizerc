@@ -1,0 +1,8 @@
+var path = require('path')
+
+module.exports = {
+  'config':          path.resolve('src/server/config', 'config.json'),
+  'migrations-path': 'src/server/database/mysql/migrations',
+  'seeders-path': 'src/server/database/mysql/seeders',
+  'models-path': 'src/server/database/mysql/models'
+}

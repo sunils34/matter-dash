@@ -4,13 +4,12 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 var CleanPlugin = require('clean-webpack-plugin');
 var precss = require('precss');
 var autoprefixer = require('autoprefixer');
-var LiveReloadPlugin = require('webpack-livereload-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
-var BUILD_DIR = path.resolve(__dirname, 'build/dev');
+var BUILD_DIR = path.resolve(__dirname, 'build/prod');
 var APP_DIR = path.resolve(__dirname, './src/client');
 
-console.log("-- Development --");
+console.log("-- Production --");
 console.log();
 
 console.log("Core directories");
@@ -23,29 +22,35 @@ var config = {
     entry: APP_DIR + '/app.jsx',
     output: {
         path: BUILD_DIR,
-        filename: 'dist/bundle.js',
+        filename: 'dist/bundle.[hash].js'
     },
     plugins: [
-        new LiveReloadPlugin({appendScriptTag: true}),
-        new CleanPlugin(['./build/dev'], {
+        new CleanPlugin(['./build/prod'], {
             verbose: true
         }),
         new CopyWebpackPlugin([
             {
-                from: 'src/client/fonts',
+                from: 'src/client/app/fonts',
                 to: './public/fonts/'
             },
             {
-                from: 'src/client/images',
+                from: 'src/client/app/images',
                 to: './public/images/'
             }
         ]),
         new webpack.DefinePlugin({
             'process.env': {
-                'NODE_ENV': JSON.stringify('development')
+                'NODE_ENV': JSON.stringify('production')
             }
         }),
-        new HtmlWebpackPlugin({
+        new webpack.optimize.OccurenceOrderPlugin(),
+        new webpack.optimize.DedupePlugin(),
+        new webpack.optimize.UglifyJsPlugin({
+            compressor: {
+                warnings: false
+            }
+        }),
+         new HtmlWebpackPlugin({
             template: 'src/client/index.ejs',
             filename: 'index.html',
             inject: false
@@ -54,11 +59,15 @@ var config = {
     module: {
         loaders: [
             {
-                test: /\.jsx?/,
-                exclude: /node_modules/,
+                test: /\.js?/,
+                // exclude: /node_modules/,
                 include: APP_DIR,
                 loader: 'babel',
-                include: [path.resolve(__dirname, 'src')]
+                include: [path.resolve(__dirname, 'src'),
+                    path.resolve(__dirname, 'node_modules/joi'),
+                    path.resolve(__dirname, 'node_modules/hoek'),
+                    path.resolve(__dirname, 'node_modules/isemail'),
+                    path.resolve(__dirname, 'node_modules/topo')]
             },
             {
                 test: /\.css?$/,
@@ -74,11 +83,10 @@ var config = {
             {
                 test: /\.json$/,
                 loader: "json-loader"
-            },
-        ]
+            }]
     },
-    postcss: function() {
-      return [precss, autoprefixer];
+    postcss: function () {
+        return [precss, autoprefixer];
     },
     resolve: {
         extensions: ['', '.js', '.jsx']

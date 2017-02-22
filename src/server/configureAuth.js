@@ -3,7 +3,7 @@ import {OAuth2Strategy as GoogleStrategy} from 'passport-google-oauth'
 //import {User, UserClaim, comparePassword} from './database/models';
 import jwt from 'jsonwebtoken';
 import util from 'util';
-import auth from '../config/auth';
+import auth from './config/auth';
 
 import User from './database/mongo/models/User'
 
@@ -31,7 +31,7 @@ const configure = (app) => {
 
   // the callback after google has authenticated the user
   app.get('/auth/google/callback', passport.authenticate('google', {
-    successRedirect : '/api/me',
+    successRedirect : '/',
     failureRedirect : '/signin'
   }));
 
