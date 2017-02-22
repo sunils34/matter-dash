@@ -44,3 +44,4 @@ webpack-stats.json
 npm-debug.log
 *.swp
 build
+deploy
