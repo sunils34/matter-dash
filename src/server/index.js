@@ -1,4 +1,5 @@
 
+import 'babel-polyfill'
 import express from 'express';
 import path from 'path';
 import graphqlHTTP from 'express-graphql';

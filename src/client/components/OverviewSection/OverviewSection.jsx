@@ -2,16 +2,21 @@ import React from 'react';
 import './OverviewSection.css';
 import MatterPieChart from '../Charts/MatterPieChart/MatterPieChart.jsx';
 
-const OverviewSectionSubNav =  ({title, active}) => {
+const OverviewSectionSubNav =  ({text, active}) => {
 
   var className = 'sub-nav';
   if(active) {
     className += ' active';
   }
   return (
-    <div className={className}>{title}</div>
+    <div className={className}>{text}</div>
   );
 };
+
+OverviewSectionSubNav.propTypes = {
+  onClick: React.PropTypes.func.isRequired,
+  text: React.PropTypes.string.isRequired
+}
 
 
 class OverviewSectionHeader extends React.Component {
@@ -35,10 +40,10 @@ class OverviewSectionHeader extends React.Component {
           </div>
           <div className='row'>
             <div className='col-md-8'>
-              <OverviewSectionSubNav title='All Employees' active={true}/>
-              <OverviewSectionSubNav title='Leadership'/>
-              <OverviewSectionSubNav title='Tech'/>
-              <OverviewSectionSubNav title='Non-Tech'/>
+              <OverviewSectionSubNav text='All Employees' active={true}/>
+              <OverviewSectionSubNav text='Leadership'/>
+              <OverviewSectionSubNav text='Tech'/>
+              <OverviewSectionSubNav text='Non-Tech'/>
             </div>
           </div>
         </div>
