@@ -107,7 +107,6 @@ class MatterPieChart extends React.Component {
                   outerRadius="90%"
                   activeShape={renderTitle}
                   activeIndex={0}
-                  isAnimationActive={false}
                   fill="#8884d8"
                 >
                 {
