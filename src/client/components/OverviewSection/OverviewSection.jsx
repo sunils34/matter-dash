@@ -1,31 +1,30 @@
 import React from 'react';
 import './OverviewSection.css';
 import MatterPieChart from '../Charts/MatterPieChart/MatterPieChart.jsx';
+import * as appActions from '../../redux/actions/app';
+import { connect } from 'react-redux';
 
-window.Period = 'All';
-window.Department = 'All';
+class OverviewSectionSubNav extends React.Component {
+  onDepartmentClick(department) {
+    this.props.dispatch(appActions.changeDepartment(department));
+  }
 
-const onDepartmentClick = (department) => {
-  console.log('clicked');
-  window.Department = department;
+  render() {
+    var className = 'sub-nav';
+    if(this.props.active) {
+      className += ' active';
+    }
+    return (
+      <a
+      href='#'
+      onClick={() => this.onDepartmentClick(this.props.text)}
+      className={className}>{this.props.text}
+      </a>
+    )
+  };
 }
 
-const OverviewSectionSubNav =  ({text, active}) => {
-
-  var className = 'sub-nav';
-  if(active) {
-    className += ' active';
-  }
-  return (
-    <a
-    href='#'
-    onClick={() => onDepartmentClick(text)}
-    className={className}>{text}
-    </a>
-  );
-};
-
-const OverviewSectionDepartments =  ({departments}) => {
+const OverviewSectionDepartments =  ({departments, dispatch}) => {
 
   var depts = ['All'].concat(departments);
 
@@ -37,14 +36,16 @@ const OverviewSectionDepartments =  ({departments}) => {
                 key={dept}
                 text = {dept}
                 active = {dept == Department}
+                dispatch={dispatch}
                   />);
-      })};
+      })}
     </div>
   );
 };
 
 
 OverviewSectionSubNav.propTypes = {
+  dispatch: React.PropTypes.func.isRequired,
   text: React.PropTypes.string.isRequired
 }
 
@@ -69,13 +70,18 @@ class OverviewSectionHeader extends React.Component {
             </div>
           </div>
           <div className='row'>
-              <OverviewSectionDepartments departments={this.props.organization.departments}/>
+              <OverviewSectionDepartments dispatch={this.props.dispatch} departments={this.props.organization.departments}/>
           </div>
         </div>
       </div>
     );
   }
 }
+
+OverviewSectionHeader.propTypes = {
+  dispatch: React.PropTypes.func.isRequired
+}
+
 
 
 const data = [{name: 'Male', value: 70}, {name: 'Female', value: 10},
@@ -95,8 +101,8 @@ class OverviewCharts extends React.Component {
 
   render() {
     var query = {
-      department: window.Department,
-      period: window.Period,
+      department: this.props.department,
+      period: this.props.period,
     };
     return (
       <div className='row'>
@@ -107,23 +113,37 @@ class OverviewCharts extends React.Component {
           <MatterPieChart legendAlign='right' title="Ethnicity" query={_.extend({}, query, {type: 'ethnicity'})}/>
         </div>
       </div>
-    );
+    )
   }
 
 }
 
-
-
 class OverviewSection extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      department: 'All',
+      period: 'All'
+    }
+  }
 
   render () {
     return (
       <div className='container overview-section'>
-        <OverviewSectionHeader user={this.props.user} organization={this.props.organization}/>
-        <OverviewCharts />
+        <OverviewSectionHeader dispatch={this.props.dispatch} user={this.props.user} organization={this.props.organization} query={this.props.query}/>
+        <OverviewCharts department={this.props.department} period={this.props.period} />
       </div>
     )
   }
 }
 
-module.exports = OverviewSection;
+const mapStateToProps = (state) => {
+  return {
+    department: state.app.department,
+    period: state.app.period
+  }
+}
+
+export default connect(mapStateToProps)(OverviewSection);
