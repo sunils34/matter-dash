@@ -66,10 +66,10 @@ class OverviewCharts extends React.Component {
     return (
       <div className='row'>
         <div className='col-lg-6'>
-          <MatterPieChart data={data} legendAlign='left' title="Gender"/>
+          <MatterPieChart legendAlign='left' title="Gender" queryType='gender'/>
         </div>
         <div className='col-lg-6'>
-          <MatterPieChart data={ethData} legendAlign='right' title="Ethnicity"/>
+          <MatterPieChart legendAlign='right' title="Ethnicity" queryType='ethnicity'/>
         </div>
       </div>
     );
@@ -82,7 +82,6 @@ class OverviewCharts extends React.Component {
 class OverviewSection extends React.Component {
 
   render () {
-    console.log(this.props);
     return (
       <div className='container overview-section'>
         <OverviewSectionHeader user={this.props.user} organization={this.props.organization}/>

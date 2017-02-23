@@ -5,6 +5,7 @@ import {
 
 import organization from './queries/organization';
 import user from './queries/user';
+import piedatapoints from './queries/piedatapoints';
 
 
 export default  new Schema({
@@ -12,7 +13,8 @@ export default  new Schema({
     name: 'Query',
     fields:  {
       user,
-      organization
+      organization,
+      piedatapoints
     }
   })
 });

@@ -2,7 +2,6 @@ import OrganizationType from '../types/OrganizationType';
 import Organization from '../../database/mysql/models/Organization';
 import User from '../../database/mysql/models/User';
 import sequelize from '../../database/mysql/sequelize';
-import _ from 'lodash';
 
 import {
   GraphQLList as List
