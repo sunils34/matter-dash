@@ -21,7 +21,7 @@ class App extends React.Component {
 } 
 
 const CurrentUser = gql`query CurrentUser { user { id, name, email } }`;
-const CurrentOrg = gql`query CurrentOrg { organization { name, employee_count} }`;
+const CurrentOrg = gql`query CurrentOrg { organization { name, employee_count, departments} }`;
 
 
 export default compose(

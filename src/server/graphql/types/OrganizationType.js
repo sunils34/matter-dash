@@ -3,7 +3,8 @@ import {
   GraphQLObjectType as ObjectType,
   GraphQLString as StringType,
   GraphQLInt as IntType,
-  GraphQLNonNull as NonNull
+  GraphQLNonNull as NonNull,
+  GraphQLList as List
 } from 'graphql';
 import GraphQLDate from 'graphql-date';
 
@@ -19,6 +20,10 @@ export default new ObjectType({
     employee_count: {
       type: IntType,
       description: 'Count of employees'
+    },
+    departments: {
+      type: new List(StringType),
+      description: 'Departments in Organization'
     },
     created_at: {
       type: GraphQLDate,

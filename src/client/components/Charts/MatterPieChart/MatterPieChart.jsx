@@ -66,7 +66,7 @@ class MatterPieChart extends React.Component {
 
     var props = this.props;
     if(this.props.data.loading) return null;
-    
+
     var total = 0;
     _.map(props.data.piedatapoints, function(element) {
       total += element.value;
@@ -123,8 +123,8 @@ class MatterPieChart extends React.Component {
 }
 
 
-const GetPieDataPoints = gql`query GetPieDataPoints($queryType: String!) { piedatapoints(type: $queryType) { name, value } }`;
+const GetPieDataPoints = gql`query GetPieDataPoints($query: JSON!) { piedatapoints(query: $query) { name, value } }`;
 
 module.exports = graphql(GetPieDataPoints, {
-  options: ({ queryType }) => ({ variables: { queryType } }),
+  options: ({ query }) => ({ variables: { query } }),
 })(MatterPieChart);

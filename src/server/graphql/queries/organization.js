@@ -2,6 +2,7 @@ import OrganizationType from '../types/OrganizationType';
 import Organization from '../../database/mysql/models/Organization';
 import User from '../../database/mysql/models/User';
 import sequelize from '../../database/mysql/sequelize';
+import _ from 'lodash';
 
 import {
   GraphQLList as List
@@ -36,6 +37,10 @@ const organization = {
           organization.employee_count = results[0].count;
         }
 
+        var results = await sequelize.query('SELECT DISTINCT(jobFunction) FROM ADP WHERE orgId = ?', {
+          replacements: [organization.id], type: sequelize.QueryTypes.SELECT
+        });
+        organization.departments = _.map(results, 'jobFunction');
         return organization;
       }
     }

@@ -2,6 +2,14 @@ import React from 'react';
 import './OverviewSection.css';
 import MatterPieChart from '../Charts/MatterPieChart/MatterPieChart.jsx';
 
+window.Period = 'All';
+window.Department = 'All';
+
+const onDepartmentClick = (department) => {
+  console.log('clicked');
+  window.Department = department;
+}
+
 const OverviewSectionSubNav =  ({text, active}) => {
 
   var className = 'sub-nav';
@@ -9,12 +17,34 @@ const OverviewSectionSubNav =  ({text, active}) => {
     className += ' active';
   }
   return (
-    <div className={className}>{text}</div>
+    <a
+    href='#'
+    onClick={() => onDepartmentClick(text)}
+    className={className}>{text}
+    </a>
   );
 };
 
+const OverviewSectionDepartments =  ({departments}) => {
+
+  var depts = ['All'].concat(departments);
+
+  return (
+    <div className='col-md-8'>
+      {depts.map( (dept) => {
+
+        return (<OverviewSectionSubNav
+                key={dept}
+                text = {dept}
+                active = {dept == Department}
+                  />);
+      })};
+    </div>
+  );
+};
+
+
 OverviewSectionSubNav.propTypes = {
-  onClick: React.PropTypes.func.isRequired,
   text: React.PropTypes.string.isRequired
 }
 
@@ -39,12 +69,7 @@ class OverviewSectionHeader extends React.Component {
             </div>
           </div>
           <div className='row'>
-            <div className='col-md-8'>
-              <OverviewSectionSubNav text='All Employees' active={true}/>
-              <OverviewSectionSubNav text='Leadership'/>
-              <OverviewSectionSubNav text='Tech'/>
-              <OverviewSectionSubNav text='Non-Tech'/>
-            </div>
+              <OverviewSectionDepartments departments={this.props.organization.departments}/>
           </div>
         </div>
       </div>
@@ -67,14 +92,19 @@ const ethData = [
 
 class OverviewCharts extends React.Component {
 
+
   render() {
+    var query = {
+      department: window.Department,
+      period: window.Period,
+    };
     return (
       <div className='row'>
         <div className='col-lg-6'>
-          <MatterPieChart legendAlign='left' title="Gender" queryType='gender'/>
+          <MatterPieChart legendAlign='left' title="Gender" query={_.extend({}, query, {type: 'gender'})} />
         </div>
         <div className='col-lg-6'>
-          <MatterPieChart legendAlign='right' title="Ethnicity" queryType='ethnicity'/>
+          <MatterPieChart legendAlign='right' title="Ethnicity" query={_.extend({}, query, {type: 'ethnicity'})}/>
         </div>
       </div>
     );

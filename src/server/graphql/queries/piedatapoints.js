@@ -6,7 +6,10 @@ import sequelize from '../../database/mysql/sequelize';
 
 import {
   GraphQLString as StringType,
+  GraphQLObjectType as ObjectType,
 } from 'graphql';
+
+import GraphQLJSON from 'graphql-type-json';
 
 
 const getOrganization = async(user) => {
@@ -31,20 +34,20 @@ const getOrganization = async(user) => {
 const pieDataPoints = {
   type: new List(PieDataPointType),
   args: {
-    type: {type: new NonNull( StringType )}
+    query: {type: GraphQLJSON}
   },
   async resolve(parent, args) {
     if(!parent.request.user) return null;
     const user = parent.request.user;
     var organization = await getOrganization(user);
-
+    var query = args.query;
     var results = null;
-    if(args.type == 'gender') {
+    if(query.type == 'gender') {
       results = await sequelize.query('SELECT COUNT (*) as value, gender as name FROM adp WHERE orgId = ? GROUP BY gender', {
         replacements: [organization.id], type: sequelize.QueryTypes.SELECT
       });
     }
-    else if(args.type == 'ethnicity') {
+    else if(query.type == 'ethnicity') {
       results = await sequelize.query('SELECT COUNT (*) as value, eeoEthnicDescription as name FROM adp WHERE orgId = ? GROUP BY eeoEthnicDescription', {
         replacements: [organization.id], type: sequelize.QueryTypes.SELECT
       });
