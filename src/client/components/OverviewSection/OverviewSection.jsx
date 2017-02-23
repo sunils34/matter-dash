@@ -27,7 +27,7 @@ class OverviewSectionHeader extends React.Component {
               <div className='large-text company-name'>{this.props.data.company_name}</div>
             </div>
             <div className='col-md-1 pull-right'>
-              <div className='large-text employee-total'>{this.props.data.total_employees}</div>
+              <div className='large-text employee-total'>{this.props.data.company_total_employees}</div>
             </div>
             <div className='col-md-1 pull-right'>
               <div className='total-description'>Employee Total</div>

@@ -2,6 +2,7 @@ import {
   GraphQLObjectType as ObjectType,
   GraphQLID as ID,
   GraphQLString as StringType,
+  GraphQLInt as IntType,
   GraphQLNonNull as NonNull
 } from 'graphql';
 
@@ -18,6 +19,14 @@ export default new ObjectType({
     name: {
       type: StringType,
       description: 'Name of the user'
+    },
+    company_name: {
+      type: StringType,
+      description: 'Name of the company this user is associated with'
+    },
+    company_total_employees: {
+      type: IntType,
+      description: 'Name of the company this user is associated with'
     },
     created_at: {
       type: GraphQLDate,

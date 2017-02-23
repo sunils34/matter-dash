@@ -1,6 +1,9 @@
 import './app.css';
 import React from 'react';
 import { render } from 'react-dom';
+import ApolloClient , { createNetworkInterface } from 'apollo-client';
+import { ApolloProvider } from 'react-apollo';
+
 //import { Provider } from 'react-redux'
 //import { createStore } from 'redux'
 //import todoApp from './reducers'
@@ -9,12 +12,22 @@ import { render } from 'react-dom';
 //
 import App from './components/App/App';
 
-const data = {
-  company_name: 'XO Group2',
-  total_employees: 400
-};
+//TODO ADD CSRF TOKEN
+const networkInterface = createNetworkInterface({
+  uri: '/graphql',
+  opts: {
+    credentials: 'same-origin',
+    headers: {
+      'X-CSRF-Token': "xyz",
+      token: 'supersecret'
+    }
+  }
+});
+const client = new ApolloClient({networkInterface: networkInterface});
 
 render(
-  <App data={data} />,
+  <ApolloProvider client={client}>
+    <App />
+  </ApolloProvider> ,
   document.getElementById('react')
 )

@@ -9,7 +9,7 @@ import User from './types/UserType';
 
 export default  new Schema({
   query: new ObjectType({
-    name: 'Query',
+    name: 'CurrentUser',
     fields: () => ({
       me: {
         type: User,
@@ -19,8 +19,10 @@ export default  new Schema({
             return {
               id: user._id,
               email: user.email,
-              name: user.google.name,
-              created_at: user.created_at
+              name: user.name,
+              created_at: user.created_at,
+              company_name:'XO Group',
+              company_total_employees: 333
             };
           }
           else {

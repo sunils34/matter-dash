@@ -7,9 +7,13 @@ import expressJWT from 'express-jwt';
 import session from 'express-session';
 import expressGraphQL from 'express-graphql';
 import schema from './graphql/schema';
-import configureAuth from './configureAuth'
-import mongoose from 'mongoose'
-import mongodbStore from 'connect-mongodb-session'
+import cookieParser from 'cookie-parser';
+import configureAuth from './configureAuth';
+import db from './database/mysql/sequelize';
+import sequelizeTables from './database/mysql/models';
+import sequelizeStore from 'connect-sequelize';
+
+var SequelizeStore = sequelizeStore(session);
 
 
 import React from 'react'
@@ -19,20 +23,13 @@ import ReactDOM from 'react-dom/server';
 import expressReactViews from 'express-react-views';
 
 
-const MongoDBStore = mongodbStore(session);
 
 const env = process.env.NODE_ENV == 'production' ? 'prod' : 'dev';
 const appdir = path.resolve(__dirname + '/../../build/' + env);
 
 const app = express();
-mongoose.connect(process.env.MONGO_URI || 'localhost:27017/matter');
 
-var store = new MongoDBStore(
-  {
-    uri: process.env.MONGO_URI,
-    collection: 'sessions'
-  });
-
+const store = new SequelizeStore(db, {}, 'sessions')
 
 // set up middleware limits
 app.use(bodyParser({limit: '50mb'}));
@@ -117,4 +114,7 @@ app.get('*', function (req, res) {
 
 const port = process.env.PORT || 4000;
 
-app.listen(port, () => console.log('Now browse to localhost:'+port+'/graphql'));
+//sync tables
+sequelizeTables.sync({force: false}).catch(err => console.error(err.stack)).then(() => {
+  app.listen(port, () => console.log('Now browse to localhost:'+port+'/graphql'));
+});
