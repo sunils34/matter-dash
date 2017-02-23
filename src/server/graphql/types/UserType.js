@@ -20,14 +20,6 @@ export default new ObjectType({
       type: StringType,
       description: 'Name of the user'
     },
-    company_name: {
-      type: StringType,
-      description: 'Name of the company this user is associated with'
-    },
-    company_total_employees: {
-      type: IntType,
-      description: 'Name of the company this user is associated with'
-    },
     created_at: {
       type: GraphQLDate,
       description: 'Date the user signed up'

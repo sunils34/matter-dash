@@ -6,7 +6,9 @@ module.exports = {
 
     return queryInterface.bulkInsert(organizationTableName, [{
       id: 'testOrg',
-      name: "Matter"
+      name: "Matter",
+      createdAt: new Date(),
+      updatedAt: new Date()
     }], {});
 
     /*

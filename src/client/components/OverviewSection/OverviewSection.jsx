@@ -24,10 +24,10 @@ class OverviewSectionHeader extends React.Component {
         <div className='col-lg-11'>
           <div className='row sub-heading'>
             <div className='col-md-5'>
-              <div className='large-text company-name'>{this.props.data.company_name}</div>
+              <div className='large-text company-name'>{this.props.organization.name}</div>
             </div>
             <div className='col-md-1 pull-right'>
-              <div className='large-text employee-total'>{this.props.data.company_total_employees}</div>
+              <div className='large-text employee-total'>{this.props.organization.employee_count}</div>
             </div>
             <div className='col-md-1 pull-right'>
               <div className='total-description'>Employee Total</div>
@@ -52,7 +52,7 @@ const data = [{name: 'Male', value: 70}, {name: 'Female', value: 10},
                     {name: 'Prefer not to disclose', value: 2}, {name: 'Non-Binary', value: 8}];
 
 const ethData = [
-  {name: 'White', value: 57}, 
+  {name: 'White', value: 57},
   {name: 'Native American/Alaskan Native', value: 2},
   {name: 'Native Hawaiian/Pacific Islander', value: 2},
   {name: 'Hispanic', value: 8},
@@ -82,9 +82,10 @@ class OverviewCharts extends React.Component {
 class OverviewSection extends React.Component {
 
   render () {
+    console.log(this.props);
     return (
       <div className='container overview-section'>
-        <OverviewSectionHeader data={this.props.data}/>
+        <OverviewSectionHeader user={this.props.user} organization={this.props.organization}/>
         <OverviewCharts />
       </div>
     )
