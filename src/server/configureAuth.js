@@ -62,6 +62,10 @@ const configure = (app) => {
             profileType: profile.provider,
           }
           user = await User.create(newUser);
+
+          //TODO obtain real organization
+          let organization = await Organization.findOne({id:'testOrg'});
+          await organization.addUser(user);
         }
 
         // if a user is found, log them in
