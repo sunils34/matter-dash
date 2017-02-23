@@ -41,17 +41,25 @@ const pieDataPoints = {
     const user = parent.request.user;
     var organization = await getOrganization(user);
     var query = args.query;
+    var type = query.type;
     var results = null;
-    if(query.type == 'gender') {
-      results = await sequelize.query('SELECT COUNT (*) as value, gender as name FROM adp WHERE orgId = ? GROUP BY gender', {
-        replacements: [organization.id], type: sequelize.QueryTypes.SELECT
-      });
+
+    if(type == 'ethnicity') {
+      type = 'eeoEthnicDescription';
     }
-    else if(query.type == 'ethnicity') {
-      results = await sequelize.query('SELECT COUNT (*) as value, eeoEthnicDescription as name FROM adp WHERE orgId = ? GROUP BY eeoEthnicDescription', {
-        replacements: [organization.id], type: sequelize.QueryTypes.SELECT
-      });
+    else {
+      type = 'gender';
     }
+
+    var stmt = 'SELECT COUNT (*) as value, ' + type + ' as name FROM adp WHERE orgId = $orgId ';
+    if(query.department != 'All') {
+      stmt += 'AND jobFunction = $department ';
+    }
+    stmt += 'GROUP BY ' + type;
+    results = await sequelize.query(stmt, {
+      bind: { orgId: organization.id, department: query.department},
+      type: sequelize.QueryTypes.SELECT
+    });
     return results;
   }
 }
