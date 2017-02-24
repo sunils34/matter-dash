@@ -66,7 +66,7 @@ const pieDataPoints = {
       type = 'gender';
     }
 
-    var stmt = 'SELECT COUNT (*) as value, ' + type + ' as name FROM adp WHERE positionStatus = "active" AND orgId = $orgId ';
+    var stmt = 'SELECT COUNT (*) as value, ' + type + ' as name FROM adp WHERE positionStatus = "Active" AND orgId = $orgId ';
 
     stmt += getPeriodStatement(query.period);
     console.log(stmt);
