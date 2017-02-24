@@ -37,7 +37,7 @@ const organization = {
           organization.employee_count = results[0].count;
         }
 
-        var results = await sequelize.query('SELECT DISTINCT(jobFunction) FROM ADP WHERE orgId = ?', {
+        var results = await sequelize.query('SELECT DISTINCT(jobFunction) FROM adp WHERE orgId = ?', {
           replacements: [organization.id], type: sequelize.QueryTypes.SELECT
         });
         organization.departments = _.map(results, 'jobFunction');
