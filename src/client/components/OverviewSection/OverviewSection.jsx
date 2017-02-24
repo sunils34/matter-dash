@@ -137,6 +137,20 @@ const ethData = [
   {name: 'Asian', value: 18}
 ];
 
+const OverviewChartsTitle = ({department, period}) => {
+
+  var periodStmt = 'Over the ' + period;
+  if(period == 'Snapshot') {
+    periodStmt = 'as of Today';
+  }
+
+  return (
+    <div className='row text-center'>
+      <div className='overview-chart-title'>{`${department} Employees ${periodStmt}`}</div>
+    </div>
+  )
+}
+
 class OverviewCharts extends React.Component {
 
 
@@ -160,13 +174,16 @@ class OverviewCharts extends React.Component {
 
     return (
       <div className='row'>
-        <div className='col-lg-6'>
-          <MatterPieChart
-            componentWillUpdate={onPieChartUpdate}
-            legendAlign='left' title="Gender" query={_.extend({}, query, {type: 'gender'})} />
-        </div>
-        <div className='col-lg-6'>
-          <MatterPieChart legendAlign='right' title="Ethnicity" query={_.extend({}, query, {type: 'ethnicity'})}/>
+      <OverviewChartsTitle department={this.props.department} period={this.props.period} />
+        <div className='row'>
+          <div className='col-lg-6'>
+            <MatterPieChart
+              componentWillUpdate={onPieChartUpdate}
+              legendAlign='left' title="Gender" query={_.extend({}, query, {type: 'gender'})} />
+          </div>
+          <div className='col-lg-6'>
+            <MatterPieChart legendAlign='right' title="Ethnicity" query={_.extend({}, query, {type: 'ethnicity'})}/>
+          </div>
         </div>
       </div>
     )
