@@ -30,11 +30,11 @@ var config = {
         }),
         new CopyWebpackPlugin([
             {
-                from: 'src/client/app/fonts',
+                from: 'src/client/fonts',
                 to: './public/fonts/'
             },
             {
-                from: 'src/client/app/images',
+                from: 'src/client/images',
                 to: './public/images/'
             }
         ]),
