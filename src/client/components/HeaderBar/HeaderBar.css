@@ -2,4 +2,23 @@
   font-size: 30px;
   width: 70px;
   text-align: center;
+  height: 50px;
+  background: #6F73E3;
+  padding-top: 2px;
+  padding-left: 3px;
 }
+
+.matter-navbar {
+  background:#8386ED;
+
+  .navbar-nav>li>a {
+    color: #FFF;
+    text-shadow: none;
+    background: none;
+  }
+
+  .navbar-nav>.active>a, .navbar-default .navbar-nav>.open>a {
+    font-weight: bold;
+  }
+}
+

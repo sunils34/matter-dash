@@ -75,6 +75,9 @@ app.use('/graphql', expressGraphQL(req => ({
   pretty: true
 })));
 
+// Serve static assets
+app.use(express.static(path.join(appdir, 'public')));
+
 app.get('/dist/core.js', function (req, res) {
   res.header("Content-Type", "application/javascript");
   const codejs = "window.SLACK_CLIENT_ID=\"" + "TEST" + "\";\n";
