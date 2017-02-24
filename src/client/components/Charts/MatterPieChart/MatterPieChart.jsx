@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
 
-const COLORS = ['#6E6EE2', '#72D5C6', '#3DBAEF', '#E96DA4', "#F1BA00", '#3481A5'];
+const COLORS = ['#6E6EE2', '#72D5C6', '#3DBAEF', '#E96DA4', "#E28D6E", "#F1BA00", '#3481A5' ];
 
 const RADIAN = Math.PI / 180;
 
@@ -114,6 +114,7 @@ class MatterPieChart extends React.Component {
                   activeShape={renderTitle}
                   activeIndex={0}
                   fill="#8884d8"
+                  //isAnimationActive={false}
                 >
                 {
                   data.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]}/>)

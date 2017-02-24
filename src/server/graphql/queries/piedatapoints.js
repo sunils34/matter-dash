@@ -31,6 +31,21 @@ const getOrganization = async(user) => {
   return organization;
 }
 
+const getPeriodStatement = (period) => {
+
+  if(period == 'Last Quarter') {
+    return ' AND hireDate <  NOW() - INTERVAL 3 MONTH';
+  }
+  if(period == 'Last 6 Months') {
+    return ' AND hireDate <  NOW() - INTERVAL 6 MONTH';
+  }
+  if(period == 'Last Year') {
+    return ' AND hireDate <  NOW() - INTERVAL 12 MONTH';
+  }
+
+  return '';
+}
+
 const pieDataPoints = {
   type: new List(PieDataPointType),
   args: {
@@ -51,11 +66,15 @@ const pieDataPoints = {
       type = 'gender';
     }
 
-    var stmt = 'SELECT COUNT (*) as value, ' + type + ' as name FROM adp WHERE orgId = $orgId ';
+    var stmt = 'SELECT COUNT (*) as value, ' + type + ' as name FROM adp WHERE positionStatus = "active" AND orgId = $orgId ';
+
+    stmt += getPeriodStatement(query.period);
+    console.log(stmt);
+
     if(query.department != 'All') {
-      stmt += 'AND jobFunction = $department ';
+      stmt += ' AND jobFunction = $department ';
     }
-    stmt += 'GROUP BY ' + type;
+    stmt += ' GROUP BY ' + type;
     results = await sequelize.query(stmt, {
       bind: { orgId: organization.id, department: query.department},
       type: sequelize.QueryTypes.SELECT
