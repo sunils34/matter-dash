@@ -18,7 +18,7 @@ class OverviewSectionSubNav extends React.Component {
     return (
       <a
       href='#'
-      onClick={() => this.props.onClick(this.props.text)}
+      onClick={(e) => { e.preventDefault(); return this.props.onClick(this.props.text)}}
       className={className}>{this.props.text}
       </a>
     )
@@ -88,23 +88,19 @@ OverviewSectionSubNav.propTypes = {
 class OverviewSectionHeader extends React.Component {
   render() {
     return (
-      <div className='row'>
+      <div className='row heading'>
         <div className='col-lg-1'>
-          <div className='company-logo'>CL</div>
+          <div className='organization-logo'>CL</div>
         </div>
         <div className='col-lg-11'>
           <div className='row sub-heading'>
-            <div className='col-md-5'>
-              <div className='large-text company-name'>{this.props.organization.name}</div>
-            </div>
-            <div className='col-md-1 pull-right'>
-              <div className='large-text employee-total'>{this.props.employee_count}</div>
-            </div>
-            <div className='col-md-1 pull-right'>
-              <div className='total-description'>Employee Total</div>
-            </div>
+          <div className='pull-left organization-name'>{this.props.organization.name}</div>
+          <div className='row pull-right'>
+                <div className='pull-right employee-total'>{this.props.employee_count}</div>
+                <div className='pull-right employee-total-description'>Employee total</div>
           </div>
-          <div className='row'>
+          </div>
+          <div className='row overview-subnav'>
               <OverviewSectionDepartments
                 currentDepartment={this.props.department}
                 dispatch={this.props.dispatch}
@@ -151,6 +147,17 @@ const OverviewChartsTitle = ({department, period}) => {
   )
 }
 
+
+const OverviewChartsSubTitle = ({text}) => {
+
+  return (
+    <div className='row text-center'>
+      <div className='overview-chart-subtitle'>{text}</div>
+    </div>
+  )
+}
+
+
 class OverviewCharts extends React.Component {
 
 
@@ -174,7 +181,8 @@ class OverviewCharts extends React.Component {
 
     return (
       <div className='row'>
-      <OverviewChartsTitle department={this.props.department} period={this.props.period} />
+        <OverviewChartsTitle department={this.props.department} period={this.props.period} />
+        <OverviewChartsSubTitle text={`${this.props.employee_count} Employees`} />
         <div className='row'>
           <div className='col-lg-6'>
             <MatterPieChart
@@ -211,9 +219,12 @@ class OverviewSection extends React.Component {
           organization={this.props.organization}
           department={this.props.department}
           period={this.props.period}
-          employee_count={this.props.employee_count}
+          employee_count={this.props.organization.employee_count}
             />
-        <OverviewCharts dispatch={this.props.dispatch} department={this.props.department} period={this.props.period} />
+        <OverviewCharts dispatch={this.props.dispatch}
+          employee_count={this.props.employee_count}
+          department={this.props.department}
+          period={this.props.period} />
       </div>
     )
   }

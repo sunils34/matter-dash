@@ -1,11 +1,20 @@
 .overview-section {
-  .company-logo {
+
+  background: white;
+  padding: 15px 30px
+
+  .organization-logo {
     width: 100px;
     height: 100px;
   }
 
-  .large-text {
-    font-size:30px;
+  .organization-name {
+    font-size: 33px;
+    color: #8C8C8C;
+  }
+
+  .heading {
+    padding: 20px;
   }
 
   .sub-heading {
@@ -32,9 +41,32 @@
       margin-left: 30px;
     }
   }
+
+  .overview-subnav {
+    padding-top: 20px;
+    margin-bottom: 35px;
+  }
+
+  .overview-chart-title {
+    font-size: 22px;
+    color: #39393A;
+  }
+
+  .overview-chart-subtitle {
+    font-size: 15px;
+    color: #8C8C8C;
+  }
+
+  .employee-total-description {
+    font-size: 15px;
+    color: #8C8C8C;
+    width: 70px;
+  }
+
+  .employee-total {
+    font-size: 43px;
+    color: #8A8A8A;
+    margin-top: -15px;
+  }
 }
 
-.overview-section {
-  background: white;
-  padding: 15px 30px
-}
