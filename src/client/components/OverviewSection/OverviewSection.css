@@ -12,7 +12,11 @@
     border-bottom: 1px solid #ECECEC;
   }
 
+  .sub-nav.active {
+    color: #888EE7;
+  }
   .sub-nav {
+    color: #8D8D8D;
     font-size: 13px;
     display: inline;
     margin-right: 30px;

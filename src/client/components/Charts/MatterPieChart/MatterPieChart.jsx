@@ -62,6 +62,12 @@ class MatterPieChart extends React.Component {
     super(props);
   }
 
+  componentWillUpdate(nextProps, nextState) {
+    if(this.props.componentWillUpdate) {
+      this.props.componentWillUpdate(nextProps, nextState);
+    }
+  }
+
   render () {
 
     var props = this.props;

@@ -7,3 +7,11 @@ export function changeDepartment(newDepartment, activeView) {
         activeView,
     };
 }
+
+export function changeEmployeesCount(newCount, activeView) {
+    return {
+        type: types.CHANGE_EMPLOYEES_COUNT,
+        count: newCount,
+        activeView,
+    };
+}

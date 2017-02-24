@@ -5,6 +5,9 @@ import * as appActions from '../../redux/actions/app';
 import { connect } from 'react-redux';
 
 class OverviewSectionSubNav extends React.Component {
+  constructor(props) {
+    super(props);
+  }
   onDepartmentClick(department) {
     this.props.dispatch(appActions.changeDepartment(department));
   }
@@ -24,7 +27,7 @@ class OverviewSectionSubNav extends React.Component {
   };
 }
 
-const OverviewSectionDepartments =  ({departments, dispatch}) => {
+const OverviewSectionDepartments =  ({departments, currentDepartment, dispatch}) => {
 
   var depts = ['All'].concat(departments);
 
@@ -35,7 +38,7 @@ const OverviewSectionDepartments =  ({departments, dispatch}) => {
         return (<OverviewSectionSubNav
                 key={dept}
                 text = {dept}
-                active = {dept == Department}
+                active = {dept == currentDepartment}
                 dispatch={dispatch}
                   />);
       })}
@@ -63,14 +66,14 @@ class OverviewSectionHeader extends React.Component {
               <div className='large-text company-name'>{this.props.organization.name}</div>
             </div>
             <div className='col-md-1 pull-right'>
-              <div className='large-text employee-total'>{this.props.organization.employee_count}</div>
+              <div className='large-text employee-total'>{this.props.employee_count}</div>
             </div>
             <div className='col-md-1 pull-right'>
               <div className='total-description'>Employee Total</div>
             </div>
           </div>
           <div className='row'>
-              <OverviewSectionDepartments dispatch={this.props.dispatch} departments={this.props.organization.departments}/>
+              <OverviewSectionDepartments currentDepartment={this.props.department} dispatch={this.props.dispatch} departments={this.props.organization.departments}/>
           </div>
         </div>
       </div>
@@ -104,10 +107,25 @@ class OverviewCharts extends React.Component {
       department: this.props.department,
       period: this.props.period,
     };
+    var dispatch = this.props.dispatch;
+
+    const onPieChartUpdate = (nextProps, nextState)  => {
+      if(nextProps.data.piedatapoints) {
+        var total = 0;
+        nextProps.data.piedatapoints.forEach((point) => {
+          total += point.value;
+        })
+        dispatch(appActions.changeEmployeesCount(total));
+      }
+    }
+
+
     return (
       <div className='row'>
         <div className='col-lg-6'>
-          <MatterPieChart legendAlign='left' title="Gender" query={_.extend({}, query, {type: 'gender'})} />
+          <MatterPieChart
+            componentWillUpdate={onPieChartUpdate}
+            legendAlign='left' title="Gender" query={_.extend({}, query, {type: 'gender'})} />
         </div>
         <div className='col-lg-6'>
           <MatterPieChart legendAlign='right' title="Ethnicity" query={_.extend({}, query, {type: 'ethnicity'})}/>
@@ -132,8 +150,15 @@ class OverviewSection extends React.Component {
   render () {
     return (
       <div className='container overview-section'>
-        <OverviewSectionHeader dispatch={this.props.dispatch} user={this.props.user} organization={this.props.organization} query={this.props.query}/>
-        <OverviewCharts department={this.props.department} period={this.props.period} />
+        <OverviewSectionHeader
+          dispatch={this.props.dispatch}
+          user={this.props.user}
+          organization={this.props.organization}
+          department={this.props.department}
+          period={this.props.period}
+          employee_count={this.props.employee_count}
+            />
+        <OverviewCharts dispatch={this.props.dispatch} department={this.props.department} period={this.props.period} />
       </div>
     )
   }
@@ -142,7 +167,8 @@ class OverviewSection extends React.Component {
 const mapStateToProps = (state) => {
   return {
     department: state.app.department,
-    period: state.app.period
+    period: state.app.period,
+    employee_count: state.app.employee_count
   }
 }
 
