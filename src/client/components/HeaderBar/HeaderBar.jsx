@@ -16,7 +16,8 @@ const HeaderBar = () => (
         </div>
         <div id="navbar" className="navbar-collapse collapse">
           <ul className="nav navbar-nav">
-            <li className="active"><a href="#">Overview</a></li>
+            <li className="active"><a href="#">Dashboard</a></li>
+            <li><a href="#about">My Company</a></li>
             <li><a href="#about">Comparison</a></li>
           </ul>
           <ul className="nav navbar-nav navbar-right">

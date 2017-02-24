@@ -8,6 +8,14 @@ export function changeDepartment(newDepartment, activeView) {
     };
 }
 
+export function changePeriod(newPeriod, activeView) {
+    return {
+        type: types.CHANGE_PERIOD,
+        period: newPeriod,
+        activeView,
+    };
+}
+
 export function changeEmployeesCount(newCount, activeView) {
     return {
         type: types.CHANGE_EMPLOYEES_COUNT,

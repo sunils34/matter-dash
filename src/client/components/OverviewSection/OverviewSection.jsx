@@ -8,48 +8,80 @@ class OverviewSectionSubNav extends React.Component {
   constructor(props) {
     super(props);
   }
-  onDepartmentClick(department) {
-    this.props.dispatch(appActions.changeDepartment(department));
-  }
-
   render() {
+
+    //add classes
     var className = 'sub-nav';
-    if(this.props.active) {
-      className += ' active';
-    }
+    className += (this.props.active) ? " active" : "";
+    className += (this.props.right) ? " pull-right" : " pull-left"
+
     return (
       <a
       href='#'
-      onClick={() => this.onDepartmentClick(this.props.text)}
+      onClick={() => this.props.onClick(this.props.text)}
       className={className}>{this.props.text}
       </a>
     )
   };
 }
 
-const OverviewSectionDepartments =  ({departments, currentDepartment, dispatch}) => {
+class OverviewSectionDepartments extends  React.Component {
+  render() {
+    var depts = ['All'].concat(this.props.departments);
 
-  var depts = ['All'].concat(departments);
+    var dispatch = this.props.dispatch;
+    const onDepartmentClick = (department) => {
+      dispatch(appActions.changeDepartment(department));
+    }
 
-  return (
-    <div className='col-md-8'>
+    return (
+      <div className='col-md-7 department-subnav'>
       {depts.map( (dept) => {
 
         return (<OverviewSectionSubNav
                 key={dept}
                 text = {dept}
-                active = {dept == currentDepartment}
-                dispatch={dispatch}
+                active = {dept == this.props.currentDepartment}
+                onClick={onDepartmentClick}
                   />);
       })}
-    </div>
-  );
-};
+      </div>
+    );
+  }
+}
+
+class OverviewSectionPeriod extends  React.Component {
+  render() {
+    const {dispatch} = this.props;
+    var periods = ['Snapshot', 'Last Quarter', 'Last 6 Months', 'Last Year']
+    periods = _.reverse(periods);
+
+    const onPeriodClick = (period) => {
+      dispatch(appActions.changePeriod(period));
+    }
+
+    return (
+      <div className='period-subnav col-md-5'>
+      {periods.map( (period) => {
+
+        return (<OverviewSectionSubNav
+                key={period}
+                text = {period}
+                right = {true}
+                active = {period == this.props.currentPeriod}
+                onClick={onPeriodClick}
+                  />);
+      })}
+      </div>
+    );
+  }
+}
+
 
 
 OverviewSectionSubNav.propTypes = {
-  dispatch: React.PropTypes.func.isRequired,
-  text: React.PropTypes.string.isRequired
+  text: React.PropTypes.string.isRequired,
+  onClick: React.PropTypes.func.isRequired
 }
 
 
@@ -73,7 +105,13 @@ class OverviewSectionHeader extends React.Component {
             </div>
           </div>
           <div className='row'>
-              <OverviewSectionDepartments currentDepartment={this.props.department} dispatch={this.props.dispatch} departments={this.props.organization.departments}/>
+              <OverviewSectionDepartments
+                currentDepartment={this.props.department}
+                dispatch={this.props.dispatch}
+                departments={this.props.organization.departments}/>
+              <OverviewSectionPeriod
+                currentPeriod={this.props.period}
+                dispatch={this.props.dispatch}/>
           </div>
         </div>
       </div>
