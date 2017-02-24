@@ -96,7 +96,7 @@ class OverviewSectionHeader extends React.Component {
           <div className='row sub-heading'>
           <div className='pull-left organization-name'>{this.props.organization.name}</div>
           <div className='row pull-right'>
-                <div className='pull-right employee-total'>{this.props.employee_count}</div>
+                <div className='pull-right employee-total'>{this.props.organization.employee_count}</div>
                 <div className='pull-right employee-total-description'>Employee total</div>
           </div>
           </div>
@@ -219,7 +219,6 @@ class OverviewSection extends React.Component {
           organization={this.props.organization}
           department={this.props.department}
           period={this.props.period}
-          employee_count={this.props.organization.employee_count}
             />
         <OverviewCharts dispatch={this.props.dispatch}
           employee_count={this.props.employee_count}

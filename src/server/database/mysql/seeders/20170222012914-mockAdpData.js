@@ -20,7 +20,10 @@ module.exports = {
     //TODO bias and skew data to more real-world companies
     var data = [];
     var positionStatusValues = ['Active', 'Terminated'];
-    for(var i =0; i < 2000; i++) {
+
+    var limit = faker.random.number({min:500, max:3000});
+
+    for(var i =0; i < limit; i++) {
       var row = {
         id: i,
         orgId: "testOrg",

@@ -8,7 +8,7 @@ import _ from 'lodash';
 const initialState = {
   department: 'All',
   period: 'Snapshot',
-  employee_count: 100,
+  employee_count: 0,
   loaded: false,
 };
 

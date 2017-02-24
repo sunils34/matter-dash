@@ -29,7 +29,7 @@ const organization = {
       if(organizations.length) {
         var organization = organizations[0];
 
-        var results = await sequelize.query('SELECT COUNT (*) as count FROM adp WHERE orgId = ?', {
+        var results = await sequelize.query('SELECT COUNT (*) as count FROM adp WHERE positionStatus=\'Active\' AND orgId = ?', {
           replacements: [organization.id], type: sequelize.QueryTypes.SELECT
         });
 
