@@ -3,31 +3,20 @@ import {
   GraphQLObjectType as ObjectType,
 } from 'graphql';
 
-import tests from './queries/tests/all';
-import User from './types/UserType';
+import GraphQLJSON from 'graphql-type-json';
+
+import organization from './queries/organization';
+import user from './queries/user';
+import piedatapoints from './queries/piedatapoints';
 
 
 export default  new Schema({
   query: new ObjectType({
     name: 'Query',
-    fields: () => ({
-      me: {
-        type: User,
-        resolve(parent, args, {db}) {
-          if(parent.request.user) {
-            const user = parent.request.user;
-            return {
-              id: user._id,
-              email: user.email,
-              name: user.google.name,
-              created_at: user.created_at
-            };
-          }
-          else {
-            return null;
-          }
-        }
-      }
-    })
+    fields:  {
+      user,
+      organization,
+      piedatapoints
+    }
   })
 });

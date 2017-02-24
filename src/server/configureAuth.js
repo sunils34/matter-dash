@@ -1,12 +1,10 @@
 import passport from 'passport';
-import {OAuth2Strategy as GoogleStrategy} from 'passport-google-oauth'
-//import {User, UserClaim, comparePassword} from './database/models';
+import {OAuth2Strategy as GoogleStrategy} from 'passport-google-oauth';
 import jwt from 'jsonwebtoken';
 import util from 'util';
 import auth from './config/auth';
 
-import User from './database/mongo/models/User'
-
+import {User, Organization} from './database/mysql/models';
 
 const configure = (app) => {
 
@@ -48,49 +46,52 @@ const configure = (app) => {
 
     // make the code asynchronous
     // User.findOne won't fire until we have all our data back from Google
-    process.nextTick(function() {
 
-      // try to find the user based on their google id
-      User.findOne({ 'google.id' : profile.id }, function(err, user) {
-        if (err)
-          return done(err);
+    const findOrCreateUserGoogleUser = async() => {
+      if (profile) {
+        let user = await User.findOne({
+          where: {profileType: profile.provider, profileId: profile.id}
+        });
 
-        if (user) {
+        if(!user) {
+          // create user
+          var newUser = {
+            name : profile.displayName,
+            email : profile.emails[0].value,
+            profileId: profile.id,
+            profileType: profile.provider,
+          }
+          user = await User.create(newUser);
 
-          // if a user is found, log them in
-          const userWithJWT = addJWT(user);
-
-          return done(null, userWithJWT);
-        } else {
-          // if the user isnt in our database, create a new user
-          var newUser          = new User();
-          newUser.email = profile.emails[0].value;
-          // set all of the relevant information
-          newUser.google.id    = profile.id;
-          newUser.google.token = token;
-          newUser.google.name  = profile.displayName;
-          newUser.google.email = profile.emails[0].value; // pull the first email
-
-          // save the user
-          newUser.save(function(err) {
-            if (err)
-              throw err;
-            return done(null, addJWT(newUser));
-          });
+          //TODO obtain real organization
+          let organization = await Organization.findOne({id:'testOrg'});
+          await organization.addUser(user);
         }
-      });
-    });
+
+        // if a user is found, log them in
+        const userWithJWT = addJWT(user);
+        done(null, userWithJWT);
+      }
+
+    };
+    findOrCreateUserGoogleUser().catch(done)
 
   }));
 
   //TODO make this more efficient than storing the entire user object in
   //the session
   passport.serializeUser(function (user, cb) {
-    cb(null, user);
+    const data = {id: user.id, token: user.token}
+    console.log(data);
+    cb(null, data);
   });
 
   passport.deserializeUser(function (obj, cb) {
-    cb(null, obj);
+    const findUser = async() => {
+      let user = await User.findOne({where: {id: obj.id}});
+      cb(null, user);
+    }
+    findUser().catch(cb);
   });
 };
 

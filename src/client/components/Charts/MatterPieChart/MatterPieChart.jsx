@@ -2,8 +2,10 @@ import React from 'react';
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
 import './MatterPieChart.css';
 import _ from 'lodash';
+import { graphql, compose } from 'react-apollo';
+import gql from 'graphql-tag';
 
-const COLORS = ['#6E6EE2', '#72D5C6', '#3DBAEF', '#E96DA4', "#F1BA00", '#3481A5'];
+const COLORS = ['#6E6EE2', '#72D5C6', '#3DBAEF', '#E96DA4', "#E28D6E", "#F1BA00", '#3481A5' ];
 
 const RADIAN = Math.PI / 180;
 
@@ -57,16 +59,29 @@ const renderTitle = (props) => {
 class MatterPieChart extends React.Component {
 
   constructor(props) {
-
     super(props);
-    var data = _.map(props.data, function(element, index) {
-      return _.extend({}, element, {title: props.title, color: COLORS[index % COLORS.length] });
-    });
+  }
 
-    this.state = { data: data };
+  componentWillUpdate(nextProps, nextState) {
+    if(this.props.componentWillUpdate) {
+      this.props.componentWillUpdate(nextProps, nextState);
+    }
   }
 
   render () {
+
+    var props = this.props;
+    if(this.props.data.loading) return null;
+
+    var total = 0;
+    _.map(props.data.piedatapoints, function(element) {
+      total += element.value;
+    });
+
+    var data = _.map(props.data.piedatapoints, function(element, index) {
+      return _.extend({}, element, {value: Math.round(element.value/total*100), title: props.title, color: COLORS[index % COLORS.length] });
+    });
+
     var cx="60%"
     if(this.props.legendAlign == 'right') {
       cx="30%";
@@ -74,7 +89,7 @@ class MatterPieChart extends React.Component {
 
     var leftLegend = (
       <div className='col-md-4 legend'>
-        <Legend payload={this.state.data} />
+        <Legend payload={data} />
       </div>
     )
     var rightLegend = null;
@@ -91,18 +106,18 @@ class MatterPieChart extends React.Component {
             <ResponsiveContainer height={300} width="100%">
               <PieChart onMouseEnter={this.onPieEnter}>
                 <Pie
-                  data={this.state.data}
+                  data={data}
                   cx="50%"
                   cy="50%"
                   innerRadius="50%"
                   outerRadius="90%"
                   activeShape={renderTitle}
                   activeIndex={0}
-                  isAnimationActive={false}
                   fill="#8884d8"
+                  //isAnimationActive={false}
                 >
                 {
-                  this.state.data.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]}/>)
+                  data.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]}/>)
                 }
                 </Pie>
             </PieChart>
@@ -114,4 +129,9 @@ class MatterPieChart extends React.Component {
   }
 }
 
-module.exports = MatterPieChart;
+
+const GetPieDataPoints = gql`query GetPieDataPoints($query: JSON!) { piedatapoints(query: $query) { name, value } }`;
+
+module.exports = graphql(GetPieDataPoints, {
+  options: ({ query }) => ({ variables: { query } }),
+})(MatterPieChart);

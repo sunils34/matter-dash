@@ -14,7 +14,7 @@ module.exports = {
       return queryInterface.createTable('users', { id: Sequelize.INTEGER });
     */
 
-    queryInterface.createTable(
+    return queryInterface.createTable(
       adpTableName,
       {
         id: {
@@ -53,6 +53,6 @@ module.exports = {
       Example:
       return queryInterface.dropTable('users');
     */
-    queryInterface.dropTable(adpTableName);
+    return queryInterface.dropTable(adpTableName);
   }
 };
