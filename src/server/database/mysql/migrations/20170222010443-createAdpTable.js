@@ -1,6 +1,7 @@
 'use strict';
+var shortid = require('shortid');
 
-const adpTableName = 'adp';
+const adpTableName = 'employees';
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
@@ -18,21 +19,25 @@ module.exports = {
       adpTableName,
       {
         id: {
-          type: Sequelize.BIGINT,
+          type: Sequelize.STRING,
           primaryKey: true,
-          autoIncrement: true
+          defaultValue: shortid.generate,
         },
         orgId: Sequelize.STRING,
-        firstName: Sequelize.STRING,
-        lastName: Sequelize.STRING,
+        employeeId: Sequelize.STRING,
         positionStatus: Sequelize.STRING,
         hireDate: {
           type: Sequelize.DATE
         },
-        jobFunction: Sequelize.STRING,
+        flsaCode: Sequelize.STRING,
+        jobTitle: Sequelize.STRING,
         payGradeCode: Sequelize.STRING,
+        workerCategory: Sequelize.STRING,
+        department: Sequelize.STRING,
         location: Sequelize.STRING,
         age: Sequelize.STRING,
+        ageRange: Sequelize.STRING,
+        eeoEthnicCode: Sequelize.STRING,
         eeoEthnicDescription: Sequelize.STRING,
         gender: Sequelize.STRING,
         createdAt: {

@@ -64,7 +64,7 @@ const configure = (app) => {
           user = await User.create(newUser);
 
           //TODO obtain real organization
-          let organization = await Organization.findOne({id:'testOrg'});
+          let organization = await Organization.findOne({where: {id:'xogroup'}});
           await organization.addUser(user);
         }
 
@@ -82,7 +82,6 @@ const configure = (app) => {
   //the session
   passport.serializeUser(function (user, cb) {
     const data = {id: user.id, token: user.token}
-    console.log(data);
     cb(null, data);
   });
 

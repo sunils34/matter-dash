@@ -12,25 +12,6 @@ import {
 import GraphQLJSON from 'graphql-type-json';
 
 
-const getOrganization = async(user) => {
-  var organization = null;
-  const organizations = await Organization.findAll({
-    include: [{
-      model: User,
-      through: {
-        where: {userId: user.id}
-      }
-    }] ,
-    raw: true
-  });
-
-  //TODO for now assume only one org per user
-  if(organizations.length) {
-    organization = organizations[0];
-  }
-  return organization;
-}
-
 const getPeriodStatement = (period) => {
 
   if(period == 'Last Quarter') {
@@ -54,7 +35,9 @@ const pieDataPoints = {
   async resolve(parent, args) {
     if(!parent.request.user) return null;
     const user = parent.request.user;
-    var organization = await getOrganization(user);
+    const organizations = await user.getOrganizations({raw: true});
+    if(!organizations.length) return null;
+    var organization = organizations[0];
     var query = args.query;
     var type = query.type;
     var results = null;
@@ -66,13 +49,13 @@ const pieDataPoints = {
       type = 'gender';
     }
 
-    var stmt = 'SELECT COUNT (*) as value, ' + type + ' as name FROM adp WHERE positionStatus = "Active" AND orgId = $orgId ';
+    var stmt = 'SELECT COUNT (*) as value, ' + type + ' as name FROM employees WHERE positionStatus = "Active" AND orgId = $orgId ';
 
     stmt += getPeriodStatement(query.period);
     console.log(stmt);
 
     if(query.department != 'All') {
-      stmt += ' AND jobFunction = $department ';
+      stmt += ' AND department = $department ';
     }
     stmt += ' GROUP BY ' + type;
     results = await sequelize.query(stmt, {

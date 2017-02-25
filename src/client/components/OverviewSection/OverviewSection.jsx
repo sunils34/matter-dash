@@ -3,6 +3,7 @@ import './OverviewSection.css';
 import MatterPieChart from '../Charts/MatterPieChart/MatterPieChart.jsx';
 import * as appActions from '../../redux/actions/app';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 
 class OverviewSectionSubNav extends React.Component {
   constructor(props) {

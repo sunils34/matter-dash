@@ -15,21 +15,13 @@ const organization = {
 
     if(parent.request.user) {
       const user = parent.request.user;
-      const organizations = await Organization.findAll({
-        include: [{
-          model: User,
-          through: {
-            where: {userId: user.id}
-          }
-        }] ,
-        raw: true
-      });
+      const organizations = await user.getOrganizations({raw: true});
 
-      //TODO for now assume only one org per user
+      //TODO for now assume only one org per user exists
       if(organizations.length) {
         var organization = organizations[0];
 
-        var results = await sequelize.query('SELECT COUNT (*) as count FROM adp WHERE positionStatus=\'Active\' AND orgId = ?', {
+        var results = await sequelize.query('SELECT COUNT (*) as count FROM employees WHERE positionStatus=\'Active\' AND orgId = ?', {
           replacements: [organization.id], type: sequelize.QueryTypes.SELECT
         });
 
@@ -37,10 +29,10 @@ const organization = {
           organization.employee_count = results[0].count;
         }
 
-        var results = await sequelize.query('SELECT DISTINCT(jobFunction) FROM adp WHERE orgId = ?', {
+        var results = await sequelize.query('SELECT DISTINCT(department) FROM employees WHERE orgId = ?', {
           replacements: [organization.id], type: sequelize.QueryTypes.SELECT
         });
-        organization.departments = _.map(results, 'jobFunction');
+        organization.departments = _.map(results, 'department');
         return organization;
       }
     }

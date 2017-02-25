@@ -9,7 +9,13 @@ module.exports = {
       name: "Matter",
       createdAt: new Date(),
       updatedAt: new Date()
-    }], {});
+    }, 
+    {
+      id: 'xogroup',
+      name: "XO Group",
+      createdAt: new Date(),
+      updatedAt: new Date()
+    } ], {});
 
     /*
       Add altering commands here.
