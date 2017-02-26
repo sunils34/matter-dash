@@ -67,13 +67,20 @@ app.get('/signin', (req, res) => {
   }
 });
 
-app.use('/graphql', expressGraphQL(req => ({
-  schema,
-  graphiql: process.env.NODE_ENV == 'development',
-  rootValue : {request: req},
-  context: req.session,
-  pretty: true
-})));
+app.use('/graphql', expressGraphQL((req, res) => {
+
+  if(!req.isAuthenticated()) {
+    res.json({'error': 'This endpoint is only accessible to a logged in user'})
+  } else {
+    return {
+      schema,
+      graphiql: process.env.NODE_ENV == 'development',
+      rootValue : {request: req},
+      context: req.session,
+      pretty: true
+    }
+  }
+}));
 
 // Serve static assets
 app.use(express.static(path.join(appdir, 'public')));
