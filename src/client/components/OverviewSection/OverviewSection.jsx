@@ -209,8 +209,7 @@ class OverviewChartsBar extends React.Component {
 
   render() {
     var query = {
-      department: this.props.department,
-      period: this.props.period,
+      department: this.props.department
     };
     var dispatch = this.props.dispatch;
 
@@ -233,10 +232,10 @@ class OverviewChartsBar extends React.Component {
           <div className='col-lg-6'>
             <MatterBarChart
               componentWillUpdate={onPieChartUpdate}
-              legendAlign='left' title="Gender" query={_.extend({}, query, {type: 'genderOverTime'})} />
+              legendAlign='left' title="Gender" query={_.extend({}, query, {type: 'gender'})} />
           </div>
           <div className='col-lg-6'>
-            <MatterBarChart legendAlign='right' title="Ethnicity" query={_.extend({}, query, {type: 'ethnicityOverTime'})}/>
+            <MatterBarChart legendAlign='right' title="Ethnicity" query={_.extend({}, query, {type: 'ethnicity'})}/>
           </div>
         </div>
       </div>
