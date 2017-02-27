@@ -2,10 +2,16 @@
 
   background: white;
   padding: 15px 30px;
+  margin-bottom: 25px;
+
 
   .organization-logo {
     width: 100px;
     height: 100px;
+  }
+
+  .overview-charts {
+    margin-top: 25px;
   }
 
   .organization-name {
@@ -44,7 +50,6 @@
 
   .overview-subnav {
     padding-top: 20px;
-    margin-bottom: 35px;
   }
 
   .overview-chart-title {

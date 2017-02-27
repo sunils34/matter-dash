@@ -1,6 +1,7 @@
 import React from 'react';
 import './OverviewSection.css';
 import MatterPieChart from '../Charts/MatterPieChart/MatterPieChart.jsx';
+import MatterBarChart from '../Charts/MatterBarChart/MatterBarChart.jsx';
 import * as appActions from '../../redux/actions/app';
 import { connect } from 'react-redux';
 import _ from 'lodash';
@@ -134,16 +135,20 @@ const ethData = [
   {name: 'Asian', value: 18}
 ];
 
-const OverviewChartsTitle = ({department, period}) => {
+const OverviewChartsTitle = ({title, department, period}) => {
 
-  var periodStmt = 'Over the ' + period;
-  if(period == 'Snapshot') {
-    periodStmt = 'as of Today';
+  if(!title) {
+    //default title
+    var periodStmt = 'Over the ' + period;
+    if(period == 'Snapshot') {
+      periodStmt = 'as of Today';
+    }
+    title = department + ' Employees ' + periodStmt;
   }
 
   return (
     <div className='row text-center'>
-      <div className='overview-chart-title'>{`${department} Employees ${periodStmt}`}</div>
+      <div className='overview-chart-title'>{title}</div>
     </div>
   )
 }
@@ -159,7 +164,7 @@ const OverviewChartsSubTitle = ({text}) => {
 }
 
 
-class OverviewCharts extends React.Component {
+class OverviewChartsPie extends React.Component {
 
 
   render() {
@@ -181,9 +186,9 @@ class OverviewCharts extends React.Component {
 
 
     return (
-      <div className='row'>
+      <div className='row overview-charts'>
         <OverviewChartsTitle department={this.props.department} period={this.props.period} />
-        <OverviewChartsSubTitle text={`${this.props.employee_count} Employees`} />
+        <OverviewChartsSubTitle text={`${this.props.employee_count} employees`} />
         <div className='row'>
           <div className='col-lg-6'>
             <MatterPieChart
@@ -197,7 +202,45 @@ class OverviewCharts extends React.Component {
       </div>
     )
   }
+}
 
+class OverviewChartsBar extends React.Component {
+
+
+  render() {
+    var query = {
+      department: this.props.department
+    };
+    var dispatch = this.props.dispatch;
+
+    const onPieChartUpdate = (nextProps, nextState)  => {
+      if(nextProps.data.piedatapoints) {
+        var total = 0;
+        nextProps.data.piedatapoints.forEach((point) => {
+          total += point.value;
+        })
+        dispatch(appActions.changeEmployeesCount(total));
+      }
+    }
+
+
+    return (
+      <div className='row overview-charts'>
+        <OverviewChartsTitle title={`${this.props.department} Employees Over Time`} />
+        <OverviewChartsSubTitle text={`${this.props.employee_count} employees`} />
+        <div className='row'>
+          <div className='col-lg-6'>
+            <MatterBarChart
+              componentWillUpdate={onPieChartUpdate}
+              legendAlign='left' title="Gender" query={_.extend({}, query, {type: 'gender'})} />
+          </div>
+          <div className='col-lg-6'>
+            <MatterBarChart legendAlign='right' title="Ethnicity" query={_.extend({}, query, {type: 'ethnicity'})}/>
+          </div>
+        </div>
+      </div>
+    )
+  }
 }
 
 class OverviewSection extends React.Component {
@@ -213,18 +256,26 @@ class OverviewSection extends React.Component {
 
   render () {
     return (
-      <div className='container overview-section'>
-        <OverviewSectionHeader
-          dispatch={this.props.dispatch}
-          user={this.props.user}
-          organization={this.props.organization}
-          department={this.props.department}
-          period={this.props.period}
-            />
-        <OverviewCharts dispatch={this.props.dispatch}
-          employee_count={this.props.employee_count}
-          department={this.props.department}
-          period={this.props.period} />
+      <div>
+        <div className='container overview-section'>
+          <OverviewSectionHeader
+            dispatch={this.props.dispatch}
+            user={this.props.user}
+            organization={this.props.organization}
+            department={this.props.department}
+            period={this.props.period}
+              />
+          <OverviewChartsPie dispatch={this.props.dispatch}
+            employee_count={this.props.employee_count}
+            department={this.props.department}
+            period={this.props.period} />
+        </div>
+        <div className='container overview-section'>
+          <OverviewChartsBar dispatch={this.props.dispatch}
+            employee_count={this.props.employee_count}
+            department={this.props.department}
+            period={this.props.period} />
+        </div>
       </div>
     )
   }
