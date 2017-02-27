@@ -7,7 +7,6 @@ import gql from 'graphql-tag';
 import _ from 'lodash';
 
 const COLORS = ['#6E6EE2', '#72D5C6', '#3DBAEF', '#E96DA4', "#E28D6E", "#F1BA00", '#3481A5' ];
-
 const convertToPercentageData = (data, fields) => {
   var data = _.map(data, function(element, index) {
     var total = 0;
