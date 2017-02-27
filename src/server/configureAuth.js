@@ -6,6 +6,8 @@ import auth from './config/auth';
 
 import {User, Organization} from './database/mysql/models';
 
+const WHITELISTED_EMAILS = ['l.widrich@gmail.com', 'hello@lauramcguigan.com', 'sunils34@gmail.com', 'mferber@xogrp.com'];
+
 const configure = (app) => {
 
   function addJWT(user){
@@ -53,9 +55,12 @@ const configure = (app) => {
           where: {profileType: profile.provider, profileId: profile.id}
         });
 
-        if(!user) {
+        if (!user) {
+          if (WHITELISTED_EMAILS.indexOf(profile.emails[0].value) < 0) {
+            return null;
+          }
           // create user
-          var newUser = {
+          const newUser = {
             name : profile.displayName,
             email : profile.emails[0].value,
             profileId: profile.id,
