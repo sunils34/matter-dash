@@ -49,26 +49,26 @@ const barDataPoints = {
       type = 'gender';
     }
 
-    var stmt = 'SELECT COUNT (*) as v, '+type+' as k FROM employees where orgId=$orgId ' 
+    var stmt = 'SELECT COUNT (*) as v, '+type+' as k FROM employees where orgId=$orgId '
 
     if(query.department != 'All') {
       stmt += ' AND department = $department ';
     }
-    stmt += ' AND hireDate < \'$year\' GROUP BY ' + type;
-    var results = await getLast5Years(organization, query);
+    stmt += ` AND hireDate < '$year' GROUP BY ${type} ORDER BY v ASC`;
+    const results = await getLast5Years(organization, query);
 
-    for (var idx in results)  {
-      var r = results[idx];
+    for (let idx in results)  {
+      let r = results[idx];
       var countResults = await sequelize.query(stmt, {
-        bind: {orgId: organization.id, department: query.department, year: r.name, type},
-        type: sequelize.QueryTypes.SELECT
+        bind: { orgId: organization.id, department: query.department, year: r.name, type },
+        type: sequelize.QueryTypes.SELECT,
       });
       countResults.forEach(function(c) {
-        r[c.k]=c.v;
+        r[c.k] = c.v;
       });
     }
 
-    var fields = await sequelize.query('SELECT DISTINCT '+type+' as type FROM employees where orgId=$orgId', {
+    let fields = await sequelize.query(`SELECT ${type} as type FROM employees where orgId=$orgId GROUP BY ${type} ORDER BY count(*) ASC`, {
       bind: {orgId: organization.id, department: query.department, year: r.name, type},
       type: sequelize.QueryTypes.SELECT
     })
