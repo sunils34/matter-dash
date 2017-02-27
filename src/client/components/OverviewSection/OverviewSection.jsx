@@ -235,7 +235,7 @@ class OverviewChartsBar extends React.Component {
               legendAlign='left' title="Gender" query={_.extend({}, query, {type: 'gender'})} />
           </div>
           <div className='col-lg-6'>
-            <MatterBarChart legendAlign='right' title="Ethnicity" query={_.extend({}, query, {type: 'ethnicity'})}/>
+            <MatterBarChart height={345} legendAlign='right' title="Ethnicity" query={_.extend({}, query, {type: 'ethnicity'})}/>
           </div>
         </div>
       </div>
