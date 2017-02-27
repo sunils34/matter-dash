@@ -58,7 +58,7 @@ const barDataPoints = {
     const results = await getLast5Years(organization, query);
 
     for (let idx in results)  {
-      let r = results[idx];
+      var r = results[idx];
       var countResults = await sequelize.query(stmt, {
         bind: { orgId: organization.id, department: query.department, year: r.name, type },
         type: sequelize.QueryTypes.SELECT,
