@@ -41,7 +41,7 @@ const MatterBarChart = React.createClass({
           <XAxis dataKey='name'/>
           <YAxis type="number" domain={[0, 'dataMax']} unit='%' />
           <CartesianGrid strokeDasharray="3" vertical={false}/>
-          <Tooltip/>
+          <Tooltip animationDuration={0}/>
           {
             fields.map((entry, index) => <Bar unit='%' key={`bar-${index}`} dataKey={entry} stackId="a" fill={COLORS[index % COLORS.length]}/>)
           }
