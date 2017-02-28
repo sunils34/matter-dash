@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import HeaderBar from '../HeaderBar/HeaderBar.jsx';
-import OverviewSection from '../OverviewSection/OverviewSection.jsx';
 import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
+import HeaderBar from '../../components/HeaderBar/HeaderBar';
+import OverviewSection from '../../components/OverviewSection/OverviewSection';
 
 window.Period = 'All';
 window.Department = 'All';
@@ -11,16 +11,19 @@ window.Department = 'All';
 
 class App extends React.Component {
   render() {
-
-
-    if(this.props.userReq.loading || this.props.organizationReq.loading) {
+    if (!this.props.children ||
+        this.props.userReq.loading ||
+        this.props.organizationReq.loading) {
       return null;
     }
     else {
+      const user = this.props.userReq.user;
+      const organization = this.props.organizationReq.organization;
+
       return (
         <div>
-        <OverviewSection user={this.props.userReq.user} organization={this.props.organizationReq.organization} />
-        <HeaderBar />
+          <HeaderBar location={this.props.location}/>
+          {React.cloneElement(this.props.children, { user, organization })}
         </div>
       );
     }

@@ -2,10 +2,10 @@ import React from 'react';
 import { render } from 'react-dom';
 import ApolloClient, { createNetworkInterface } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
-import './app.css';
+import { browserHistory, Router } from 'react-router';
 import store from './redux/store/store';
-
-import App from './components/App/App';
+import Routes from './routes';
+import './app.css';
 
 const reduxStore = store({});
 
@@ -27,7 +27,7 @@ const client = new ApolloClient({
 
 render(
   <ApolloProvider client={client} store={reduxStore}>
-    <App />
+    <Router children={Routes} history={browserHistory} />
   </ApolloProvider>,
   document.getElementById('react'),
 );

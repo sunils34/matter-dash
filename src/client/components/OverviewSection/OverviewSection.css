@@ -1,9 +1,8 @@
 .overview-section {
 
   background: white;
-  padding: 15px 30px;
+  padding: 15px 15px;
   margin-bottom: 25px;
-
 
   .organization-logo {
     width: 100px;
@@ -17,10 +16,6 @@
   .organization-name {
     font-size: 33px;
     color: #8C8C8C;
-  }
-
-  .heading {
-    padding: 20px;
   }
 
   .sub-heading {

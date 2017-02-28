@@ -91,10 +91,7 @@ class OverviewSectionHeader extends React.Component {
   render() {
     return (
       <div className='row heading'>
-        <div className='col-lg-1'>
-          <div className='organization-logo'>CL</div>
-        </div>
-        <div className='col-lg-11'>
+        <div className='col-lg-12'>
           <div className='row sub-heading'>
           <div className='pull-left organization-name'>{this.props.organization.name}</div>
           <div className='row pull-right'>
