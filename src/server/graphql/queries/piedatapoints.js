@@ -3,6 +3,7 @@ import User from '../../database/mysql/models/User';
 import {GraphQLID as ID,GraphQLNonNull as NonNull,GraphQLList as List} from 'graphql';
 import PieDataPointType from '../types/PieDataPointType';
 import sequelize from '../../database/mysql/sequelize';
+import getFields from './fields';
 
 import {
   GraphQLString as StringType,
@@ -28,12 +29,26 @@ const getPeriodStatement = (period) => {
 }
 
 const pieDataPoints = {
-  type: new List(PieDataPointType),
+  type: new ObjectType({
+    name: 'PieDataResults',
+    fields: {
+      results: { type: new List(PieDataPointType) },
+      fields: { type: new List(
+        new ObjectType({
+          name: 'PieDataField',
+          fields: {
+            name: { type: StringType },
+            color: { type: StringType },
+          },
+        })),
+      },
+    },
+  }),
   args: {
-    query: {type: GraphQLJSON}
+    query: { type: GraphQLJSON },
   },
   async resolve(parent, args) {
-    if(!parent.request.user) return null;
+    if (!parent.request.user) return null;
     const user = parent.request.user;
     const organizations = await user.getOrganizations({raw: true});
     if(!organizations.length) return null;
@@ -52,19 +67,19 @@ const pieDataPoints = {
     var stmt = 'SELECT COUNT (*) as value, ' + type + ' as name FROM employees WHERE positionStatus = "Active" AND orgId = $orgId ';
 
     stmt += getPeriodStatement(query.period);
-    console.log(stmt);
 
     if(query.department != 'All') {
       stmt += ' AND department = $department ';
     }
     stmt += ' GROUP BY ' + type;
     results = await sequelize.query(stmt, {
-      bind: { orgId: organization.id, department: query.department},
-      type: sequelize.QueryTypes.SELECT
+      bind: { orgId: organization.id, department: query.department },
+      type: sequelize.QueryTypes.SELECT,
     });
-    return results;
-  }
-}
+    const fields = await getFields(type, organization.id, sequelize);
+    return { results, fields };
+  },
+};
 
 export default pieDataPoints;
 

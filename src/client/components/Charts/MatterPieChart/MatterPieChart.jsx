@@ -1,13 +1,9 @@
 import React from 'react';
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
-import './MatterPieChart.css';
 import _ from 'lodash';
-import { graphql, compose } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-
-const COLORS = ['#6E6EE2', '#72D5C6', '#3DBAEF', '#E96DA4', "#E28D6E", "#F1BA00", '#3481A5' ];
-
-const RADIAN = Math.PI / 180;
+import './MatterPieChart.css';
 
 
 const Legend = (props) => {
@@ -73,13 +69,20 @@ class MatterPieChart extends React.Component {
     var props = this.props;
     if(this.props.data.loading) return null;
 
+    const dataPoints = props.data.piedatapoints.results;
+    const fields = props.data.piedatapoints.fields;
+
     var total = 0;
-    _.map(props.data.piedatapoints, function(element) {
+    _.map(dataPoints, (element) => {
       total += element.value;
     });
 
-    var data = _.map(props.data.piedatapoints, function(element, index) {
-      return _.extend({}, element, {value: Math.round(element.value/total*100), title: props.title, color: COLORS[index % COLORS.length] });
+    var data = _.map(dataPoints, function(element, index) {
+      return _.extend({}, element, {
+        value: Math.round(element.value/total*100),
+        title: props.title,
+        color: _.result(_.find(fields, (field) => (field.name === element.name)), 'color'),
+      });
     });
 
     var cx="60%"
@@ -117,7 +120,7 @@ class MatterPieChart extends React.Component {
                   //isAnimationActive={false}
                 >
                 {
-                  data.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]}/>)
+                  data.map(entry => <Cell key={`cell-${entry.name}`} fill={entry.color} />)
                 }
                 </Pie>
             </PieChart>
@@ -130,7 +133,17 @@ class MatterPieChart extends React.Component {
 }
 
 
-const GetPieDataPoints = gql`query GetPieDataPoints($query: JSON!) { piedatapoints(query: $query) { name, value } }`;
+const GetPieDataPoints = gql`query GetPieDataPoints($query: JSON!) {
+  piedatapoints(query: $query) {
+    results {
+      name
+      value
+    }, fields {
+      name
+      color
+    }
+  }
+}`;
 
 module.exports = graphql(GetPieDataPoints, {
   options: ({ query }) => ({ variables: { query } }),

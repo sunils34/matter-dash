@@ -154,35 +154,34 @@ const OverviewChartsTitle = ({title, department, period}) => {
 }
 
 
-const OverviewChartsSubTitle = ({text}) => {
+const OverviewChartsSubTitle = ({ text }) => {
 
   return (
     <div className='row text-center'>
       <div className='overview-chart-subtitle'>{text}</div>
     </div>
-  )
-}
+  );
+};
 
 
 class OverviewChartsPie extends React.Component {
-
 
   render() {
     var query = {
       department: this.props.department,
       period: this.props.period,
     };
-    var dispatch = this.props.dispatch;
 
+    const dispatch = this.props.dispatch;
     const onPieChartUpdate = (nextProps, nextState)  => {
       if(nextProps.data.piedatapoints) {
-        var total = 0;
-        nextProps.data.piedatapoints.forEach((point) => {
+        let total = 0;
+        nextProps.data.piedatapoints.results.forEach((point) => {
           total += point.value;
-        })
+        });
         dispatch(appActions.changeEmployeesCount(total));
       }
-    }
+    };
 
 
     return (

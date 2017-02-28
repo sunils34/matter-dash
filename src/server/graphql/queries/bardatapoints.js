@@ -3,12 +3,14 @@ import User from '../../database/mysql/models/User';
 import {GraphQLID as ID,GraphQLNonNull as NonNull,GraphQLList as List} from 'graphql';
 import sequelize from '../../database/mysql/sequelize';
 import _ from 'lodash';
+import getFields from './fields';
 
 import {
   GraphQLString as StringType,
   GraphQLObjectType as ObjectType,
 } from 'graphql';
 
+const COLORS = ['#6E6EE2', '#72D5C6', '#3DBAEF', '#E96DA4', '#E28D6E', '#F1BA00', '#3481A5'];
 import GraphQLJSON from 'graphql-type-json';
 
 const getLast5Years = async function(organization, query) {
@@ -26,12 +28,20 @@ const barDataPoints = {
   type: new ObjectType({
     name: 'BarDataResults',
     fields: {
-      results: {type: new List(GraphQLJSON)},
-      fields: {type: new List(StringType)},
-    }
+      results: { type: new List(GraphQLJSON) },
+      fields: { type: new List(
+        new ObjectType({
+          name: 'BarDataField',
+          fields: {
+            name: { type: StringType },
+            color: { type: StringType },
+          },
+        })),
+      },
+    },
   }),
   args: {
-    query: {type: GraphQLJSON}
+    query: { type: GraphQLJSON },
   },
   async resolve(parent, args) {
     if(!parent.request.user) return null;
@@ -68,14 +78,9 @@ const barDataPoints = {
       });
     }
 
-    let fields = await sequelize.query(`SELECT ${type} as type FROM employees where orgId=$orgId GROUP BY ${type} ORDER BY count(*) ASC`, {
-      bind: {orgId: organization.id, department: query.department, year: r.name, type},
-      type: sequelize.QueryTypes.SELECT
-    })
-    fields = _.flatten(_.map(fields, _.values));
-
-    return {results:results, fields: fields};
-  }
+    const fields = await getFields(type, organization.id, sequelize);
+    return { results, fields };
+  },
 }
 
 export default barDataPoints;
