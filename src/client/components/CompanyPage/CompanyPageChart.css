@@ -1,0 +1,26 @@
+.company-page-chart {
+
+  .header {
+    background: #F8F8F8;
+    border: 1px solid #DEDEDE;
+    border-radius: 4px 4px 0 0;
+    padding: 10px;
+    width: 100%;
+    float: left;
+  }
+
+  .filter-icon {
+    cursor: pointer;
+    margin-right: 25px;
+    text-align: center;
+    .material-icons {
+      color: #6E6EE2;
+      margin-left: 2px;
+    }
+
+    div {
+      margin-top: -10px;
+      font-size: 10px;
+    }
+  }
+}

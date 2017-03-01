@@ -1,19 +1,19 @@
 import React from 'react';
-import Dropdown from 'react-bootstrap-dropdown';
-
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 import './CompanyPage.css';
-import CompanyPageChart from './CompanyPageChart'
+import CompanyPageChart from './CompanyPageChart';
 
 const CompanyPageHeader = ({ organization }) => {
   var aBasicItemModel = [
     {
-      text: "View: Stacked",
+      label: "View: Stacked",
       value: "1"
     },
     {
-      text: "View: ",
+      label: "View: ",
       value: "2"
     }
   ];
@@ -21,12 +21,16 @@ const CompanyPageHeader = ({ organization }) => {
   return (
     <div className="row">
       <div className="pull-left company-name">
-        <span>{organization.name}</span>
+        <span>My Company</span>
       </div>
       <div className="pull-right">
-        <Dropdown
-        title="MyDropdown"
-        items={aBasicItemModel}
+        <Select
+        clearable={false}
+        className="select-layout"
+        name="dashboardLayout"
+        value="1"
+        options={aBasicItemModel}
+
           />
       </div>
     </div>
@@ -62,15 +66,15 @@ const GetCompanyPageInit = gql`
 query GetCompanyPageInit{
   companyPageInit {
     departments {
-      name
+      label
       value
     }
     genders {
-      name,
+      label,
       value
     }
-    ethnicities {
-      name,
+    timeframes {
+      label,
       value
     }
   }

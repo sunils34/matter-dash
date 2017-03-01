@@ -9,14 +9,14 @@ import sequelize from '../../../database/mysql/sequelize';
 const CompanyPageInitType = new List(new ObjectType({
   name: 'CompanyPageInitType',
   fields: {
-    name: { type: StringType },
+    label: { type: StringType },
     value: { type: StringType },
   },
 }));
 
 const getDistinctValues = async (orgId, field) => 
   sequelize.query(
-    `SELECT DISTINCT ${field} as value, ${field} as name
+    `SELECT DISTINCT ${field} as value, ${field} as label
       FROM employees
       WHERE orgId=$orgId;`, { bind: { orgId },
         type: sequelize.QueryTypes.SELECT,
@@ -30,6 +30,7 @@ const companyPageInit = {
       departments: { type: CompanyPageInitType },
       genders: { type: CompanyPageInitType },
       ethnicities: { type: CompanyPageInitType },
+      timeframes: { type: CompanyPageInitType },
     },
   }),
   async resolve(parent) {
@@ -42,6 +43,10 @@ const companyPageInit = {
       departments: await getDistinctValues(organization.id, 'department'),
       genders: await getDistinctValues(organization.id, 'gender'),
       ethnicities: await getDistinctValues(organization.id, 'eeoEthnicDescription'),
+      timeframes: [
+        { label: 'Monthly', value: 'Monthly' },
+        { label: 'Yearly', value: 'Yearly' },
+      ],
     };
 
     return results;
