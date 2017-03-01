@@ -3,22 +3,22 @@ import {
   GraphQLObjectType as ObjectType,
 } from 'graphql';
 
-import GraphQLJSON from 'graphql-type-json';
-
 import organization from './queries/organization';
 import user from './queries/user';
 import piedatapoints from './queries/piedatapoints';
 import bardatapoints from './queries/bardatapoints';
+import companyPageInit from './queries/CompanyPage/init';
 
 
-export default  new Schema({
+export default new Schema({
   query: new ObjectType({
     name: 'Query',
-    fields:  {
+    fields: {
       user,
       organization,
       piedatapoints,
-      bardatapoints
+      bardatapoints,
+      companyPageInit,
     }
   })
 });

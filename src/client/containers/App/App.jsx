@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
 import HeaderBar from '../../components/HeaderBar/HeaderBar';
-import OverviewSection from '../../components/OverviewSection/OverviewSection';
 
 window.Period = 'All';
 window.Department = 'All';
