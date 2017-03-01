@@ -1,8 +1,8 @@
 import React from 'react';
 import Select from 'react-select';
-import './CompanyPageChart.css';
+import './ReportsPageChart.css';
 
-class CompanyPageChart extends React.Component {
+class ReportsPageChart extends React.Component {
   constructor(props) {
     super(props);
     this.state = {department: props.department, gender: props.gender, timeframe: 'Monthly'};
@@ -10,7 +10,7 @@ class CompanyPageChart extends React.Component {
   render() {
     const { initData } = this.props;
     return (
-      <div className='row company-page-chart'>
+      <div className='row reports-page-chart'>
         <div className="header">
           <div className="filter-icon pull-left">
             <i className="material-icons">filter_list</i>
@@ -48,4 +48,4 @@ class CompanyPageChart extends React.Component {
   }
 }
 
-export default CompanyPageChart;
+export default ReportsPageChart;

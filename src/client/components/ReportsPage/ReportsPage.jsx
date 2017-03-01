@@ -3,10 +3,10 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
-import './CompanyPage.css';
-import CompanyPageChart from './CompanyPageChart';
+import './ReportsPage.css';
+import ReportsPageChart from './ReportsPageChart';
 
-const CompanyPageHeader = ({ organization }) => {
+const ReportsPageHeader = ({ isempty, organization }) => {
   var aBasicItemModel = [
     {
       label: "View: Stacked",
@@ -17,11 +17,15 @@ const CompanyPageHeader = ({ organization }) => {
       value: "2"
     }
   ];
+  let name = null;
+  if(isempty)  {
+    name = "New Report";
+  }
 
   return (
     <div className="row">
-      <div className="pull-left company-name">
-        <span>My Company</span>
+      <div className="pull-left reports-name">
+        <span>{name}</span>
       </div>
       <div className="pull-right">
         <Select
@@ -37,34 +41,45 @@ const CompanyPageHeader = ({ organization }) => {
   );
 };
 
+const ReportsEmptyView = () => {
+  return (
+    <div className="row reports-page-chart empty">
+      <div className='center-block'>
+        <span>You don't have any reports! Let's create a new graph in order to get started.</span>
+      </div>
+    </div>
+  );
+};
 
-class CompanyPage extends React.Component {
+
+class ReportsPage extends React.Component {
   render() {
-
     let body = null;
+    let isEmpty = true;
     if (!this.props.data.loading) {
-      body = (<CompanyPageChart initData={this.props.data.companyPageInit} />);
+      isEmpty = true;
+      body = <ReportsEmptyView />
     }
 
     return (
-      <div className="container company-page">
-        <CompanyPageHeader organization={this.props.organization} />
+      <div className="container reports-page">
+        <ReportsPageHeader isempty={isEmpty} organization={this.props.organization} />
         {body}
       </div>
     );
   }
 }
 
-CompanyPage.propTypes = {
+ReportsPage.propTypes = {
   data: React.PropTypes.object,
   user: React.PropTypes.object,
   organization: React.PropTypes.object,
 };
 
 
-const GetCompanyPageInit = gql`
-query GetCompanyPageInit{
-  companyPageInit {
+const GetReportsPageInit = gql`
+query GetReportsPageInit{
+  reportsPageInit {
     departments {
       label
       value
@@ -81,4 +96,4 @@ query GetCompanyPageInit{
 }
 `;
 
-export default graphql(GetCompanyPageInit)(CompanyPage);
+export default graphql(GetReportsPageInit)(ReportsPage);

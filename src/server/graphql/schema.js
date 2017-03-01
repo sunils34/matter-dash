@@ -7,7 +7,7 @@ import organization from './queries/organization';
 import user from './queries/user';
 import piedatapoints from './queries/piedatapoints';
 import bardatapoints from './queries/bardatapoints';
-import companyPageInit from './queries/CompanyPage/init';
+import reportsPageInit from './queries/ReportsPage/init';
 
 
 export default new Schema({
@@ -18,7 +18,7 @@ export default new Schema({
       organization,
       piedatapoints,
       bardatapoints,
-      companyPageInit,
+      reportsPageInit,
     }
   })
 });
