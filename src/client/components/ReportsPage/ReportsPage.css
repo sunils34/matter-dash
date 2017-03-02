@@ -27,6 +27,7 @@
   }
 
   .reports-add {
+    width: 100%;
     background: #F8F8F8;
     border: 1px solid #DEDEDE;
     border-radius: 4px;
@@ -41,4 +42,22 @@
       margin-right: 15px;
     }
   }
+
+  .reports-add:focus {
+    outline: none;
+  }
+}
+
+.new-report-modal {
+  width: 75rem;
+  height: 500px;
+  position: absolute;
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  border: 1px solid rgb(204, 204, 204);
+  background: rgb(255, 255, 255);
+  overflow: auto;
+  border-radius: 4px;
+  outline: none;
 }

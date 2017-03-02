@@ -2,15 +2,22 @@
 
   .header {
     background: #F8F8F8;
-    border: 1px solid #DEDEDE;
-    border-radius: 4px 4px 0 0;
-    padding: 10px;
-    width: 100%;
-    float: left;
+    border-bottom: 1px solid #DEDEDE;
+    margin-right: -0.0625rem;
+    margin-left: -0.9375rem;
+    padding: 15px;
+    background: #F8F8F8;
+
+    .description {
+      font-size: 11px;
+      color: #ABABAB;
+    }
+
   }
 
   .filter-icon {
     cursor: pointer;
+    margin-left: 17px;
     margin-right: 25px;
     text-align: center;
     .material-icons {
@@ -22,5 +29,26 @@
       margin-top: -10px;
       font-size: 10px;
     }
+  }
+
+  .empty-state {
+    height: 300px;
+    font-size: 23px;
+    color: #DEDEDE;
+  }
+
+  .add-button {
+    background: #8386ED;
+    border-radius: 4px;
+    border: none;
+    font-size: 14px;
+    outline: none;
+    padding: 10px;
+    margin-right:20px;
+  }
+  .add-button.disabled {
+    background: #ECECEC;
+    color: #CBCBCB;
+    font-size: 14px;
   }
 }

@@ -1,21 +1,20 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
-import { Link } from 'react-router';
 import gql from 'graphql-tag';
 import Select from 'react-select';
+import ReactModal from 'react-modal';
+import { push } from 'react-router-redux';
 import 'react-select/dist/react-select.css';
 import ReportsPageChart from './ReportsPageChart';
 import './ReportsPage.css';
 
 
-const ReportsAddNewGraphButton = () => {
+const ReportsAddNewGraphButton = ({onNewClick}) => {
 
   return (
-    <Link to="/reports/add">
-      <div className='row align-center reports-add'>
-          <i>+</i><div>Add New Graph</div>
-      </div>
-    </Link>
+    <button onClick={onNewClick} className='row align-center reports-add'>
+      <i>+</i><div>Add New Graph</div>
+    </button>
   );
 };
 
@@ -62,7 +61,7 @@ const ReportsPageHeader = ({ isempty, organization }) => {
   );
 };
 
-const ReportsEmptyView = () => {
+const ReportsEmptyView = ({onNewClick}) => {
   return (
     <div className="column reports-empty">
       <div className="row align-center">
@@ -71,25 +70,57 @@ const ReportsEmptyView = () => {
       <div className="row align-center">
         <div className='empty-text'>You don't have any reports! Let's create a new graph in order to get started.</div>
       </div>
-      <ReportsAddNewGraphButton />
+      <ReportsAddNewGraphButton onNewClick={onNewClick} />
     </div>
   );
 };
 
 
 class ReportsPage extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      showNewModal: false
+    };
+
+    this.handleOpenModal = this.handleOpenModal.bind(this);
+    this.handleCloseModal = this.handleCloseModal.bind(this);
+  }
+
+  handleOpenModal() {
+    this.setState({ showNewModal: true });
+  }
+
+  handleCloseModal() {
+    this.setState({ showNewModal: false });
+  }
+
   render() {
     let body = null;
     let isEmpty = true;
+
     if (!this.props.data.loading) {
       isEmpty = true;
-      body = <ReportsEmptyView />
+      body = <ReportsEmptyView onNewClick={this.handleOpenModal} />;
     }
 
     return (
       <div className="container reports-page">
         <ReportsPageHeader isempty={isEmpty} organization={this.props.organization} />
         {body}
+        <ReactModal
+          isOpen={this.state.showNewModal}
+          contentLabel="Add New Graph"
+          onRequestClose={this.handleCloseModal}
+          shouldCloseOnOverlayClick
+          role="dialog"
+          className="new-report-modal"
+        >
+          <ReportsPageChart
+            initData={this.props.data.reportsPageInit}
+            />
+        </ReactModal>
       </div>
     );
   }
