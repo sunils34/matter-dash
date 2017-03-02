@@ -106,7 +106,7 @@ class MatterPieChart extends React.Component {
       <div className='row matter-pie-chart'>
           {leftLegend}
           <div className='col-md-8'>
-            <ResponsiveContainer height={300} width="100%">
+            <ResponsiveContainer height={400} width="100%">
               <PieChart onMouseEnter={this.onPieEnter}>
                 <Pie
                   data={data}

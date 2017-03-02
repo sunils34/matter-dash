@@ -11,5 +11,8 @@
         "react",
         "jsx-a11y",
         "import"
-    ]
+    ],
+    "rules": {
+      "forbid-prop-types": "off"
+    }
 }
