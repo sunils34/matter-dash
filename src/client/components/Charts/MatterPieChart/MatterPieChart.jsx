@@ -10,7 +10,7 @@ const Legend = (props) => {
   const { payload } = props;
 
   return (
-    <ul className='legend-list'>
+    <div className='legend-list'>
     {
       payload.map((entry, index) => {
         const style = {
@@ -28,7 +28,7 @@ const Legend = (props) => {
         )
       })
     }
-    </ul>
+    </div>
   );
 }
 
@@ -91,7 +91,7 @@ class MatterPieChart extends React.Component {
     }
 
     var leftLegend = (
-      <div className='col-md-4 legend'>
+      <div className='large-2 column legend'>
         <Legend payload={data} />
       </div>
     )
@@ -103,10 +103,10 @@ class MatterPieChart extends React.Component {
     }
 
     return (
-      <div className='row matter-pie-chart'>
+      <div className='column large-11 matter-pie-chart'>
           {leftLegend}
-          <div className='col-md-8'>
-            <ResponsiveContainer height={400} width="100%">
+          <div className='column'>
+            <ResponsiveContainer height={380} width="100%">
               <PieChart onMouseEnter={this.onPieEnter}>
                 <Pie
                   data={data}

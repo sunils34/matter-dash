@@ -6,15 +6,15 @@ import {
 } from 'graphql';
 import sequelize from '../../../database/mysql/sequelize';
 
-const CompanyPageInitType = new List(new ObjectType({
-  name: 'CompanyPageInitType',
+const ReportsPageInitType = new List(new ObjectType({
+  name: 'ReportsPageInitType',
   fields: {
     label: { type: StringType },
     value: { type: StringType },
   },
 }));
 
-const getDistinctValues = async (orgId, field) => 
+const getDistinctValues = async (orgId, field) =>
   sequelize.query(
     `SELECT DISTINCT ${field} as value, ${field} as label
       FROM employees
@@ -25,12 +25,12 @@ const getDistinctValues = async (orgId, field) =>
 
 const companyPageInit = {
   type: new ObjectType({
-    name: 'CompanyPageInitResults',
+    name: 'ReportsPageInitResults',
     fields: {
-      departments: { type: CompanyPageInitType },
-      genders: { type: CompanyPageInitType },
-      ethnicities: { type: CompanyPageInitType },
-      timeframes: { type: CompanyPageInitType },
+      departments: { type: ReportsPageInitType },
+      genders: { type: ReportsPageInitType },
+      ethnicities: { type: ReportsPageInitType },
+      timeframes: { type: ReportsPageInitType },
     },
   }),
   async resolve(parent) {

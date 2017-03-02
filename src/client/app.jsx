@@ -6,6 +6,7 @@ import { browserHistory, Router } from 'react-router';
 import store from './redux/store/store';
 import Routes from './routes';
 import './app.css';
+import './foundation.scss'
 
 const reduxStore = store({});
 

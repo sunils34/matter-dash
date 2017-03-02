@@ -91,7 +91,7 @@ app.get('/dist/core.js', function (req, res) {
   res.send(codejs);
 });
 
-app.get('/dist/bundle*.js', function (req, res) {
+app.get('/dist/bundle*', function (req, res) {
   if (!(env == 'dev')) {
     res.setHeader('Cache-Control', 'public, max-age=31536000');
   }
