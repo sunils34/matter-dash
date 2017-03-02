@@ -18,34 +18,44 @@ const ReportsPageHeader = ({ isempty, organization }) => {
     }
   ];
   let name = null;
-  if(isempty)  {
+  let viewTypeSelect = null;
+  if(!isempty)  {
+    //TODO get real name
     name = "New Report";
-  }
-
-  return (
-    <div className="row">
-      <div className="pull-left reports-name">
-        <span>{name}</span>
-      </div>
-      <div className="pull-right">
+    viewTypeSelect = (
+      <div className="column large-2 right-align">
         <Select
         clearable={false}
         className="select-layout"
         name="dashboardLayout"
         value="1"
-        options={aBasicItemModel}
-
-          />
+        options={aBasicItemModel} />
       </div>
+    );
+  }
+  else {
+    name = "New Report";
+    viewTypeSelect = null;
+  }
+
+  return (
+    <div className="row reports-page-header">
+      <div className="reports-name column large-2">
+        <span>{name}</span>
+      </div>
+      {viewTypeSelect}
     </div>
   );
 };
 
 const ReportsEmptyView = () => {
   return (
-    <div className="row reports-page-chart empty">
-      <div className='center-block'>
-        <span>You don't have any reports! Let's create a new graph in order to get started.</span>
+    <div className="column reports-empty">
+      <div className="row align-center">
+        <div className="visibility-off-icon"></div>
+      </div>
+      <div className="row align-center">
+        <div className='empty-text'>You don't have any reports! Let's create a new graph in order to get started.</div>
       </div>
     </div>
   );

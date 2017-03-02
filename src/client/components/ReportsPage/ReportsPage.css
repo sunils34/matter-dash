@@ -7,4 +7,22 @@
   .select-layout {
     width: 200px;
   }
+
+  .reports-page-header {
+    border-bottom: 1px solid #DEDEDE;
+    margin-bottom: 20px;
+  }
+
+  .reports-empty {
+    .visibility-off-icon {
+      height: 35px;
+      width: 40px;
+      fill: #8386ED;
+      background-image: url('/images/visibility-off-icon.svg');
+    }
+    .empty-text {
+      font-size: 25px;
+      color: #6E6EE2;
+    }
+  }
 }
