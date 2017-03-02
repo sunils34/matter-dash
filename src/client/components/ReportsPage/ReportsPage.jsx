@@ -1,10 +1,24 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
+import { Link } from 'react-router';
 import gql from 'graphql-tag';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
-import './ReportsPage.css';
 import ReportsPageChart from './ReportsPageChart';
+import './ReportsPage.css';
+
+
+const ReportsAddNewGraphButton = () => {
+
+  return (
+    <Link to="/reports/add">
+      <div className='row align-center reports-add'>
+          <i>+</i><div>Add New Graph</div>
+      </div>
+    </Link>
+  );
+};
+
 
 const ReportsPageHeader = ({ isempty, organization }) => {
   var aBasicItemModel = [
@@ -57,6 +71,7 @@ const ReportsEmptyView = () => {
       <div className="row align-center">
         <div className='empty-text'>You don't have any reports! Let's create a new graph in order to get started.</div>
       </div>
+      <ReportsAddNewGraphButton />
     </div>
   );
 };

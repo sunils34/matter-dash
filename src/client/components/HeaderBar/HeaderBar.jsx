@@ -26,30 +26,12 @@ class HeaderBar extends React.Component {
           <div className='nav-list'>
               <ul className="inline-list">
                   <HeaderLink location={location} path='/dashboard'>Dashboard</HeaderLink>
-                  <HeaderLink location={location} path='/company'>Company</HeaderLink>
+                  <HeaderLink location={location} path='/reports'>Reports</HeaderLink>
                   <HeaderLink location={location} path='/comparison'>Comparison</HeaderLink>
               </ul>
           </div>
       </nav>
     )
-
-
-    return (
-      <nav className="matter-navbar navbar navbar-fixed-top">
-      <div className="container-fluid">
-      <div id="navbar" className="navbar-collapse collapse">
-      <ul className="nav navbar-nav">
-        <HeaderLink location={location} path='/dashboard'>Dashboard</HeaderLink>
-        <HeaderLink location={location} path='/company'>Company</HeaderLink>
-        <HeaderLink location={location} path='/comparison'>Comparison</HeaderLink>
-      </ul>
-      <ul className="nav navbar-nav navbar-right">
-      <div className='logo'><img src='/images/matter-logo-square.svg'></img></div>
-      </ul>
-      </div>
-      </div>
-      </nav>
-    );
   }
 }
 

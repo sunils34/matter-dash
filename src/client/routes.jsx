@@ -12,7 +12,9 @@ const Routes = (
   <Route path="/" component={App} onChange={refreshBugsnag}>
     <IndexRedirect to="/dashboard" />
     <Route path="/dashboard" component={OverviewSection} />
-    <Route path="/company" component={ReportsPage} />
+    <Route path="/reports" component={ReportsPage} />
+    <Route path="/reports/add" component={ReportsPage} />
+    <Route path="/reports/:id" component={ReportsPage} />
   </Route>
 );
 

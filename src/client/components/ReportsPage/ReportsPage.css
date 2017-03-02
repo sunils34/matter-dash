@@ -25,4 +25,20 @@
       color: #6E6EE2;
     }
   }
+
+  .reports-add {
+    background: #F8F8F8;
+    border: 1px solid #DEDEDE;
+    border-radius: 4px;
+    padding: 12px;
+    cursor: pointer;
+    text-decoration: none;
+
+    font-size: 20px;
+    color: #CBCBCB;
+
+    i {
+      margin-right: 15px;
+    }
+  }
 }
