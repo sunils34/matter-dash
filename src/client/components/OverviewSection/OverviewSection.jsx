@@ -144,7 +144,7 @@ const OverviewChartsTitle = ({title, department, period}) => {
   }
 
   return (
-    <div className='row text-center'>
+    <div className='row align-center'>
       <div className='overview-chart-title'>{title}</div>
     </div>
   )
@@ -154,7 +154,7 @@ const OverviewChartsTitle = ({title, department, period}) => {
 const OverviewChartsSubTitle = ({ text }) => {
 
   return (
-    <div className='row text-center'>
+    <div className='row align-center'>
       <div className='overview-chart-subtitle'>{text}</div>
     </div>
   );
@@ -182,16 +182,16 @@ class OverviewChartsPie extends React.Component {
 
 
     return (
-      <div className='row overview-charts'>
+      <div className='overview-charts'>
         <OverviewChartsTitle department={this.props.department} period={this.props.period} />
         <OverviewChartsSubTitle text={`${this.props.employee_count} employees`} />
-        <div className='row'>
-          <div className='col-lg-6'>
+        <div className='row align-center'>
+          <div className='large-5 columns'>
             <MatterPieChart
               componentWillUpdate={onPieChartUpdate}
               legendAlign='left' title="Gender" query={_.extend({}, query, {type: 'gender'})} />
           </div>
-          <div className='col-lg-6'>
+          <div className='large-5 columns'>
             <MatterPieChart legendAlign='right' title="Ethnicity" query={_.extend({}, query, {type: 'ethnicity'})}/>
           </div>
         </div>
@@ -221,16 +221,16 @@ class OverviewChartsBar extends React.Component {
 
 
     return (
-      <div className='row overview-charts'>
+      <div className='overview-charts'>
         <OverviewChartsTitle title={`${this.props.department} Employees Over Time`} />
         <OverviewChartsSubTitle text={`${this.props.employee_count} employees`} />
-        <div className='row'>
-          <div className='col-lg-6'>
+        <div className='row align-center'>
+          <div className='large-5 columns'>
             <MatterBarChart
               componentWillUpdate={onPieChartUpdate}
               legendAlign='left' title="Gender" query={_.extend({}, query, {type: 'gender'})} />
           </div>
-          <div className='col-lg-6'>
+          <div className='large-5 columns'>
             <MatterBarChart height={345} legendAlign='right' title="Ethnicity" query={_.extend({}, query, {type: 'ethnicity'})}/>
           </div>
         </div>
@@ -252,21 +252,14 @@ class OverviewSection extends React.Component {
 
   render () {
     return (
-      <div>
-        <div className='container overview-section'>
-          <OverviewSectionHeader
-            dispatch={this.props.dispatch}
-            user={this.props.user}
-            organization={this.props.organization}
-            department={this.props.department}
-            period={this.props.period}
-              />
+      <div className='container'>
+        <div className='overview-section'>
           <OverviewChartsPie dispatch={this.props.dispatch}
             employee_count={this.props.employee_count}
             department={this.props.department}
             period={this.props.period} />
         </div>
-        <div className='container overview-section'>
+        <div className='overview-section'>
           <OverviewChartsBar dispatch={this.props.dispatch}
             employee_count={this.props.employee_count}
             department={this.props.department}

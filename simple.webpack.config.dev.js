@@ -6,6 +6,7 @@ var precss = require('precss');
 var autoprefixer = require('autoprefixer');
 var LiveReloadPlugin = require('webpack-livereload-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 var BUILD_DIR = path.resolve(__dirname, 'build/dev');
 var APP_DIR = path.resolve(__dirname, './src/client');
@@ -50,6 +51,7 @@ var config = {
             filename: 'index.html',
             inject: false
         }),
+        new ExtractTextPlugin("dist/bundle.css")
     ],
     module: {
         loaders: [
@@ -59,6 +61,12 @@ var config = {
                 include: APP_DIR,
                 loader: 'babel',
                 include: [path.resolve(__dirname, 'src')]
+            },
+            {
+              // for some modules like foundation
+              test: /\.scss$/,
+              exclude: [/node_modules/], // sassLoader will include node_modules explicitly
+              loader: ExtractTextPlugin.extract("style", "css?sourceMap!postcss!sass?sourceMap&outputStyle=expanded")
             },
             {
                 test: /\.css?$/,
@@ -80,8 +88,14 @@ var config = {
     postcss: function() {
       return [precss, autoprefixer];
     },
+    sassLoader: {
+      includePaths: [path.resolve(__dirname, "node_modules")]
+    },
     resolve: {
-        extensions: ['', '.js', '.jsx']
+        extensions: ['', '.js', '.jsx', '.css', '.scss'],
+        alias: {
+          foundation: path.join(__dirname, 'node_modules/foundation-sites/scss/foundation.scss')
+        }
     },
     node: {
         dns: 'mock',
