@@ -50,12 +50,13 @@ const barDataPoints = {
     if(!organizations.length) return null;
     var organization = organizations[0];
     var query = args.query;
-    var type = query.type;
+    var type = _.lowerCase(query.type);
 
     if(type == 'ethnicity') {
       type = 'eeoEthnicDescription';
-    }
-    else {
+    } else if(type == 'age') {
+      type = 'ageRange';
+    } else {
       type = 'gender';
     }
 

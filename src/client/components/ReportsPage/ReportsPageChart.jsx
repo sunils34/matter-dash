@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import './ReportsPageChart.css';
 import { Row, Column } from '../Grid';
 import * as reportActions from '../../redux/actions/reports';
+import MatterBarChart from '../Charts/MatterBarChart/MatterBarChart.jsx';
 
 const ButtonAddToReport = ({ onClick, disabled }) => {
 
@@ -39,8 +40,14 @@ class ReportsPageChart extends React.Component {
 
 
   render() {
-    const { initData } = this.props;
+    const { initData, department, measure, timeframe } = this.props;
+
     let body = <UnselectedBody />;
+    if (department && measure) {
+      const query = { department, type: measure, timeframe };
+      body = (<MatterBarChart height={345} legendAlign="right" query={query} />);
+    }
+
 
     return (
       <Row extraClass="reports-page-chart">
