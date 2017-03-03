@@ -6,10 +6,10 @@ import {
 } from '../actionTypes/reports';
 
 const initialState = {
-  department: null,
-  measure: null,
+  department: 'All',
+  measure: 'Age',
   chart: null,
-  timeframe: null,
+  timeframe: 'Yearly',
 };
 
 export default function reports(state = initialState, action) {

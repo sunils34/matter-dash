@@ -44,7 +44,7 @@ class ReportsPageChart extends React.Component {
 
     let body = <UnselectedBody />;
     if (department && measure) {
-      const query = { department, type: measure, timeframe };
+      const query = { department, measure, timeframe };
       body = (<MatterBarChart height={345} legendAlign="right" query={query} />);
     }
 

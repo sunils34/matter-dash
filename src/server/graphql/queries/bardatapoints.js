@@ -1,27 +1,82 @@
-import Organization from '../../database/mysql/models/Organization';
-import User from '../../database/mysql/models/User';
-import {GraphQLID as ID,GraphQLNonNull as NonNull,GraphQLList as List} from 'graphql';
-import sequelize from '../../database/mysql/sequelize';
-import _ from 'lodash';
-import getFields from './fields';
-
 import {
+  GraphQLList as List,
   GraphQLString as StringType,
   GraphQLObjectType as ObjectType,
 } from 'graphql';
-
-const COLORS = ['#6E6EE2', '#72D5C6', '#3DBAEF', '#E96DA4', '#E28D6E', '#F1BA00', '#3481A5'];
 import GraphQLJSON from 'graphql-type-json';
+import _ from 'lodash';
 
-const getLast5Years = async function(organization, query) {
-  const stmt = 'select * from (select DISTINCT YEAR(hireDate) as name from employees where orgId= $orgId ORDER BY name DESC LIMIT 5) AS T ORDER BY name ASC;';
-  var results = await sequelize.query(stmt, {
-    bind: {orgId: organization.id},
-    type: sequelize.QueryTypes.SELECT
+
+import sequelize from '../../database/mysql/sequelize';
+import getFields from './fields';
+
+const getLast5Years = async (organization, limit = 6) => {
+  const stmt = `
+  SELECT name as name, name as time FROM
+    (select DISTINCT YEAR(hireDate) as name
+     FROM employees
+     WHERE orgId=$orgId
+     ORDER BY name
+     DESC LIMIT ${limit})
+  AS T ORDER BY time ASC;`;
+  return sequelize.query(stmt, {
+    bind: { orgId: organization.id },
+    type: sequelize.QueryTypes.SELECT,
   });
+};
+
+const getLast6Months = async (organization, limit = 6) => {
+  const stmt = `
+    SELECT * FROM (
+      SELECT DATE_FORMAT(employees.hireDate ,'%Y-%m') as time,
+      DATE_FORMAT(employees.hireDate ,'%b %Y') as name
+      FROM employees where orgId=$orgId
+      GROUP BY
+        DATE_FORMAT(employees.hireDate ,'%Y-%m'),
+        DATE_FORMAT(employees.hireDate ,'%b %Y')
+      ORDER BY time
+      DESC
+      LIMIT ${limit}
+    ) AS T ORDER BY time ASC;`;
+
+  return sequelize.query(stmt, {
+    bind: { orgId: organization.id },
+    type: sequelize.QueryTypes.SELECT,
+  });
+};
+
+const getResults = async (organization, department, measure, timeframe) => {
+  let results = [];
+  let stmt = `SELECT COUNT (*) as v, ${measure} as k FROM employees where orgId=$orgId `;
+  let timeframeStmt = '';
+
+  if (department !== 'All') {
+    stmt += ' AND department = $department ';
+  }
+
+  if (timeframe === 'monthly') {
+    results = await getLast6Months(organization);
+    timeframeStmt = ' DATE_FORMAT(employees.hireDate ,\'%Y-%m\') <= $time';
+  } else {
+    results = await getLast5Years(organization);
+    timeframeStmt = ' YEAR(hireDate) <= $time';
+  }
+
+  stmt += ` AND ${timeframeStmt} GROUP BY ${measure} ORDER BY v ASC`;
+
+  for (const idx in results)  {
+    const r = results[idx];
+    const countResults = await sequelize.query(stmt, {
+      bind: { orgId: organization.id, time: r.time, department, measure },
+      type: sequelize.QueryTypes.SELECT,
+    });
+    countResults.forEach((c) => {
+      r[c.k] = c.v;
+    });
+  }
 
   return results;
-}
+};
 
 
 const barDataPoints = {
@@ -44,45 +99,34 @@ const barDataPoints = {
     query: { type: GraphQLJSON },
   },
   async resolve(parent, args) {
-    if(!parent.request.user) return null;
+    if (!parent.request.user) return null;
     const user = parent.request.user;
-    const organizations = await user.getOrganizations({raw: true});
-    if(!organizations.length) return null;
-    var organization = organizations[0];
-    var query = args.query;
-    var type = _.lowerCase(query.type);
+    const organizations = await user.getOrganizations({ raw: true });
+    if (!organizations.length) return null;
+    const organization = organizations[0];
+    const query = args.query;
+    let measure = _.lowerCase(query.measure);
+    let timeframe = _.lowerCase(query.timeframe);
 
-    if(type == 'ethnicity') {
-      type = 'eeoEthnicDescription';
-    } else if(type == 'age') {
-      type = 'ageRange';
+    if (timeframe === 'monthly') {
+      timeframe = 'monthly';
     } else {
-      type = 'gender';
+      timeframe = 'yearly';
     }
 
-    var stmt = 'SELECT COUNT (*) as v, '+type+' as k FROM employees where orgId=$orgId '
-
-    if(query.department != 'All') {
-      stmt += ' AND department = $department ';
-    }
-    stmt += ` AND hireDate < '$year' GROUP BY ${type} ORDER BY v ASC`;
-    const results = await getLast5Years(organization, query);
-
-    for (let idx in results)  {
-      var r = results[idx];
-      var countResults = await sequelize.query(stmt, {
-        bind: { orgId: organization.id, department: query.department, year: r.name, type },
-        type: sequelize.QueryTypes.SELECT,
-      });
-      countResults.forEach(function(c) {
-        r[c.k] = c.v;
-      });
+    if (measure === 'ethnicity') {
+      measure = 'eeoEthnicDescription';
+    } else if (measure === 'age') {
+      measure = 'ageRange';
+    } else {
+      measure = 'gender';
     }
 
-    const fields = await getFields(type, organization.id, sequelize);
+    const results = await getResults(organization, query.department, measure, timeframe);
+    const fields = await getFields(measure, organization.id, sequelize);
     return { results, fields };
   },
-}
+};
 
 export default barDataPoints;
 

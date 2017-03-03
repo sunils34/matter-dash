@@ -30,18 +30,25 @@ class MatterBarChart extends React.Component {
     if(this.props.data.loading) return null;
     let data = this.props.data.bardatapoints.results;
     let fields = this.props.data.bardatapoints.fields;
-    data = convertToPercentageData(data, fields);
+
+    let unit = '';
+    // stacked percentage
+    if (this.props.type === 'stackedPercentage') {
+      data = convertToPercentageData(data, fields);
+      unit = '%';
+    }
+
     const height = props.height ? props.height : 300;
 
     return (
       <ResponsiveContainer height={height} width="100%">
         <BarChart height={300} data={data} margin={{top: 20, right: 30, left: 20, bottom: 5}}>
           <XAxis dataKey='name'/>
-          <YAxis type="number" domain={[0, 'dataMax']} unit='%' />
+          <YAxis type="number" domain={[0, 'dataMax']} unit={unit} />
           <CartesianGrid strokeDasharray="3" vertical={false}/>
           <Tooltip animationDuration={0}/>
           {
-            fields.map((field, index) => <Bar unit='%' key={`bar-${field.name}`} dataKey={field.name} stackId='a' fill={field.color}/>)
+            fields.map((field, index) => <Bar unit={unit} key={`bar-${field.name}`} dataKey={field.name} stackId='a' fill={field.color}/>)
           }
           <Legend iconType="circle" />
         </BarChart>
