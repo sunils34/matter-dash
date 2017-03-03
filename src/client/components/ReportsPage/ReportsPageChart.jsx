@@ -1,7 +1,9 @@
 import React from 'react';
 import Select from 'react-select';
+import { connect } from 'react-redux';
 import './ReportsPageChart.css';
 import { Row, Column } from '../Grid';
+import * as reportActions from '../../redux/actions/reports';
 
 const ButtonAddToReport = ({ onClick, disabled }) => {
 
@@ -13,7 +15,7 @@ const ButtonAddToReport = ({ onClick, disabled }) => {
     <Row right>
       <button className={c} onClick={onClick} >Add to Report</button>
     </Row>);
-}
+};
 
 const UnselectedBody = () => (
   <Row middle center extraClass="empty-state large-12">
@@ -22,10 +24,20 @@ const UnselectedBody = () => (
 );
 
 class ReportsPageChart extends React.Component {
+
   constructor(props) {
     super(props);
-    this.state = { department: 'ENGINEERING', type: 'gender', timeframe: 'Monthly' };
+    this.handleChangeDepartment = this.handleChange.bind(this, 'department');
+    this.handleChangeMeasure = this.handleChange.bind(this, 'measure');
+    this.handleChangeChart = this.handleChange.bind(this, 'chart');
+    this.handleChangeTimeframe = this.handleChange.bind(this, 'timeframe');
   }
+
+  handleChange(type, chosenItem) {
+    this.props.dispatch(reportActions.changeReport({ type, value: chosenItem.value }));
+  }
+
+
   render() {
     const { initData } = this.props;
     let body = <UnselectedBody />;
@@ -42,10 +54,11 @@ class ReportsPageChart extends React.Component {
             <Row>
               <Column>
                 <Select
+                  onChange={this.handleChangeDepartment}
                   placeholder="Choose a Department"
                   name="select-departments"
-                  clearable
-                  value={this.state.department}
+                  clearable={false}
+                  value={this.props.department}
                   options={initData.departments}
                 />
               </Column>
@@ -56,11 +69,12 @@ class ReportsPageChart extends React.Component {
             <Row>
               <Column>
                 <Select
+                  onChange={this.handleChangeMeasure}
                   placeholder="Choose Measure"
                   name="select-type"
-                  clearable
-                  value={this.state.type}
-                  options={initData.genders}
+                  clearable={false}
+                  value={this.props.measure}
+                  options={initData.measures}
                 />
               </Column>
             </Row>
@@ -70,10 +84,11 @@ class ReportsPageChart extends React.Component {
             <Row>
               <Column>
                 <Select
+                  onChange={this.handleChangeTimeframe}
                   placeholder="Choose Time Scale"
                   name="select-timeframes"
                   clearable={false}
-                  value={this.state.timeframe}
+                  value={this.props.timeframe}
                   options={initData.timeframes}
                 />
               </Column>
@@ -93,7 +108,18 @@ class ReportsPageChart extends React.Component {
 ReportsPageChart.propTypes = {
   initData: React.PropTypes.object,
   department: React.PropTypes.string,
-  gender: React.PropTypes.string,
+  measure: React.PropTypes.string,
+  chart: React.PropTypes.string,
+  timeframe: React.PropTypes.string,
 };
 
-export default ReportsPageChart;
+const mapStateToProps = (state) => {
+  return {
+    department: state.reports.department,
+    measure: state.reports.measure,
+    chart: state.reports.chart,
+    timeframe: state.reports.timeframe,
+  };
+};
+
+export default connect(mapStateToProps)(ReportsPageChart);

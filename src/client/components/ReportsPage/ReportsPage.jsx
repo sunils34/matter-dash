@@ -140,7 +140,7 @@ query GetReportsPageInit{
       label
       value
     }
-    genders {
+    measures {
       label,
       value
     }

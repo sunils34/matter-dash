@@ -28,8 +28,7 @@ const companyPageInit = {
     name: 'ReportsPageInitResults',
     fields: {
       departments: { type: ReportsPageInitType },
-      genders: { type: ReportsPageInitType },
-      ethnicities: { type: ReportsPageInitType },
+      measures: { type: ReportsPageInitType },
       timeframes: { type: ReportsPageInitType },
     },
   }),
@@ -41,14 +40,19 @@ const companyPageInit = {
     const organization = organizations[0];
     const results = {
       departments: await getDistinctValues(organization.id, 'department'),
-      genders: await getDistinctValues(organization.id, 'gender'),
-      ethnicities: await getDistinctValues(organization.id, 'eeoEthnicDescription'),
+      measures: [
+        { label: 'Gender', value: 'Gender' },
+        { label: 'Ethnicity', value: 'Ethnicity' },
+        { label: 'Age', value: 'Age' },
+      ],
       timeframes: [
         { label: 'Monthly', value: 'Monthly' },
         { label: 'Yearly', value: 'Yearly' },
       ],
     };
 
+    // include all as a department label
+    results.departments.unshift({ label: 'All', value: 'All' });
     return results;
   },
 };
