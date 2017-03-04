@@ -8,7 +8,7 @@ import {
 const initialState = {
   department: 'All',
   measure: 'Age',
-  chart: null,
+  chart: 'bar',
   timeframe: 'Yearly',
 };
 

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="27px" height="20px" viewBox="0 0 27 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>line icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="03012017" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Reports---Filter-Overlay" transform="translate(-839.000000, -120.000000)" stroke-width="2">
+            <g id="overlay" transform="translate(244.000000, 70.000000)">
+                <g id="line-icon" transform="translate(596.000000, 52.000000)">
+                    <polyline id="Path-6" stroke="#DEDEDE" points="0 7.99542956 5.9272448 2 15.5581073 11.7832129 24.3433765 2"></polyline>
+                    <polyline id="Path-6" stroke="#ABABAB" points="0 11.5827311 6.08908083 16 14.0675974 0 24.3377122 7.67693466"></polyline>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

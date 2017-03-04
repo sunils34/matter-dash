@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import './ReportsPageChart.css';
 import { Row, Column } from '../Grid';
 import * as reportActions from '../../redux/actions/reports';
-import MatterBarChart from '../Charts/MatterBarChart/MatterBarChart.jsx';
+import MatterBarChart from '../Charts/MatterBarChart/MatterBarChart';
+import MatterLineChart from '../Charts/MatterLineChart/MatterLineChart';
 
 const ButtonAddToReport = ({ onClick, disabled }) => {
 
@@ -24,6 +25,21 @@ const UnselectedBody = () => (
   </Row>
 );
 
+const DataViewIcon = ({ type, active, onClick }) => {
+  let c = 'data-view-icon';
+  if (active) c += ' active';
+  return (
+  <a className={c} onClick={() => (onClick({ value: type }))}>
+    <img alt={type} src={`/images/icons/reports/${type}.svg`} />
+  </a>);
+};
+
+DataViewIcon.propTypes = {
+  onClick: React.PropTypes.func.isRequired,
+  type: React.PropTypes.string.isRequired,
+  active: React.PropTypes.bool,
+};
+
 class ReportsPageChart extends React.Component {
 
   constructor(props) {
@@ -40,14 +56,19 @@ class ReportsPageChart extends React.Component {
 
 
   render() {
-    const { initData, department, measure, timeframe } = this.props;
+    const { initData, department, measure, chart, timeframe } = this.props;
 
     let body = <UnselectedBody />;
     if (department && measure) {
       const query = { department, measure, timeframe };
-      body = (<MatterBarChart height={345} legendAlign="right" query={query} />);
-    }
+      const height = 345;
 
+      if (chart === 'bar') {
+        body = (<MatterBarChart height={height} legendAlign="right" query={query} />);
+      } else if (chart === 'line') {
+        body = (<MatterLineChart height={height} legendAlign="right" query={query} />);
+      }
+    }
 
     return (
       <Row extraClass="reports-page-chart">
@@ -87,6 +108,15 @@ class ReportsPageChart extends React.Component {
             </Row>
           </Column>
           <Column>
+            <Row><Column extraClass="description">Data View</Column></Row>
+            <Row extraClass="data-view-wrap">
+              <DataViewIcon type="bar" onClick={this.handleChangeChart} active={chart === 'bar'} />
+              <DataViewIcon type="line" onClick={this.handleChangeChart} active={chart === 'line'} />
+              <DataViewIcon type="donut" onClick={this.handleChangeChart} active={chart === 'donut'} />
+              <DataViewIcon type="table" onClick={this.handleChangeChart} active={chart === 'table'} />
+            </Row>
+          </Column>
+          <Column>
             <Row><Column extraClass="description">Time</Column></Row>
             <Row>
               <Column>
@@ -118,6 +148,7 @@ ReportsPageChart.propTypes = {
   measure: React.PropTypes.string,
   chart: React.PropTypes.string,
   timeframe: React.PropTypes.string,
+  dispatch: React.PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
