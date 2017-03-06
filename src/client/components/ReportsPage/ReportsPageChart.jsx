@@ -6,20 +6,27 @@ import { Row, Column } from '../Grid';
 import * as reportActions from '../../redux/actions/reports';
 import MatterBarChart from '../Charts/MatterBarChart/MatterBarChart';
 import MatterLineChart from '../Charts/MatterLineChart/MatterLineChart';
+import { closeReportDialog } from '../../redux/actions/reports';
 
-const ButtonAddToReport = ({ onClick, disabled }) => {
+const ButtonAddToReport = ({ dispatch, disabled }) => {
   let c = 'add-button';
+  let clickFn = () => dispatch(closeReportDialog());
   if (disabled) {
     c += ' disabled';
+    clickFn = null;
   }
   return (
     <Row right>
-      <button className={c} onClick={onClick} >Add to Report</button>
+      <button
+        onClick={clickFn}
+        className={c}
+      >Add to Report
+      </button>
     </Row>);
 };
 
 ButtonAddToReport.propTypes = {
-  onClick: React.PropTypes.func.isRequired,
+  dispatch: React.PropTypes.func.isRequired,
   disabled: React.PropTypes.bool.isRequired,
 };
 
@@ -145,7 +152,7 @@ class ReportsPageChart extends React.Component {
         </Row>
         <Column>
           {body}
-          <ButtonAddToReport disabled={disabled} />
+          <ButtonAddToReport dispatch={this.props.dispatch} disabled={disabled} />
         </Column>
       </Row>
     );

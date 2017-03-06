@@ -1,5 +1,17 @@
 import * as types from '../actionTypes/reports';
 
+export function openReportDialog() {
+  return {
+    type: types.REPORT_DIALOG_OPEN
+  }
+}
+
+export function closeReportDialog() {
+  return {
+    type: types.REPORT_DIALOG_CLOSE
+  }
+}
+
 export function changeReport({ type, value }, activeView) {
   switch (type) {
     case 'department':
@@ -27,9 +39,9 @@ export function changeReport({ type, value }, activeView) {
   }
 }
 
-export function addToReport({ details }, activeView) {
+export function addToReport(activeView) {
   return {
     type: types.REPORT_DIALOG_ADD_TO_REPORT,
-  }
+  };
 }
 

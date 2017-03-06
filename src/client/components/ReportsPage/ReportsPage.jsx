@@ -3,9 +3,10 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import Select from 'react-select';
 import ReactModal from 'react-modal';
-import { push } from 'react-router-redux';
+import { connect } from 'react-redux';
 import 'react-select/dist/react-select.css';
 import ReportsPageChart from './ReportsPageChart';
+import { openReportDialog, closeReportDialog } from '../../redux/actions/reports';
 import './ReportsPage.css';
 
 
@@ -89,11 +90,13 @@ class ReportsPage extends React.Component {
   }
 
   handleOpenModal() {
-    this.setState({ showNewModal: true });
+    //dispatch
+    this.props.dispatch(openReportDialog());
   }
 
   handleCloseModal() {
-    this.setState({ showNewModal: false });
+    //dispatch
+    this.props.dispatch(closeReportDialog());
   }
 
   render() {
@@ -110,7 +113,7 @@ class ReportsPage extends React.Component {
         <ReportsPageHeader isempty={isEmpty} organization={this.props.organization} />
         {body}
         <ReactModal
-          isOpen={this.state.showNewModal}
+          isOpen={this.props.dialogIsOpen}
           contentLabel="Add New Graph"
           onRequestClose={this.handleCloseModal}
           shouldCloseOnOverlayClick
@@ -152,4 +155,10 @@ query GetReportsPageInit{
 }
 `;
 
-export default graphql(GetReportsPageInit)(ReportsPage);
+const mapStateToProps = state => (
+  {
+    dialogIsOpen: state.reports.dialogOpen,
+  }
+);
+
+export default connect(mapStateToProps)(graphql(GetReportsPageInit)(ReportsPage));

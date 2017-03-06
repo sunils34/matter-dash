@@ -20,7 +20,7 @@ export default new ObjectType({
       type: StringType,
       description: 'Name of the user'
     },
-    created_at: {
+    createdAt: {
       type: GraphQLDate,
       description: 'Date the user signed up'
     }
