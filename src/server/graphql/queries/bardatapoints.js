@@ -118,6 +118,10 @@ const barDataPoints = {
       measure = 'eeoEthnicDescription';
     } else if (measure === 'age') {
       measure = 'ageRange';
+    } else if (measure === 'location') {
+      measure = 'location';
+    } else if (measure === 'pay grade') {
+      measure = 'payGradeCode';
     } else {
       measure = 'gender';
     }

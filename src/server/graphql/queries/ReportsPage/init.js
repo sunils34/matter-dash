@@ -41,9 +41,11 @@ const companyPageInit = {
     const results = {
       departments: await getDistinctValues(organization.id, 'department'),
       measures: [
-        { label: 'Gender', value: 'Gender' },
-        { label: 'Ethnicity', value: 'Ethnicity' },
         { label: 'Age', value: 'Age' },
+        { label: 'Ethnicity', value: 'Ethnicity' },
+        { label: 'Gender', value: 'Gender' },
+        { label: 'Location', value: 'Location' },
+        { label: 'Pay Grade', value: 'Pay Grade' },
       ],
       timeframes: [
         { label: 'Monthly', value: 'Monthly' },
