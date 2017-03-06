@@ -33,9 +33,9 @@ const DataViewIcon = ({ type, active, onClick }) => {
   let c = 'data-view-icon';
   if (active) c += ' active';
   return (
-  <a className={c} onClick={() => (onClick({ value: type }))}>
-    <img alt={type} src={`/images/icons/reports/${type}.svg`} />
-  </a>);
+    <a className={c} onClick={() => (onClick({ value: type }))}>
+      <img alt={type} src={`/images/icons/reports/${type}.svg`} />
+    </a>);
 };
 
 DataViewIcon.propTypes = {
@@ -162,13 +162,13 @@ ReportsPageChart.propTypes = {
   dispatch: React.PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
-  return {
-    department: state.reports.department,
-    measure: state.reports.measure,
-    chart: state.reports.chart,
-    timeframe: state.reports.timeframe,
-  };
-};
+const mapStateToProps = state => (
+  {
+    department: state.reports.dialog.department,
+    measure: state.reports.dialog.measure,
+    chart: state.reports.dialog.chart,
+    timeframe: state.reports.dialog.timeframe,
+  }
+);
 
 export default connect(mapStateToProps)(ReportsPageChart);

@@ -26,3 +26,10 @@ export function changeReport({ type, value }, activeView) {
       return null;
   }
 }
+
+export function addToReport({ details }, activeView) {
+  return {
+    type: types.REPORT_DIALOG_ADD_TO_REPORT,
+  }
+}
+

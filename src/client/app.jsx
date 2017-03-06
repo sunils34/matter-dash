@@ -8,7 +8,6 @@ import Routes from './routes';
 import './app.css';
 import './foundation.scss'
 
-const reduxStore = store({});
 
 // TODO ADD CSRF TOKEN
 const nInterface = createNetworkInterface({
@@ -25,6 +24,8 @@ const nInterface = createNetworkInterface({
 const client = new ApolloClient({
   networkInterface: nInterface,
 });
+
+const reduxStore = store({}, client);
 
 render(
   <ApolloProvider client={client} store={reduxStore}>

@@ -8,6 +8,6 @@ const finalCreateStore = compose(
     applyMiddleware(thunk, promiseMiddleware, reduxTimeout())
 )(createStore);
 
-export default function configureStore(initialState) {
-    return finalCreateStore(rootReducer, initialState);
+export default function configureStore(initialState, apollo) {
+    return finalCreateStore(rootReducer(apollo), initialState);
 };
