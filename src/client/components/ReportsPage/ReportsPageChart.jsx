@@ -8,7 +8,6 @@ import MatterBarChart from '../Charts/MatterBarChart/MatterBarChart';
 import MatterLineChart from '../Charts/MatterLineChart/MatterLineChart';
 
 const ButtonAddToReport = ({ onClick, disabled }) => {
-
   let c = 'add-button';
   if (disabled) {
     c += ' disabled';
@@ -17,6 +16,11 @@ const ButtonAddToReport = ({ onClick, disabled }) => {
     <Row right>
       <button className={c} onClick={onClick} >Add to Report</button>
     </Row>);
+};
+
+ButtonAddToReport.propTypes = {
+  onClick: React.PropTypes.func.isRequired,
+  disabled: React.PropTypes.bool.isRequired,
 };
 
 const UnselectedBody = () => (
@@ -59,14 +63,17 @@ class ReportsPageChart extends React.Component {
     const { initData, department, measure, chart, timeframe } = this.props;
 
     let body = <UnselectedBody />;
+    let disabled = true;
     if (department && measure) {
       const query = { department, measure, timeframe };
       const height = 345;
 
       if (chart === 'bar') {
         body = (<MatterBarChart height={height} legendAlign="right" query={query} />);
+        disabled = false;
       } else if (chart === 'line') {
         body = (<MatterLineChart height={height} legendAlign="right" query={query} />);
+        disabled = false;
       }
     }
 
@@ -109,11 +116,15 @@ class ReportsPageChart extends React.Component {
           </Column>
           <Column>
             <Row><Column extraClass="description">Data View</Column></Row>
-            <Row extraClass="data-view-wrap">
-              <DataViewIcon type="bar" onClick={this.handleChangeChart} active={chart === 'bar'} />
-              <DataViewIcon type="line" onClick={this.handleChangeChart} active={chart === 'line'} />
-              <DataViewIcon type="donut" onClick={this.handleChangeChart} active={chart === 'donut'} />
-              <DataViewIcon type="table" onClick={this.handleChangeChart} active={chart === 'table'} />
+            <Row>
+              <Column>
+                <div className="data-view-wrap">
+                  <DataViewIcon type="bar" onClick={this.handleChangeChart} active={chart === 'bar'} />
+                  <DataViewIcon type="line" onClick={this.handleChangeChart} active={chart === 'line'} />
+                  <DataViewIcon type="donut" onClick={this.handleChangeChart} active={chart === 'donut'} />
+                  <DataViewIcon type="table" onClick={this.handleChangeChart} active={chart === 'table'} />
+                </div>
+              </Column>
             </Row>
           </Column>
           <Column>
@@ -134,7 +145,7 @@ class ReportsPageChart extends React.Component {
         </Row>
         <Column>
           {body}
-          <ButtonAddToReport disabled/>
+          <ButtonAddToReport disabled={disabled} />
         </Column>
       </Row>
     );

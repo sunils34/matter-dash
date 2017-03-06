@@ -17,9 +17,13 @@
       background: #FFFFFF;
       border: 1px solid #CBCBCB;
       border-radius: 4px;
+      height: 34px;
+      display: flex;
 
       .data-view-icon {
-        margin: 10px 10px 0px 10px;
+        flex: 1;
+        padding-left: 10px;
+        display: inline-flex;
         cursor: pointer;
       }
 
@@ -31,9 +35,7 @@
   }
 
   .filter-icon {
-    cursor: pointer;
-    margin-left: 17px;
-    margin-right: 25px;
+    margin: 15px 0px 0px 17px;
     text-align: center;
     .material-icons {
       color: #6E6EE2;
@@ -60,10 +62,14 @@
     outline: none;
     padding: 10px;
     margin-right:20px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #FFFFFF;
   }
   .add-button.disabled {
     background: #ECECEC;
     color: #CBCBCB;
-    font-size: 14px;
+    cursor: default;
+    color: #CBCBCB;
   }
 }
