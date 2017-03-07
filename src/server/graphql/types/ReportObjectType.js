@@ -1,5 +1,4 @@
-import {
-  GraphQLID as ID,
+import { GraphQLID as ID,
   GraphQLObjectType as ObjectType,
   GraphQLString as StringType,
 } from 'graphql';
@@ -19,11 +18,11 @@ export default new ObjectType({
       type: GraphQLJSON,
       description: 'Extra details of the object',
     },
-    created_at: {
+    createdAt: {
       type: GraphQLDate,
       description: 'Date the object was created',
     },
-    update_at: {
+    updateAt: {
       type: GraphQLDate,
       description: 'Date the object was updated',
     },

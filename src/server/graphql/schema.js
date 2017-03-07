@@ -9,7 +9,7 @@ import piedatapoints from './queries/piedatapoints';
 import bardatapoints from './queries/bardatapoints';
 import reportsPageInit from './queries/ReportsPage/init';
 import createReport from './mutations/reports/create';
-// import addGraphToReport from './mutations/reports/addgraph';
+import updateReport from './mutations/reports/update';
 
 
 export default new Schema({
@@ -27,6 +27,7 @@ export default new Schema({
     name: 'Mutations',
     fields: () => ({
       createReport,
+      updateReport,
     }),
   }),
 });

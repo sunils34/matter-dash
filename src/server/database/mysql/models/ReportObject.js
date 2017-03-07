@@ -8,6 +8,10 @@ const ReportObject = Model.define('reportobjects', {
     defaultValue: shortid.generate,
     primaryKey: true,
   },
+  orderNumber: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0,
+  },
   type: {
     type: Sequelize.STRING,
   },
@@ -17,11 +21,11 @@ const ReportObject = Model.define('reportobjects', {
   },
   details: {
     type: Sequelize.VIRTUAL,
-    set: (val) => {
+    set: function set(val) {
       this.setDataValue('details', val); // need to do this to validate
       this.setDataValue('extraData', JSON.stringify(val));
     },
-    get: () => {
+    get: function set() {
       JSON.parse(this.get('extraData'));
     },
     validate: {
