@@ -7,6 +7,12 @@ export function dataFetched(data) {
   };
 }
 
+export function createNewReport() {
+  return {
+    type: types.REPORT_CREATE_NEW
+  }
+}
+
 export function openReportDialog() {
   return {
     type: types.REPORT_DIALOG_OPEN
@@ -52,9 +58,9 @@ export function addToReportSubmit(activeView) {
   };
 }
 
-export function addToReportSuccess(report, activeView) {
+export function updateReport(report, activeView) {
   return {
     report,
-    type: types.REPORT_DIALOG_ADD_TO_REPORT_SUCCESS,
+    type: types.REPORT_UPDATE,
   };
 }

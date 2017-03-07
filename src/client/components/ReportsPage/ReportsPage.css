@@ -40,36 +40,6 @@
   }
 }
 
-.reports-empty {
-  .visibility-off-icon {
-    height: 26px;
-    width: 30px;
-    fill: #8386ED;
-    background-image: url('/images/visibility-off-icon.svg');
-    background-size: 30px;
-    margin-right: 25px
-  }
-  .empty-text {
-    font-size: 20px;
-    color: #6E6EE2;
-    letter-spacing: 0;
-  }
-
-  .get-started-button {
-    background: #FFFFFF;
-    border-radius: 4px;
-    border: 1px solid #CBCBCB;
-    cursor: pointer;
-    padding: 12px;
-    text-decoration: none;
-    width: 100%;
-  }
-
-  .get-started-button:focus {
-    outline: none;
-  }
-}
-
 .new-report-modal {
   width: 60rem;
   height: 500px;

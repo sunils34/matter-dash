@@ -7,7 +7,7 @@ import {
   REPORT_DIALOG_CHANGE_CHART,
   REPORT_DIALOG_CHANGE_TIMEFRAME,
   REPORT_DIALOG_ADD_TO_REPORT_SUBMIT,
-  REPORT_DIALOG_ADD_TO_REPORT_SUCCESS,
+  REPORT_UPDATE,
   REPORT_PAGE_DATA_FETCHED,
 } from '../actionTypes/reports';
 
@@ -61,11 +61,9 @@ export default function reports(state = initialState, action) {
     case REPORT_DIALOG_ADD_TO_REPORT_SUBMIT:
       newState.dialog.submitting = true;
       return newState;
-    case REPORT_DIALOG_ADD_TO_REPORT_SUCCESS:
+    case REPORT_UPDATE:
       newState.dialog = _.clone(dialogDefaults);
-      if (action.report) {
-        newState.report = action.report;
-      }
+      newState.report = action.report;
       return newState;
     default:
       return state;

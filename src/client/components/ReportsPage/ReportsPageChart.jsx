@@ -78,7 +78,7 @@ class ReportsPageChart extends React.Component {
 
       this.props.mutate({ variables: { id: this.props.report.id, objects } })
         .then(({ data }) => {
-          this.props.dispatch(reportActions.addToReportSuccess(data.updateReport));
+          this.props.dispatch(reportActions.updateReport(data.updateReport));
         }).catch((error) => {
           console.log('there was an error sending the query', error);
         });

@@ -67,19 +67,6 @@ const ReportsPageHeader = ({ report, isempty, organization }) => {
   );
 };
 
-const ReportsEmptyView = ({onClick}) => (
-  <div className="container reports-empty">
-    <button onClick={onClick} className="get-started-button row align-center">
-      <div className="visibility-off-icon" />
-      <div className='empty-text'>You don't have any reports! Let's create a new graph in order to get started.</div>
-    </button>
-  </div>
-);
-
-ReportsEmptyView.propTypes = {
-  onClick: React.PropTypes.func.isRequired,
-};
-
 const ReportChartTitle = ({title, measure, department, timeframe}) => {
 
   if(!title) {
@@ -127,7 +114,6 @@ class ReportsPage extends React.Component {
 
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
-    this.onReportCreate = this.onReportCreate.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -146,14 +132,6 @@ class ReportsPage extends React.Component {
     this.props.dispatch(closeReportDialog());
   }
 
-  onReportCreate() {
-    this.props.mutate({ variables: { name: 'New Report' } })
-      .then(({ data }) => {
-        this.props.router.push(`/report/${data.createReport.id}`);
-      }).catch((error) => {
-        console.log('there was an error sending the query', error);
-      });
-  }
 
   render() {
     let body = null;
@@ -165,7 +143,7 @@ class ReportsPage extends React.Component {
     }
 
     if (isEmpty) {
-      return <ReportsEmptyView onClick={this.onReportCreate}/>;
+      return null;
     }
     else {
       body = _.map(report.objects, (object) => {
@@ -269,24 +247,6 @@ query GetReportsPageInit($id: String){
 }
 `;
 
-const CreateReportMutation = gql`
-mutation createReport($name: String!) {
-  createReport(name: $name)
-  {
-    id,
-    name,
-    createdAt,
-    details,
-    objects {
-      id,
-      orderNumber,
-      type,
-      details,
-    }
-  }
-}
-`;
-
 
 const mapStateToProps = state => (
   {
@@ -298,12 +258,11 @@ const mapStateToProps = state => (
   }
 );
 
-export default compose(
-  connect(mapStateToProps),
+export default
+connect(mapStateToProps)(
   graphql(GetReportsPageInit, {
     options: ({ params }) => {
       return { variables: { id: params.id } };
     },
-  }),
-  graphql(CreateReportMutation),
-)(ReportsPage);
+  })(ReportsPage),
+);
