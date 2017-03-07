@@ -5,6 +5,7 @@ import {
   GraphQLList as List,
 } from 'graphql';
 import sequelize from '../../../database/mysql/sequelize';
+import ReportType from '../../types/ReportType';
 
 const ReportsPageInitType = new List(new ObjectType({
   name: 'ReportsPageInitType',
@@ -27,12 +28,16 @@ const companyPageInit = {
   type: new ObjectType({
     name: 'ReportsPageInitResults',
     fields: {
+      report: { type: ReportType },
       departments: { type: ReportsPageInitType },
       measures: { type: ReportsPageInitType },
       timeframes: { type: ReportsPageInitType },
     },
   }),
-  async resolve(parent) {
+  args: {
+    id: { type: StringType },
+  },
+  async resolve(parent, args) {
     if (!parent.request.user) return null;
     const user = parent.request.user;
     const organizations = await user.getOrganizations({ raw: true });
@@ -55,6 +60,24 @@ const companyPageInit = {
 
     // include all as a department label
     results.departments.unshift({ label: 'All', value: 'All' });
+
+    // include report details if we're asking for it
+    if (args.id) {
+      user.reports = await user.getReports({
+        where: {
+          id: args.id,
+        },
+      });
+
+      if (user.reports.length) {
+        results.report = user.reports[0];
+        results.report.objects = await results.report.getReportObjects({
+          order: 'orderNumber ASC',
+        });
+      } else {
+        throw new Error('Cannot find report');
+      }
+    }
     return results;
   },
 };

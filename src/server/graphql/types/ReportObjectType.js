@@ -1,6 +1,7 @@
 import { GraphQLID as ID,
   GraphQLObjectType as ObjectType,
   GraphQLString as StringType,
+  GraphQLInt as IntType,
 } from 'graphql';
 
 import GraphQLJSON from 'graphql-type-json';
@@ -13,6 +14,10 @@ export default new ObjectType({
     type: {
       type: StringType,
       description: 'Type of the object',
+    },
+    orderNumber: {
+      type: IntType,
+      description: 'Order number',
     },
     details: {
       type: GraphQLJSON,

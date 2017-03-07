@@ -5,7 +5,9 @@ import Model from '../sequelize';
 const Report = Model.define('reports', {
   id: {
     type: Sequelize.STRING,
-    defaultValue: shortid.generate,
+    defaultValue: function gen() {
+      return `r_${shortid.generate()}`;
+    },
     primaryKey: true,
   },
   name: {

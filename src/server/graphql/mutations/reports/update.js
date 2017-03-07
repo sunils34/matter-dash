@@ -87,12 +87,10 @@ export default {
       }
     }
 
-    return {
-      id: report.id,
-      name: report.name,
-      createdAt: report.createdAt,
-      owner: user,
-      objects: reportObjects,
-    };
+    report.objects = await report.getReportObjects({
+      order: 'orderNumber ASC',
+    });
+    report.owner = user;
+    return report;
   },
 };

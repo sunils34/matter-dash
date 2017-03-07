@@ -5,7 +5,9 @@ import Model from '../sequelize';
 const ReportObject = Model.define('reportobjects', {
   id: {
     type: Sequelize.STRING,
-    defaultValue: shortid.generate,
+    defaultValue: function gen() {
+      return `ro_${shortid.generate()}`;
+    },
     primaryKey: true,
   },
   orderNumber: {
@@ -25,8 +27,8 @@ const ReportObject = Model.define('reportobjects', {
       this.setDataValue('details', val); // need to do this to validate
       this.setDataValue('extraData', JSON.stringify(val));
     },
-    get: function set() {
-      JSON.parse(this.get('extraData'));
+    get: function get() {
+      return JSON.parse(this.get('extraData'));
     },
     validate: {
       isObject: (val) => {

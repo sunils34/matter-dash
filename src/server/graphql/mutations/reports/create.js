@@ -19,7 +19,7 @@ export default {
     const report = await Report.create({
       name: args.name,
     });
-    report.setOwner(user);
+    await report.setOwner(user);
     return {
       id: report.id,
       name: report.name,

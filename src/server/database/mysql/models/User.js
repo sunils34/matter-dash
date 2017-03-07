@@ -1,6 +1,7 @@
 import Sequelize from 'sequelize';
 import Model from '../sequelize';
 import bcrypt from 'bcryptjs';
+import shortid from 'shortid';
 
 const SALT_WORK_FACTOR = 10;
 function hashPassword(password) {
@@ -17,8 +18,10 @@ function comparePassword(password, hash) {
 
 const User = Model.define('users', {
   id: {
-    type: Sequelize.UUID,
-    defaultValue: Sequelize.UUIDV1,
+    type: Sequelize.STRING,
+    defaultValue: function gen() {
+      return `u_${shortid.generate()}`;
+    },
     primaryKey: true
   },
   name: {
