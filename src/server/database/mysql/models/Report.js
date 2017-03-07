@@ -19,13 +19,12 @@ const Report = Model.define('reports', {
   },
   details: {
     type: Sequelize.VIRTUAL,
-    set: (val) => {
+    set: function set(val) {
       this.setDataValue('details', val); // need to do this to validate
       this.setDataValue('extraData', JSON.stringify(val));
     },
-    get: () => {
-      console.log(this.get('extraData'));
-      JSON.parse(this.get('extraData'));
+    get: function get() {
+      return JSON.parse(this.get('extraData'));
     },
     validate: {
       isObject: (val) => {

@@ -74,7 +74,7 @@ class ReportsPageChart extends React.Component {
         },
       };
       const objects = _.clone(this.props.report.objects);
-      objects.unshift(newObject);
+      objects.push(newObject);
 
       this.props.mutate({ variables: { id: this.props.report.id, objects } })
         .then(({ data }) => {
@@ -225,6 +225,7 @@ mutation updateReport($id: String!, $objects: [JSON]) {
   {
     id,
     name,
+    details,
     objects {
       id,
       orderNumber,

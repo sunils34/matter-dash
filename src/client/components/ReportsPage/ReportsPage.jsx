@@ -1,5 +1,5 @@
 import React from 'react';
-import { graphql } from 'react-apollo';
+import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
 import Select from 'react-select';
 import ReactModal from 'react-modal';
@@ -41,7 +41,7 @@ const ReportsPageHeader = ({ report, isempty, organization }) => {
   let viewTypeSelect = null;
   if (report && report.name) {
     name = report.name;
-    const viewType = report.details && report.detals.viewType || 'stacked';
+    const viewType = report.details && report.details.viewType || 'stacked';
 
     viewTypeSelect = (
       <Column>
@@ -67,16 +67,18 @@ const ReportsPageHeader = ({ report, isempty, organization }) => {
   );
 };
 
-const ReportsEmptyView = () => (
-  <div className="column reports-empty">
-    <div className="row align-center">
+const ReportsEmptyView = ({onClick}) => (
+  <div className="container reports-empty">
+    <button onClick={onClick} className="get-started-button row align-center">
       <div className="visibility-off-icon" />
-    </div>
-    <div className="row align-center">
       <div className='empty-text'>You don't have any reports! Let's create a new graph in order to get started.</div>
-    </div>
+    </button>
   </div>
 );
+
+ReportsEmptyView.propTypes = {
+  onClick: React.PropTypes.func.isRequired,
+};
 
 const ReportChartTitle = ({title, measure, department, timeframe}) => {
 
@@ -125,6 +127,7 @@ class ReportsPage extends React.Component {
 
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
+    this.onReportCreate = this.onReportCreate.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -143,24 +146,32 @@ class ReportsPage extends React.Component {
     this.props.dispatch(closeReportDialog());
   }
 
+  onReportCreate() {
+    this.props.mutate({ variables: { name: 'New Report' } })
+      .then(({ data }) => {
+        this.props.router.push(`/report/${data.createReport.id}`);
+      }).catch((error) => {
+        console.log('there was an error sending the query', error);
+      });
+  }
+
   render() {
     let body = null;
     const { dialogIsOpen, data, report } = this.props;
-    let isEmpty = !report || !report.objects || !report.objects.length;
+    let isEmpty = !report || !report.objects;
 
     if (data.loading) {
       return null;
     }
 
     if (isEmpty) {
-      body = <ReportsEmptyView />;
+      return <ReportsEmptyView onClick={this.onReportCreate}/>;
     }
     else {
       body = _.map(report.objects, (object) => {
         const { department, measure, timeframe } = object.details;
         const query = { department, measure, timeframe };
         const key = object.id;
-        console.log(key);
 
         const title = (
           <ReportChartTitle
@@ -258,6 +269,25 @@ query GetReportsPageInit($id: String){
 }
 `;
 
+const CreateReportMutation = gql`
+mutation createReport($name: String!) {
+  createReport(name: $name)
+  {
+    id,
+    name,
+    createdAt,
+    details,
+    objects {
+      id,
+      orderNumber,
+      type,
+      details,
+    }
+  }
+}
+`;
+
+
 const mapStateToProps = state => (
   {
     dialogIsOpen: state.reports.dialog.open,
@@ -268,8 +298,12 @@ const mapStateToProps = state => (
   }
 );
 
-export default connect(mapStateToProps)(graphql(GetReportsPageInit, {
-  options: ({ params }) => {
-    return { variables: { id: params.id } };
-  },
-})(ReportsPage));
+export default compose(
+  connect(mapStateToProps),
+  graphql(GetReportsPageInit, {
+    options: ({ params }) => {
+      return { variables: { id: params.id } };
+    },
+  }),
+  graphql(CreateReportMutation),
+)(ReportsPage);

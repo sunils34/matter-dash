@@ -13,18 +13,6 @@
     margin-bottom: 20px;
   }
 
-  .reports-empty {
-    .visibility-off-icon {
-      height: 35px;
-      width: 40px;
-      fill: #8386ED;
-      background-image: url('/images/visibility-off-icon.svg');
-    }
-    .empty-text {
-      font-size: 25px;
-      color: #6E6EE2;
-    }
-  }
 
   .reports-add {
     width: 100%;
@@ -48,7 +36,37 @@
   }
 
   .report-object-wrap {
-    margin: 50px 0px;
+    margin: 50px auto;
+  }
+}
+
+.reports-empty {
+  .visibility-off-icon {
+    height: 26px;
+    width: 30px;
+    fill: #8386ED;
+    background-image: url('/images/visibility-off-icon.svg');
+    background-size: 30px;
+    margin-right: 25px
+  }
+  .empty-text {
+    font-size: 20px;
+    color: #6E6EE2;
+    letter-spacing: 0;
+  }
+
+  .get-started-button {
+    background: #FFFFFF;
+    border-radius: 4px;
+    border: 1px solid #CBCBCB;
+    cursor: pointer;
+    padding: 12px;
+    text-decoration: none;
+    width: 100%;
+  }
+
+  .get-started-button:focus {
+    outline: none;
   }
 }
 
