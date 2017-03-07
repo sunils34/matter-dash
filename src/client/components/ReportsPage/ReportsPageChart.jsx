@@ -3,6 +3,7 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import Select from 'react-select';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 import './ReportsPageChart.css';
 import { Row, Column } from '../Grid';
 import MatterBarChart from '../Charts/MatterBarChart/MatterBarChart';
@@ -226,7 +227,9 @@ mutation updateReport($id: String!, $objects: [JSON]) {
     name,
     objects {
       id,
-      details
+      orderNumber,
+      type,
+      details,
     }
   }
 }

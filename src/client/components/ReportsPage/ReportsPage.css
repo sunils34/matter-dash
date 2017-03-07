@@ -46,6 +46,10 @@
   .reports-add:focus {
     outline: none;
   }
+
+  .report-object-wrap {
+    margin: 50px 0px;
+  }
 }
 
 .new-report-modal {

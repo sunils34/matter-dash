@@ -8,7 +8,11 @@ import 'react-select/dist/react-select.css';
 import ReportsPageChart from './ReportsPageChart';
 import { openReportDialog, closeReportDialog } from '../../redux/actions/reports';
 import './ReportsPage.css';
+import { Row, Column } from '../Grid';
 import * as reportActions from '../../redux/actions/reports';
+
+import MatterBarChart from '../Charts/MatterBarChart/MatterBarChart';
+import MatterLineChart from '../Charts/MatterLineChart/MatterLineChart';
 
 
 const ReportsAddNewGraphButton = ({onNewClick}) => {
@@ -21,61 +25,94 @@ const ReportsAddNewGraphButton = ({onNewClick}) => {
 };
 
 
-const ReportsPageHeader = ({ isempty, organization }) => {
-  var aBasicItemModel = [
+const ReportsPageHeader = ({ report, isempty, organization }) => {
+  var viewTypeModel = [
     {
-      label: "View: Stacked",
-      value: "1"
+      label: "Stacked View",
+      value: "stacked",
     },
     {
-      label: "View: ",
-      value: "2"
+      label: "Grid View",
+      value: "grid",
     }
   ];
-  let name = null;
+
+  let name = 'New Report';
   let viewTypeSelect = null;
-  if(!isempty)  {
-    //TODO get real name
-    name = "New Report";
+  if (report && report.name) {
+    name = report.name;
+    const viewType = report.details && report.detals.viewType || 'stacked';
+
     viewTypeSelect = (
-      <div className="column large-2 right-align">
-        <Select
-        clearable={false}
-        className="select-layout"
-        name="dashboardLayout"
-        value="1"
-        options={aBasicItemModel} />
-      </div>
+      <Column>
+        <Row right>
+          <Select
+            clearable={false}
+            className="select-layout"
+            name="Dashboard View"
+            value={viewType}
+            options={viewTypeModel} />
+        </Row>
+      </Column>
     );
   }
-  else {
-    name = "New Report";
-    viewTypeSelect = null;
+
+  return (
+    <Row extraClass="reports-page-header">
+      <Column extraClass="reports-name">
+        <span>{name}</span>
+      </Column>
+      {viewTypeSelect}
+    </Row>
+  );
+};
+
+const ReportsEmptyView = () => (
+  <div className="column reports-empty">
+    <div className="row align-center">
+      <div className="visibility-off-icon" />
+    </div>
+    <div className="row align-center">
+      <div className='empty-text'>You don't have any reports! Let's create a new graph in order to get started.</div>
+    </div>
+  </div>
+);
+
+const ReportChartTitle = ({title, measure, department, timeframe}) => {
+
+  if(!title) {
+    //default title
+    let periodStmt = null;
+    if(_.lowerCase(timeframe) === 'monthly') {
+      periodStmt = 'Month over Month';
+    }
+    else if(_.lowerCase(timeframe) === 'yearly') {
+      periodStmt = 'Year over Year';
+    }
+    title = `${department} Change by ${measure} ${periodStmt}`;
   }
 
   return (
-    <div className="row reports-page-header">
-      <div className="reports-name column large-2">
-        <span>{name}</span>
-      </div>
-      {viewTypeSelect}
-    </div>
-  );
+    <Row center>
+      <div className='report-chart-title'>{title}</div>
+    </Row>
+  )
+}
+
+ReportChartTitle.defaultProps = {
+  title: null,
+  measure: null,
+  department: null,
+  timeframe: null,
 };
 
-const ReportsEmptyView = ({onNewClick}) => {
-  return (
-    <div className="column reports-empty">
-      <div className="row align-center">
-        <div className="visibility-off-icon"></div>
-      </div>
-      <div className="row align-center">
-        <div className='empty-text'>You don't have any reports! Let's create a new graph in order to get started.</div>
-      </div>
-      <ReportsAddNewGraphButton onNewClick={onNewClick} />
-    </div>
-  );
+ReportChartTitle.propTypes = {
+  title: React.PropTypes.string,
+  measure : React.PropTypes.string,
+  department: React.PropTypes.string,
+  timeframe: React.PropTypes.string,
 };
+
 
 
 class ReportsPage extends React.Component {
@@ -108,19 +145,70 @@ class ReportsPage extends React.Component {
 
   render() {
     let body = null;
-    let isEmpty = true;
+    const { dialogIsOpen, data, report } = this.props;
+    let isEmpty = !report || !report.objects || !report.objects.length;
 
-    if (!this.props.data.loading) {
-      isEmpty = true;
-      body = <ReportsEmptyView onNewClick={this.handleOpenModal} />;
+    if (data.loading) {
+      return null;
+    }
+
+    if (isEmpty) {
+      body = <ReportsEmptyView />;
+    }
+    else {
+      body = _.map(report.objects, (object) => {
+        const { department, measure, timeframe } = object.details;
+        const query = { department, measure, timeframe };
+        const key = object.id;
+        console.log(key);
+
+        const title = (
+          <ReportChartTitle
+            department={department}
+            measure={measure}
+            timeframe={timeframe}
+          />);
+
+        let objectElt = null;
+
+        switch (object.type) {
+          case 'line':
+            objectElt = (
+              <MatterLineChart
+                height={400}
+                query={query}
+              />);
+            break;
+          case 'bar':
+            objectElt = (
+              <MatterBarChart
+                height={400}
+                query={query}
+              />);
+            break;
+          default:
+            return null;
+        }
+
+        return (
+          <Row key={key} extraClass="report-object-wrap">
+            <Column>
+              {title}
+              <Row>
+                {objectElt}
+              </Row>
+            </Column>
+          </Row>);
+      });
     }
 
     return (
       <div className="container reports-page">
-        <ReportsPageHeader isempty={isEmpty} organization={this.props.organization} />
+        <ReportsPageHeader report={report} isempty={isEmpty} />
         {body}
+        <ReportsAddNewGraphButton onNewClick={this.handleOpenModal} />
         <ReactModal
-          isOpen={this.props.dialogIsOpen}
+          isOpen={dialogIsOpen}
           contentLabel="Add New Graph"
           onRequestClose={this.handleCloseModal}
           shouldCloseOnOverlayClick
@@ -149,6 +237,8 @@ query GetReportsPageInit($id: String){
       name,
       objects {
         id,
+        orderNumber,
+        type,
         details
       }
     },
