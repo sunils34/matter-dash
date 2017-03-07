@@ -1,4 +1,6 @@
 import React from 'react';
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
 import Select from 'react-select';
 import { connect } from 'react-redux';
 import './ReportsPageChart.css';
@@ -7,26 +9,25 @@ import MatterBarChart from '../Charts/MatterBarChart/MatterBarChart';
 import MatterLineChart from '../Charts/MatterLineChart/MatterLineChart';
 import * as reportActions from '../../redux/actions/reports';
 
-const ButtonAddToReport = ({ dispatch, disabled }) => {
+const ButtonAddToReport = ({ disabled, onClick, isSubmitting }) => {
   let c = 'add-button';
-  let clickFn = () => dispatch(reportActions.closeReportDialog());
   if (disabled) {
     c += ' disabled';
-    clickFn = null;
+  }
+  let text = 'Add to Report';
+  if(isSubmitting) {
+    onClick = null;
+    text = 'Adding to Report';
   }
   return (
-    <Row right>
-      <button
-        onClick={clickFn}
-        className={c}
-      >Add to Report
-      </button>
-    </Row>);
+    <button onClick={onClick} className={c} >{text}</button>
+  );
 };
 
 ButtonAddToReport.propTypes = {
-  dispatch: React.PropTypes.func.isRequired,
+  onClick: React.PropTypes.func.isRequired,
   disabled: React.PropTypes.bool.isRequired,
+  isSubmitting: React.PropTypes.bool.isRequired,
 };
 
 const UnselectedBody = () => (
@@ -58,15 +59,45 @@ class ReportsPageChart extends React.Component {
     this.handleChangeMeasure = this.handleChange.bind(this, 'measure');
     this.handleChangeChart = this.handleChange.bind(this, 'chart');
     this.handleChangeTimeframe = this.handleChange.bind(this, 'timeframe');
+    this.submit = this.submit.bind(this);
+  }
+
+  componentWillReceiveProps(newProps) {
+    if(!this.props.isSubmitting && newProps.isSubmitting) {
+      const newObject = {
+        type: this.props.chart,
+        details: {
+          department: this.props.department,
+          measure: this.props.measure,
+          timeframe: this.props.timeframe,
+        },
+      };
+      const objects = _.clone(this.props.report.objects);
+      objects.unshift(newObject);
+
+      this.props.mutate({ variables: { id: this.props.report.id, objects } })
+        .then(({ data }) => {
+          this.props.dispatch(reportActions.addToReportSuccess(data.updateReport));
+        }).catch((error) => {
+          console.log('there was an error sending the query', error);
+        });
+    }
   }
 
   handleChange(type, chosenItem) {
     this.props.dispatch(reportActions.changeReport({ type, value: chosenItem.value }));
   }
 
+  submit() {
+    if(this.props.disabled || this.props.isSubmitting) return false;
+    this.props.dispatch(reportActions.addToReportSubmit());
+    return false;
+  }
+
 
   render() {
-    const { department, measure, chart, timeframe } = this.props;
+    const { department, measure, chart, timeframe, dispatch, isSubmitting } = this.props;
+    const { departments, measures, timeframes } = this.props;
 
     let body = <UnselectedBody />;
     let disabled = true;
@@ -99,8 +130,8 @@ class ReportsPageChart extends React.Component {
                   placeholder="Choose a Department"
                   name="select-departments"
                   clearable={false}
-                  value={this.props.department}
-                  options={this.props.departments}
+                  value={department}
+                  options={departments}
                 />
               </Column>
             </Row>
@@ -114,8 +145,8 @@ class ReportsPageChart extends React.Component {
                   placeholder="Choose Measure"
                   name="select-type"
                   clearable={false}
-                  value={this.props.measure}
-                  options={this.props.measures}
+                  value={measure}
+                  options={measures}
                 />
               </Column>
             </Row>
@@ -142,8 +173,8 @@ class ReportsPageChart extends React.Component {
                   placeholder="Choose Time Scale"
                   name="select-timeframes"
                   clearable={false}
-                  value={this.props.timeframe}
-                  options={this.props.timeframes}
+                  value={timeframe}
+                  options={timeframes}
                 />
               </Column>
             </Row>
@@ -151,7 +182,11 @@ class ReportsPageChart extends React.Component {
         </Row>
         <Column>
           {body}
-          <ButtonAddToReport dispatch={this.props.dispatch} disabled={disabled} />
+          <Row right>
+            <ButtonAddToReport isSubmitting={isSubmitting} 
+            onClick={this.submit}
+            disabled={disabled} />
+          </Row>
         </Column>
       </Row>
     );
@@ -174,10 +209,29 @@ const mapStateToProps = state => (
     chart: state.reports.dialog.chart,
     timeframe: state.reports.dialog.timeframe,
 
+    isSubmitting: state.reports.dialog.submitting,
+
+    report: state.reports.report,
     measures: state.reports.measures,
     timeframes: state.reports.timeframes,
     departments: state.reports.departments,
   }
 );
 
-export default connect(mapStateToProps)(ReportsPageChart);
+const AddToReportMutation = gql`
+mutation updateReport($id: String!, $objects: [JSON]) {
+  updateReport(id:$id, objects:$objects)
+  {
+    id,
+    name,
+    objects {
+      id,
+      details
+    }
+  }
+}
+`;
+
+export default connect(mapStateToProps)(
+  graphql(AddToReportMutation)(ReportsPageChart),
+);

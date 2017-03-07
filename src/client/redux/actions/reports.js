@@ -46,9 +46,15 @@ export function changeReport({ type, value }, activeView) {
   }
 }
 
-export function addToReport(activeView) {
+export function addToReportSubmit(activeView) {
   return {
-    type: types.REPORT_DIALOG_ADD_TO_REPORT,
+    type: types.REPORT_DIALOG_ADD_TO_REPORT_SUBMIT,
   };
 }
 
+export function addToReportSuccess(report, activeView) {
+  return {
+    report,
+    type: types.REPORT_DIALOG_ADD_TO_REPORT_SUCCESS,
+  };
+}

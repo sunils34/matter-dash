@@ -170,7 +170,7 @@ query GetReportsPageInit($id: String){
 
 const mapStateToProps = state => (
   {
-    dialogIsOpen: state.reports.dialogOpen,
+    dialogIsOpen: state.reports.dialog.open,
     report: state.reports.report,
     measures: state.reports.measures,
     departments: state.reports.departments,

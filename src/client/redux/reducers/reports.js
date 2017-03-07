@@ -6,18 +6,22 @@ import {
   REPORT_DIALOG_CHANGE_MEASURE,
   REPORT_DIALOG_CHANGE_CHART,
   REPORT_DIALOG_CHANGE_TIMEFRAME,
-  REPORT_DIALOG_ADD_TO_REPORT,
+  REPORT_DIALOG_ADD_TO_REPORT_SUBMIT,
+  REPORT_DIALOG_ADD_TO_REPORT_SUCCESS,
   REPORT_PAGE_DATA_FETCHED,
 } from '../actionTypes/reports';
 
+const dialogDefaults = {
+  open: false,
+  submitting: false,
+  department: 'All',
+  measure: 'Age',
+  chart: 'bar',
+  timeframe: 'Yearly',
+};
+
 const initialState = {
-  dialogIsOpen: false,
-  dialog: {
-    department: 'All',
-    measure: 'Age',
-    chart: 'bar',
-    timeframe: 'Yearly',
-  },
+  dialog: _.clone(dialogDefaults),
   report: null,
   departments: null,
   timeframes: null,
@@ -34,10 +38,10 @@ export default function reports(state = initialState, action) {
       newState.timeframes = action.data.timeframes;
       return newState;
     case REPORT_DIALOG_OPEN:
-      newState.dialogOpen = true;
+      newState.dialog.open = true;
       return newState;
     case REPORT_DIALOG_CLOSE:
-      newState.dialogOpen = false;
+      newState.dialog.open = false;
       return newState;
     case REPORT_DIALOG_CHANGE_MEASURE:
       newState.dialog.measure = action.measure;
@@ -54,8 +58,14 @@ export default function reports(state = initialState, action) {
     case REPORT_DIALOG_CHANGE_TIMEFRAME:
       newState.dialog.timeframe = action.timeframe;
       return newState;
-    case REPORT_DIALOG_CHANGE_TIMEFRAME:
-      newState.dialog.timeframe = action.timeframe;
+    case REPORT_DIALOG_ADD_TO_REPORT_SUBMIT:
+      newState.dialog.submitting = true;
+      return newState;
+    case REPORT_DIALOG_ADD_TO_REPORT_SUCCESS:
+      newState.dialog = _.clone(dialogDefaults);
+      if (action.report) {
+        newState.report = action.report;
+      }
       return newState;
     default:
       return state;
