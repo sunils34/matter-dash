@@ -1,5 +1,12 @@
 import * as types from '../actionTypes/reports';
 
+export function dataFetched(data) {
+  return {
+    type: types.REPORT_PAGE_DATA_FETCHED,
+    data,
+  };
+}
+
 export function openReportDialog() {
   return {
     type: types.REPORT_DIALOG_OPEN

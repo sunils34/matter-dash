@@ -13,7 +13,7 @@ const Routes = (
     <IndexRedirect to="/dashboard" />
     <Route path="/dashboard" component={OverviewSection} />
     <Route path="/reports" component={ReportsPage} />
-    <Route path="/reports/:id" component={ReportsPage} />
+    <Route path="/report/:id" component={ReportsPage} />
   </Route>
 );
 

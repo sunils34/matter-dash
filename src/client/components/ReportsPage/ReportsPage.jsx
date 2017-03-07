@@ -8,6 +8,7 @@ import 'react-select/dist/react-select.css';
 import ReportsPageChart from './ReportsPageChart';
 import { openReportDialog, closeReportDialog } from '../../redux/actions/reports';
 import './ReportsPage.css';
+import * as reportActions from '../../redux/actions/reports';
 
 
 const ReportsAddNewGraphButton = ({onNewClick}) => {
@@ -89,6 +90,12 @@ class ReportsPage extends React.Component {
     this.handleCloseModal = this.handleCloseModal.bind(this);
   }
 
+  componentWillReceiveProps(newProps) {
+    if (this.props.data.loading && !newProps.data.loading) {
+      this.props.dispatch(reportActions.dataFetched(newProps.data.reportsPageInit));
+    }
+  }
+
   handleOpenModal() {
     //dispatch
     this.props.dispatch(openReportDialog());
@@ -120,9 +127,7 @@ class ReportsPage extends React.Component {
           role="dialog"
           className="new-report-modal"
         >
-          <ReportsPageChart
-            initData={this.props.data.reportsPageInit}
-            />
+          <ReportsPageChart />
         </ReactModal>
       </div>
     );
@@ -137,8 +142,16 @@ ReportsPage.propTypes = {
 
 
 const GetReportsPageInit = gql`
-query GetReportsPageInit{
-  reportsPageInit {
+query GetReportsPageInit($id: String){
+  reportsPageInit(id: $id) {
+    report {
+      id,
+      name,
+      objects {
+        id,
+        details
+      }
+    },
     departments {
       label
       value
@@ -158,7 +171,15 @@ query GetReportsPageInit{
 const mapStateToProps = state => (
   {
     dialogIsOpen: state.reports.dialogOpen,
+    report: state.reports.report,
+    measures: state.reports.measures,
+    departments: state.reports.departments,
+    timeframes: state.reports.timeframes,
   }
 );
 
-export default connect(mapStateToProps)(graphql(GetReportsPageInit)(ReportsPage));
+export default connect(mapStateToProps)(graphql(GetReportsPageInit, {
+  options: ({ params }) => {
+    return { variables: { id: params.id } };
+  },
+})(ReportsPage));

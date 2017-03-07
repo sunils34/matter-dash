@@ -3,14 +3,13 @@ import Select from 'react-select';
 import { connect } from 'react-redux';
 import './ReportsPageChart.css';
 import { Row, Column } from '../Grid';
-import * as reportActions from '../../redux/actions/reports';
 import MatterBarChart from '../Charts/MatterBarChart/MatterBarChart';
 import MatterLineChart from '../Charts/MatterLineChart/MatterLineChart';
-import { closeReportDialog } from '../../redux/actions/reports';
+import * as reportActions from '../../redux/actions/reports';
 
 const ButtonAddToReport = ({ dispatch, disabled }) => {
   let c = 'add-button';
-  let clickFn = () => dispatch(closeReportDialog());
+  let clickFn = () => dispatch(reportActions.closeReportDialog());
   if (disabled) {
     c += ' disabled';
     clickFn = null;
@@ -67,7 +66,7 @@ class ReportsPageChart extends React.Component {
 
 
   render() {
-    const { initData, department, measure, chart, timeframe } = this.props;
+    const { department, measure, chart, timeframe } = this.props;
 
     let body = <UnselectedBody />;
     let disabled = true;
@@ -101,7 +100,7 @@ class ReportsPageChart extends React.Component {
                   name="select-departments"
                   clearable={false}
                   value={this.props.department}
-                  options={initData.departments}
+                  options={this.props.departments}
                 />
               </Column>
             </Row>
@@ -116,7 +115,7 @@ class ReportsPageChart extends React.Component {
                   name="select-type"
                   clearable={false}
                   value={this.props.measure}
-                  options={initData.measures}
+                  options={this.props.measures}
                 />
               </Column>
             </Row>
@@ -144,7 +143,7 @@ class ReportsPageChart extends React.Component {
                   name="select-timeframes"
                   clearable={false}
                   value={this.props.timeframe}
-                  options={initData.timeframes}
+                  options={this.props.timeframes}
                 />
               </Column>
             </Row>
@@ -161,7 +160,6 @@ class ReportsPageChart extends React.Component {
 
 
 ReportsPageChart.propTypes = {
-  initData: React.PropTypes.object,
   department: React.PropTypes.string,
   measure: React.PropTypes.string,
   chart: React.PropTypes.string,
@@ -175,6 +173,10 @@ const mapStateToProps = state => (
     measure: state.reports.dialog.measure,
     chart: state.reports.dialog.chart,
     timeframe: state.reports.dialog.timeframe,
+
+    measures: state.reports.measures,
+    timeframes: state.reports.timeframes,
+    departments: state.reports.departments,
   }
 );
 

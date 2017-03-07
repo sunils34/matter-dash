@@ -7,6 +7,7 @@ import {
   REPORT_DIALOG_CHANGE_CHART,
   REPORT_DIALOG_CHANGE_TIMEFRAME,
   REPORT_DIALOG_ADD_TO_REPORT,
+  REPORT_PAGE_DATA_FETCHED,
 } from '../actionTypes/reports';
 
 const initialState = {
@@ -17,11 +18,21 @@ const initialState = {
     chart: 'bar',
     timeframe: 'Yearly',
   },
+  report: null,
+  departments: null,
+  timeframes: null,
+  measures: null,
 };
 
 export default function reports(state = initialState, action) {
   const newState = _.clone(state);
   switch (action.type) {
+    case REPORT_PAGE_DATA_FETCHED:
+      newState.report = action.data.report;
+      newState.measures = action.data.measures;
+      newState.departments = action.data.departments;
+      newState.timeframes = action.data.timeframes;
+      return newState;
     case REPORT_DIALOG_OPEN:
       newState.dialogOpen = true;
       return newState;
@@ -39,6 +50,9 @@ export default function reports(state = initialState, action) {
       return newState;
     case REPORT_DIALOG_CHANGE_CHART:
       newState.dialog.chart = action.chart;
+      return newState;
+    case REPORT_DIALOG_CHANGE_TIMEFRAME:
+      newState.dialog.timeframe = action.timeframe;
       return newState;
     case REPORT_DIALOG_CHANGE_TIMEFRAME:
       newState.dialog.timeframe = action.timeframe;
