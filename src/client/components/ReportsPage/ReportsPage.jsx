@@ -1,5 +1,5 @@
 import React from 'react';
-import { graphql, compose } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import Select from 'react-select';
 import ReactModal from 'react-modal';
@@ -215,6 +215,7 @@ class ReportsPage extends React.Component {
           case 'line':
             objectElt = (
               <MatterLineChart
+                animationDuration={0}
                 height={400}
                 query={query}
               />);
@@ -222,6 +223,8 @@ class ReportsPage extends React.Component {
           case 'bar':
             objectElt = (
               <MatterBarChart
+                animationDuration={0}
+                type="stackedPercentage"
                 height={400}
                 query={query}
               />);

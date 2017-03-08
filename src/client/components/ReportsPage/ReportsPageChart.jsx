@@ -107,7 +107,7 @@ class ReportsPageChart extends React.Component {
       const height = 345;
 
       if (chart === 'bar') {
-        body = (<MatterBarChart height={height} legendAlign="right" query={query} />);
+        body = (<MatterBarChart type="stackedPercentage" height={height} legendAlign="right" query={query} />);
         disabled = false;
       } else if (chart === 'line') {
         body = (<MatterLineChart height={height} legendAlign="right" query={query} />);
@@ -117,76 +117,80 @@ class ReportsPageChart extends React.Component {
 
     return (
       <Row extraClass="reports-page-chart">
-        <Row extraClass="large-12 header header-row">
-          <div className="filter-icon">
-            <i className="material-icons">filter_list</i>
-            <div>Filter</div>
-          </div>
-          <Column>
-            <Row><Column extraClass="description">Department</Column></Row>
-            <Row>
-              <Column>
-                <Select
-                  onChange={this.handleChangeDepartment}
-                  placeholder="Choose a Department"
-                  name="select-departments"
-                  clearable={false}
-                  value={department}
-                  options={departments}
-                />
-              </Column>
-            </Row>
-          </Column>
-          <Column>
-            <Row><Column extraClass="description">Diversity Measure</Column></Row>
-            <Row>
-              <Column>
-                <Select
-                  onChange={this.handleChangeMeasure}
-                  placeholder="Choose Measure"
-                  name="select-type"
-                  clearable={false}
-                  value={measure}
-                  options={measures}
-                />
-              </Column>
-            </Row>
-          </Column>
-          <Column>
-            <Row><Column extraClass="description">Data View</Column></Row>
-            <Row>
-              <Column>
-                <div className="data-view-wrap">
-                  <DataViewIcon type="bar" onClick={this.handleChangeChart} active={chart === 'bar'} />
-                  <DataViewIcon type="line" onClick={this.handleChangeChart} active={chart === 'line'} />
-                  <DataViewIcon type="donut" onClick={this.handleChangeChart} active={chart === 'donut'} />
-                  <DataViewIcon type="table" onClick={this.handleChangeChart} active={chart === 'table'} />
-                </div>
-              </Column>
-            </Row>
-          </Column>
-          <Column>
-            <Row><Column extraClass="description">Time</Column></Row>
-            <Row>
-              <Column>
-                <Select
-                  onChange={this.handleChangeTimeframe}
-                  placeholder="Choose Time Scale"
-                  name="select-timeframes"
-                  clearable={false}
-                  value={timeframe}
-                  options={timeframes}
-                />
-              </Column>
-            </Row>
-          </Column>
-        </Row>
         <Column>
-          {body}
-          <Row right>
-            <ButtonAddToReport isSubmitting={isSubmitting}
-            onClick={this.submit}
-            disabled={disabled} />
+          <Row extraClass="large-12 header header-row">
+            <div className="filter-icon">
+              <i className="material-icons">filter_list</i>
+              <div>Filter</div>
+            </div>
+            <Column>
+              <Row><Column extraClass="description">Department</Column></Row>
+              <Row>
+                <Column>
+                  <Select
+                    onChange={this.handleChangeDepartment}
+                    placeholder="Choose a Department"
+                    name="select-departments"
+                    clearable={false}
+                    value={department}
+                    options={departments}
+                  />
+                </Column>
+              </Row>
+            </Column>
+            <Column>
+              <Row><Column extraClass="description">Diversity Measure</Column></Row>
+              <Row>
+                <Column>
+                  <Select
+                    onChange={this.handleChangeMeasure}
+                    placeholder="Choose Measure"
+                    name="select-type"
+                    clearable={false}
+                    value={measure}
+                    options={measures}
+                  />
+                </Column>
+              </Row>
+            </Column>
+            <Column>
+              <Row><Column extraClass="description">Data View</Column></Row>
+              <Row>
+                <Column>
+                  <div className="data-view-wrap">
+                    <DataViewIcon type="bar" onClick={this.handleChangeChart} active={chart === 'bar'} />
+                    <DataViewIcon type="line" onClick={this.handleChangeChart} active={chart === 'line'} />
+                    <DataViewIcon type="donut" onClick={this.handleChangeChart} active={chart === 'donut'} />
+                    <DataViewIcon type="table" onClick={this.handleChangeChart} active={chart === 'table'} />
+                  </div>
+                </Column>
+              </Row>
+            </Column>
+            <Column>
+              <Row><Column extraClass="description">Time</Column></Row>
+              <Row>
+                <Column>
+                  <Select
+                    onChange={this.handleChangeTimeframe}
+                    placeholder="Choose Time Scale"
+                    name="select-timeframes"
+                    clearable={false}
+                    value={timeframe}
+                    options={timeframes}
+                  />
+                </Column>
+              </Row>
+            </Column>
+          </Row>
+          <Row>
+            <Column>
+              {body}
+              <Row right>
+                <ButtonAddToReport isSubmitting={isSubmitting}
+                onClick={this.submit}
+                disabled={disabled} />
+              </Row>
+            </Column>
           </Row>
         </Column>
       </Row>

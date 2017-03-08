@@ -5,13 +5,17 @@ import gql from 'graphql-tag';
 import MatterLoadingIndicator from '../../LoadingIndicator';
 
 
-const MatterLineChart = ({ height, data }) => {
+const MatterLineChart = ({ height, data, animationDuration }) => {
 
   if (data.loading) {
+    var style = {
+      height,
+      width: '100%'
+    };
     return (
-      <ResponsiveContainer height={height} width="100%">
+      <div style={style}>
         <MatterLoadingIndicator />
-      </ResponsiveContainer>
+      </div>
     );
   }
   const dataPoints = data.bardatapoints.results;
@@ -26,7 +30,7 @@ const MatterLineChart = ({ height, data }) => {
         <Tooltip animationDuration={0} />
         <Legend iconType="circle" />
         {
-          fields.map(field => <Line type="monotone" key={`bar-${field.name}`} dataKey={field.name} strokeWidth={2} stroke={field.color} />)
+          fields.map(field => <Line animationDuration={animationDuration} type="monotone" key={`bar-${field.name}`} dataKey={field.name} strokeWidth={2} stroke={field.color} />)
         }
       </LineChart>
     </ResponsiveContainer>
@@ -34,13 +38,16 @@ const MatterLineChart = ({ height, data }) => {
 };
 
 MatterLineChart.defaultProps = {
-  height: 300,
+  animationDuration: 1500,
   data: {},
+  height: 300,
 };
 
 MatterLineChart.propTypes = {
-  height: React.PropTypes.number,
+  animationDuration: React.PropTypes.number,
   data: React.PropTypes.object,
+  height: React.PropTypes.number,
+  query: React.PropTypes.object.isRequired,
 };
 
 
