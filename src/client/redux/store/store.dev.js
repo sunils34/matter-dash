@@ -11,8 +11,8 @@ const finalCreateStore = composeEnhancers(
     applyMiddleware(thunk, promiseMiddleware, reduxTimeout())
 )(createStore);
 
-export default function configureStore(initialState) {
-    const store = finalCreateStore(rootReducer, initialState);
+export default function configureStore(initialState, apollo) {
+    const store = finalCreateStore(rootReducer(apollo), initialState);
 
     if (module.hot) {
         // Enable Webpack hot module replacement for reducers

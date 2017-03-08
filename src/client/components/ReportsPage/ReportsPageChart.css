@@ -2,16 +2,40 @@
 
   .header {
     background: #F8F8F8;
-    border: 1px solid #DEDEDE;
-    border-radius: 4px 4px 0 0;
-    padding: 10px;
-    width: 100%;
-    float: left;
+    border-bottom: 1px solid #DEDEDE;
+    margin-right: -0.0625rem;
+    margin-left: -0.9375rem;
+    padding: 15px;
+    background: #F8F8F8;
+
+    .description {
+      font-size: 11px;
+      color: #ABABAB;
+    }
+
+    .data-view-wrap {
+      background: #FFFFFF;
+      border: 1px solid #CBCBCB;
+      border-radius: 4px;
+      height: 34px;
+      display: flex;
+
+      .data-view-icon {
+        flex: 1;
+        padding-left: 10px;
+        display: inline-flex;
+        cursor: pointer;
+      }
+
+      .data-view-icon.active {
+        border: 1px solid grey;
+      }
+    }
+
   }
 
   .filter-icon {
-    cursor: pointer;
-    margin-right: 25px;
+    margin: 15px 0px 0px 17px;
     text-align: center;
     .material-icons {
       color: #6E6EE2;
@@ -22,5 +46,30 @@
       margin-top: -10px;
       font-size: 10px;
     }
+  }
+
+  .empty-state {
+    height: 345px;
+    font-size: 23px;
+    color: #DEDEDE;
+  }
+
+  .add-button {
+    background: #8386ED;
+    border-radius: 4px;
+    border: none;
+    font-size: 14px;
+    outline: none;
+    padding: 10px;
+    margin-right:20px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #FFFFFF;
+  }
+  .add-button.disabled {
+    background: #ECECEC;
+    color: #CBCBCB;
+    cursor: default;
+    color: #CBCBCB;
   }
 }

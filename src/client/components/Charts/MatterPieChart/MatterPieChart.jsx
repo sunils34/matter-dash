@@ -3,6 +3,7 @@ import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
 import _ from 'lodash';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
+import MatterLoadingIndicator from '../../LoadingIndicator';
 import './MatterPieChart.css';
 
 
@@ -67,7 +68,13 @@ class MatterPieChart extends React.Component {
   render () {
 
     var props = this.props;
-    if(this.props.data.loading) return null;
+    const height = props.height ? props.height : 380;
+    if (this.props.data.loading) {
+      return (
+        <ResponsiveContainer height={height} width="100%">
+          <MatterLoadingIndicator />
+        </ResponsiveContainer>);
+    }
 
     const dataPoints = props.data.piedatapoints.results;
     const fields = props.data.piedatapoints.fields;
@@ -106,7 +113,7 @@ class MatterPieChart extends React.Component {
       <div className='column large-11 matter-pie-chart'>
           {leftLegend}
           <div className='column'>
-            <ResponsiveContainer height={380} width="100%">
+            <ResponsiveContainer height={height} width="100%">
               <PieChart onMouseEnter={this.onPieEnter}>
                 <Pie
                   data={data}

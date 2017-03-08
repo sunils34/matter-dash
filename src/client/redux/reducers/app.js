@@ -1,9 +1,8 @@
 import {
   CHANGE_DEPARTMENT,
   CHANGE_PERIOD,
-  CHANGE_EMPLOYEES_COUNT
+  CHANGE_EMPLOYEES_COUNT,
 } from '../actionTypes/app';
-import _ from 'lodash';
 
 const initialState = {
   department: 'All',

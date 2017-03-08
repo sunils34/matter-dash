@@ -16,9 +16,7 @@ const user = {
         id: user.id,
         email: user.email,
         name: user.name,
-        created_at: user.created_at,
-        company_name:'XO Group',
-        company_total_employees: 333
+        createdAt: user.created_at,
       };
     }
     else {

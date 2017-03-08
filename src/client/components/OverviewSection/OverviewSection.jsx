@@ -227,11 +227,12 @@ class OverviewChartsBar extends React.Component {
         <div className='row align-center'>
           <div className='large-5 columns'>
             <MatterBarChart
+              type="stackedPercentage"
               componentWillUpdate={onPieChartUpdate}
-              legendAlign='left' title="Gender" query={_.extend({}, query, {type: 'gender'})} />
+              legendAlign='left' title="Gender" query={_.extend({}, query, {measure: 'gender'})} />
           </div>
           <div className='large-5 columns'>
-            <MatterBarChart height={345} legendAlign='right' title="Ethnicity" query={_.extend({}, query, {type: 'ethnicity'})}/>
+            <MatterBarChart type="stackedPercentage" height={345} legendAlign='right' title="Ethnicity" query={_.extend({}, query, {measure: 'ethnicity'})}/>
           </div>
         </div>
       </div>

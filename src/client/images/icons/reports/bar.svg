@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="23px" height="17px" viewBox="0 0 23 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>selected bar icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="03012017" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Reports---Filter-Overlay" transform="translate(-795.000000, -123.000000)" fill="#DEDEDE">
+            <g id="overlay" transform="translate(244.000000, 70.000000)">
+                <g id="bar-icon" transform="translate(551.000000, 53.000000)">
+                    <polygon id="Rectangle-4" points="0 8 4.16128193 8 4.16128193 16.0108746 0 16.0108746"></polygon>
+                    <polygon id="Rectangle-4" points="6 4 10.1612819 4 10.1612819 16.0319111 6 16.0319111"></polygon>
+                    <polygon id="Rectangle-4" points="12 3 16.1612819 3 16.1612819 15.9875448 12 15.9875448"></polygon>
+                    <rect id="Rectangle-4" x="18" y="0" width="4.16128193" height="16"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

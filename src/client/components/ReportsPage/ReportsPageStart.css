@@ -1,0 +1,58 @@
+.reports-empty-container {
+  min-height:100vh;
+  background: #F7F7F7;
+
+  .visibility-off-icon {
+    height: 26px;
+    width: 30px;
+    fill: #8386ED;
+    background-image: url('/images/visibility-off-icon.svg');
+    background-size: 30px;
+    margin-right: 25px
+  }
+  .empty-text {
+    font-size: 20px;
+    color: #6E6EE2;
+    letter-spacing: 0;
+  }
+
+  .get-started-button {
+    margin-top: 20px;
+    background: #FFFFFF;
+    border-radius: 4px;
+    border: 1px solid #CBCBCB;
+    cursor: pointer;
+    padding: 12px;
+    text-decoration: none;
+    width: 100%;
+  }
+
+  .get-started-button:focus {
+    outline: none;
+  }
+
+  .report-list-container {
+    .report-list {
+      margin-top: 30px;
+      background: white;
+      border-radius: 4px;
+      border: 1px solid #CBCBCB;
+
+      .report-list-item:last-of-type {
+        border-bottom: none;
+      }
+
+      .report-list-item:hover {
+        background: rgba(131, 134, 237,.2);
+      }
+
+      .report-list-item {
+        padding: 15px 0px 15px 15px;
+        font-size: 14px;
+        color: #4A4A4A;
+        border-bottom: 1px solid #CBCBCB;
+      }
+    }
+  }
+}
+
