@@ -10,6 +10,7 @@ import bardatapoints from './queries/bardatapoints';
 import reportsPageInit from './queries/ReportsPage/init';
 import createReport from './mutations/reports/create';
 import updateReport from './mutations/reports/update';
+import reports from './queries/reports/all';
 
 
 export default new Schema({
@@ -18,6 +19,7 @@ export default new Schema({
     fields: {
       user,
       organization,
+      reports,
       piedatapoints,
       bardatapoints,
       reportsPageInit,

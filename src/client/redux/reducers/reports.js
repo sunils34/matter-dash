@@ -23,9 +23,9 @@ const dialogDefaults = {
 const initialState = {
   dialog: _.clone(dialogDefaults),
   report: null,
-  departments: null,
-  timeframes: null,
-  measures: null,
+  start: {
+    sort: 'DESC',
+  },
 };
 
 export default function reports(state = initialState, action) {

@@ -262,7 +262,7 @@ export default
 connect(mapStateToProps)(
   graphql(GetReportsPageInit, {
     options: ({ params }) => {
-      return { variables: { id: params.id } };
+      return { variables: { id: params.id } , forceFetch: true };
     },
   })(ReportsPage),
 );

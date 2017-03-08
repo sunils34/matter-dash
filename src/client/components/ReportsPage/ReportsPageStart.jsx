@@ -1,8 +1,13 @@
 import React from 'react';
-import './ReportsPageStart.css';
-import { graphql } from 'react-apollo';
+import { graphql, compose } from 'react-apollo';
 import { connect } from 'react-redux';
+import _ from 'lodash';
+import { Link } from 'react-router';
 import gql from 'graphql-tag';
+import MatterLoadingIndicator from '../LoadingIndicator';
+import { Row, Column } from '../Grid';
+import './ReportsPageStart.css';
+import dateformat from 'dateformat';
 
 class ReportsPageStart extends React.Component {
 
@@ -20,15 +25,67 @@ class ReportsPageStart extends React.Component {
       });
   }
   render() {
-    return (
-      <div className="container reports-empty">
+    if(this.props.data.loading) {
+      return (
+        <div className="container">
+          <MatterLoadingIndicator />
+        </div>
+      );
+    }
+
+    const reports = this.props.data.reports.results;
+
+    const getStartedButton = (
+      <div className="container reports-empty-container">
         <button onClick={this.onReportCreate} className="get-started-button row align-center">
           <div className="visibility-off-icon" />
           <div className='empty-text'>You don't have any reports! Let's create a new graph in order to get started.</div>
         </button>
+      </div>
+    );
+
+    if (!reports.length) {
+      return getStartedButton;
+    }
+
+    const reportList = _.map(reports, report => (
+      <Link key={report.id} className="row report-list-item" to={`/report/${report.id}`}>
+        <Column extraClass="large-9"><Row>{report.name}</Row></Column>
+        <Column extraClass="large-1">
+          <Row>{dateformat(report.updatedAt, 'mmmm d, yyyy')}</Row>
+        </Column>
+        <Column extraClass="large-1">
+          <Row right>
+            <i className="material-icons">more_vert</i>
+          </Row>
+        </Column>
+      </Link>
+    ));
+
+    return (
+      <div className="container reports-empty-container">
+        <Row extraClass="report-list-container">
+          <Column>
+            <Row extraClass="reports-list-header">
+              <Column extraClass="large-9"><Row>Recent Reports</Row></Column>
+              <Column extraClass="large-1"><Row>Last Modified</Row></Column>
+              <Column extraClass="large-1">
+                <Row right>
+                  <i className="material-icons">list</i>
+                </Row>
+              </Column>
+            </Row>
+            <Row extraClass="report-list">
+              <Column>
+                {reportList}
+              </Column>
+            </Row>
+          </Column>
+        </Row>
+        {getStartedButton}
       </div>);
   }
-};
+}
 
 ReportsPageStart.propTypes = {
 };
@@ -51,13 +108,33 @@ mutation createReport($name: String!) {
 }
 `;
 
+const GetReports = gql`
+query reports($sort: String) {
+  reports (sort: $sort) {
+    results {
+      id,
+      name
+      details
+      updatedAt
+      createdAt
+    }
+  }
+}`;
+
 
 const mapStateToProps = state => (
   {
+    sort: state.reports.start.sort,
   }
 );
 
 
-export default connect(mapStateToProps)(
-  graphql(CreateReportMutation)(ReportsPageStart),
-);
+export default compose(
+  connect(mapStateToProps),
+  graphql(CreateReportMutation),
+  graphql(GetReports, {
+    options: ({ sort }) => {
+      return { variables: { sort }, forceFetch: true };
+    },
+  }),
+)(ReportsPageStart);

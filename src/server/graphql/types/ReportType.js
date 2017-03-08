@@ -32,7 +32,7 @@ export default new ObjectType({
       type: GraphQLDate,
       description: 'Date the report was created',
     },
-    updateAt: {
+    updatedAt: {
       type: GraphQLDate,
       description: 'Date the report was updated',
     },

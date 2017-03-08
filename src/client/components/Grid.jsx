@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Row = ({ extraClass, children, middle, center, right }) => {
+const Row = ({ extraClass, children, middle, center, right, onClick }) => {
   let c = 'row';
 
   if (middle) c += ' align-middle';
@@ -11,7 +11,7 @@ const Row = ({ extraClass, children, middle, center, right }) => {
     c += ` ${extraClass}`;
   }
   return (
-    <div className={c} >
+    <div className={c} onClick={onClick} >
       {children}
     </div>
   );
@@ -36,6 +36,7 @@ Row.defaultProps = {
   middle: false,
   center: false,
   right: false,
+  onClick: null,
 };
 
 Row.propTypes = {
@@ -44,6 +45,7 @@ Row.propTypes = {
   middle: React.PropTypes.bool,
   center: React.PropTypes.bool,
   right: React.PropTypes.bool,
+  onClick: React.PropTypes.func,
 };
 
 Column.defaultProps = {

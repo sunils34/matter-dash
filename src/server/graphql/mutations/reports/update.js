@@ -66,11 +66,6 @@ export default {
       throw new Error('This report does not exist');
     }
 
-    if (args.name) {
-      report.name = args.name;
-      report = await report.save();
-    }
-
     if (args.objects && args.objects.length) {
       for(let idx in args.objects) {
         const object = args.objects[idx];
@@ -86,6 +81,14 @@ export default {
         reportObjects.push(reportObject);
       }
     }
+
+    // update the report details
+    if (args.name) {
+      report.name = args.name;
+    }
+    report.changed('updatedAt', true);
+    report = await report.save();
+
 
     report.objects = await report.getReportObjects({
       order: 'orderNumber ASC',
