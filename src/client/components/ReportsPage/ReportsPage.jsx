@@ -5,12 +5,14 @@ import Select from 'react-select';
 import ReactModal from 'react-modal';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import DropdownMenu from 'react-dd-menu';
 import 'react-select/dist/react-select.css';
 import ReportsPageChart from './ReportsPageChart';
 import ReportsPageSaveDialog from './ReportsPageSaveDialog';
 import './ReportsPage.css';
 import { Row, Column } from '../Grid';
 import * as reportActions from '../../redux/actions/reports';
+import MatterLoadingIndicator from '../LoadingIndicator';
 
 import MatterBarChart from '../Charts/MatterBarChart/MatterBarChart';
 import MatterLineChart from '../Charts/MatterLineChart/MatterLineChart';
@@ -80,13 +82,11 @@ const ReportChartTitle = ({title, measure, department, timeframe}) => {
     else if(_.lowerCase(timeframe) === 'yearly') {
       periodStmt = 'Year over Year';
     }
-    title = `${department} Change by ${measure} ${periodStmt}`;
+    title = `${department} Growth by ${measure} ${periodStmt}`;
   }
 
   return (
-    <Row center>
-      <div className='report-chart-title'>{title}</div>
-    </Row>
+    <div className='report-chart-title'>{title}</div>
   )
 }
 
@@ -103,6 +103,49 @@ ReportChartTitle.propTypes = {
   department: React.PropTypes.string,
   timeframe: React.PropTypes.string,
 };
+
+class ReportChartMenu extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isMenuOpen: false,
+    };
+    this.toggle = this.toggle.bind(this);
+    this.deleteModule = this.deleteModule.bind(this);
+  }
+
+  toggle() {
+    this.setState({ isMenuOpen: !this.state.isMenuOpen });
+  }
+
+  close() {
+    this.setState({ isMenuOpen: false });
+  }
+
+  deleteModule() {
+    const answer = confirm("Double checking... Are you sure you want to delete this?");
+    if (answer) {
+      this.props.dispatch(reportActions.deleteObject(this.props.objectIdx));
+    }
+    this.setState({ isMenuOpen: false });
+  }
+
+  render() {
+    const menuOptions = {
+      isOpen: this.state.isMenuOpen,
+      close: this.close.bind(this),
+      align: 'right',
+      toggle: <i className="noselect settings material-icons" onClick={this.toggle}>settings</i>,
+    };
+
+    return (
+      <DropdownMenu {...menuOptions}>
+        <div className='caret'></div>
+        <li onClick={this.deleteModule}><i className="material-icons">delete</i><span>Delete Module</span></li>
+      </DropdownMenu>
+    );
+  }
+}
 
 
 
@@ -145,28 +188,26 @@ class ReportsPage extends React.Component {
 
   render() {
     let body = null;
-    const { unsaved, dialogIsOpen, data, report } = this.props;
+    const { unsaved, dialogIsOpen, data, report, dispatch } = this.props;
     let isEmpty = !report || !report.objects;
 
     if (data.loading) {
-      return null;
+      return (
+        <div className="container">
+          <MatterLoadingIndicator />
+        </div>
+      );
     }
 
     if (isEmpty) {
       return null;
-    }
-    else {
+    } else {
       body = _.map(report.objects, (object, idx) => {
+        // don't render locally deleted objects
+        if (object.deleted) return null;
         const { department, measure, timeframe } = object.details;
         const query = { department, measure, timeframe };
         const key = object.id || idx;
-
-        const title = (
-          <ReportChartTitle
-            department={department}
-            measure={measure}
-            timeframe={timeframe}
-          />);
 
         let objectElt = null;
 
@@ -192,7 +233,14 @@ class ReportsPage extends React.Component {
         return (
           <Row key={key} extraClass="report-object-wrap">
             <Column>
-              {title}
+              <Row center extraClass="report-title-wrap">
+                <ReportChartTitle
+                  department={department}
+                  measure={measure}
+                  timeframe={timeframe}
+                />
+                <ReportChartMenu dispatch={dispatch} objectIdx={idx} />
+              </Row>
               <Row>
                 {objectElt}
               </Row>

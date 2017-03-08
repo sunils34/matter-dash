@@ -55,6 +55,13 @@ export function addObject(object, activeView) {
   };
 }
 
+export function deleteObject(objectIdx) {
+  return {
+    type: types.REPORT_DELETE_OBJECT,
+    objectIdx,
+  };
+}
+
 export function updateReport(report, activeView) {
   return {
     report,

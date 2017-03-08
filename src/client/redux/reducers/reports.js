@@ -6,6 +6,7 @@ import {
   REPORT_DIALOG_CHANGE_CHART,
   REPORT_DIALOG_CHANGE_TIMEFRAME,
   REPORT_ADD_OBJECT,
+  REPORT_DELETE_OBJECT,
   REPORT_UPDATE,
   REPORT_PAGE_DATA_FETCHED,
 } from '../actionTypes/reports';
@@ -58,6 +59,10 @@ export default function reports(state = initialState, action) {
       return newState;
     case REPORT_ADD_OBJECT:
       newState.report.objects.push(action.object);
+      newState.unsaved = true;
+      return newState;
+    case REPORT_DELETE_OBJECT:
+      newState.report.objects[action.objectIdx].deleted = true;
       newState.unsaved = true;
       return newState;
     case REPORT_UPDATE:

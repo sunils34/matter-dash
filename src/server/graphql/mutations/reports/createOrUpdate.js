@@ -80,16 +80,28 @@ export default {
     if (args.objects && args.objects.length) {
       for(let idx in args.objects) {
         const object = args.objects[idx];
-        let reportObject = null;
-        if (object.id) {
-          reportObject = await updateReportObject(report, object, idx);
+
+        // delete objects first
+        if (object.deleted) {
+          if (object.id) {
+            await ReportObject.destroy({
+              where: {
+                id: object.id,
+              },
+            });
+          }
         } else {
-          reportObject = await createReportObject(report, object, idx);
+          let reportObject = null;
+          if (object.id) {
+            reportObject = await updateReportObject(report, object, idx);
+          } else {
+            reportObject = await createReportObject(report, object, idx);
+          }
+          if (reportObject.error) {
+            throw new Error(reportObject.error);
+          }
+          reportObjects.push(reportObject);
         }
-        if (reportObject.error) {
-          throw new Error(reportObject.error);
-        }
-        reportObjects.push(reportObject);
       }
     }
 
