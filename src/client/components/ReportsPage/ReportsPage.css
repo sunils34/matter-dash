@@ -1,9 +1,18 @@
 .reports-page {
   .reports-name {
-    /* My Company: */
+    margin-right: 10px;
     font-size: 27px;
     color: #4A4A4A;
   }
+
+  .reports-options {
+    text-decoration: underline;
+    margin: 0px 5px;
+    font-size: 14px;
+    color: #8386ED;
+  }
+
+
   .select-layout {
     width: 200px;
   }
@@ -38,6 +47,18 @@
   .report-object-wrap {
     margin: 50px auto;
   }
+}
+.save-modal {
+  width: 30rem;
+  height: 300px;
+  position: absolute;
+  margin: auto;
+  top: 0; left: 0; bottom: 0; right: 0;
+  border: 1px solid rgb(204, 204, 204);
+  background: rgb(255, 255, 255);
+  overflow: hidden;
+  border-radius: 4px;
+  outline: none;
 }
 
 .new-report-modal {

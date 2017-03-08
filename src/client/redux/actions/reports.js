@@ -13,16 +13,12 @@ export function createNewReport() {
   }
 }
 
-export function openReportDialog() {
+export function reportDialogToggle(dialog, openState) {
   return {
-    type: types.REPORT_DIALOG_OPEN
-  }
-}
-
-export function closeReportDialog() {
-  return {
-    type: types.REPORT_DIALOG_CLOSE
-  }
+    type: types.REPORT_DIALOG_TOGGLE,
+    dialog,
+    openState,
+  };
 }
 
 export function changeReport({ type, value }, activeView) {
@@ -52,9 +48,10 @@ export function changeReport({ type, value }, activeView) {
   }
 }
 
-export function addToReportSubmit(activeView) {
+export function addObject(object, activeView) {
   return {
-    type: types.REPORT_DIALOG_ADD_TO_REPORT_SUBMIT,
+    type: types.REPORT_ADD_OBJECT,
+    object,
   };
 }
 

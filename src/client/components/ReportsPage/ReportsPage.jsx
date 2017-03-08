@@ -6,7 +6,7 @@ import ReactModal from 'react-modal';
 import { connect } from 'react-redux';
 import 'react-select/dist/react-select.css';
 import ReportsPageChart from './ReportsPageChart';
-import { openReportDialog, closeReportDialog } from '../../redux/actions/reports';
+import ReportsPageSaveDialog from './ReportsPageSaveDialog';
 import './ReportsPage.css';
 import { Row, Column } from '../Grid';
 import * as reportActions from '../../redux/actions/reports';
@@ -25,7 +25,7 @@ const ReportsAddNewGraphButton = ({onNewClick}) => {
 };
 
 
-const ReportsPageHeader = ({ report, isempty, organization }) => {
+const ReportsPageHeader = ({ report, isempty, organization, children }) => {
   var viewTypeModel = [
     {
       label: "Stacked View",
@@ -59,8 +59,9 @@ const ReportsPageHeader = ({ report, isempty, organization }) => {
 
   return (
     <Row extraClass="reports-page-header">
-      <Column extraClass="reports-name">
-        <span>{name}</span>
+      <Column>
+        <span className="reports-name">{name}</span>
+        {children}
       </Column>
       {viewTypeSelect}
     </Row>
@@ -108,12 +109,9 @@ class ReportsPage extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      showNewModal: false
-    };
-
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
+    this.saveModalToggle = this.saveModalToggle.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -124,18 +122,23 @@ class ReportsPage extends React.Component {
 
   handleOpenModal() {
     //dispatch
-    this.props.dispatch(openReportDialog());
+    this.props.dispatch(reportActions.reportDialogToggle('addobject', true));
   }
 
   handleCloseModal() {
-    //dispatch
-    this.props.dispatch(closeReportDialog());
+    // dispatch
+    this.props.dispatch(reportActions.reportDialogToggle('addobject', false));
+  }
+
+  saveModalToggle(state) {
+    this.props.dispatch(reportActions.reportDialogToggle('save', state));
+    return false;
   }
 
 
   render() {
     let body = null;
-    const { dialogIsOpen, data, report } = this.props;
+    const { unsaved, dialogIsOpen, data, report } = this.props;
     let isEmpty = !report || !report.objects;
 
     if (data.loading) {
@@ -146,10 +149,10 @@ class ReportsPage extends React.Component {
       return null;
     }
     else {
-      body = _.map(report.objects, (object) => {
+      body = _.map(report.objects, (object, idx) => {
         const { department, measure, timeframe } = object.details;
         const query = { department, measure, timeframe };
-        const key = object.id;
+        const key = object.id || idx;
 
         const title = (
           <ReportChartTitle
@@ -193,7 +196,12 @@ class ReportsPage extends React.Component {
 
     return (
       <div className="container reports-page">
-        <ReportsPageHeader report={report} isempty={isEmpty} />
+        <ReportsPageHeader report={report} isempty={isEmpty}>
+          <a href="#" onClick={() => { this.saveModalToggle(true); }} className="reports-options">Save</a>
+          <a href="#" className="reports-options">New</a>
+          <a href="#" className="reports-options">Open</a>
+          <a href="#" className="reports-options">Reset</a>
+        </ReportsPageHeader>
         {body}
         <ReportsAddNewGraphButton onNewClick={this.handleOpenModal} />
         <ReactModal
@@ -206,12 +214,23 @@ class ReportsPage extends React.Component {
         >
           <ReportsPageChart />
         </ReactModal>
+        <ReactModal
+          isOpen={this.props.saveDialogIsOpen}
+          contentLabel="Add New Graph"
+          onRequestClose={() => { this.saveModalToggle(false); }}
+          shouldCloseOnOverlayClick
+          role="dialog"
+          className="save-modal"
+        >
+          <ReportsPageSaveDialog router={this.props.router} dispatch={this.props.dispatch} />
+        </ReactModal>
       </div>
     );
   }
 }
 
 ReportsPage.propTypes = {
+  unsaved: React.PropTypes.bool.isRequired,
   data: React.PropTypes.object,
   user: React.PropTypes.object,
   organization: React.PropTypes.object,
@@ -250,7 +269,9 @@ query GetReportsPageInit($id: String){
 
 const mapStateToProps = state => (
   {
-    dialogIsOpen: state.reports.dialog.open,
+    unsaved: state.reports.unsaved,
+    dialogIsOpen: state.reports.dialogOpenStates.addobject,
+    saveDialogIsOpen: state.reports.dialogOpenStates.save,
     report: state.reports.report,
     measures: state.reports.measures,
     departments: state.reports.departments,

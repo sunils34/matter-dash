@@ -8,8 +8,7 @@ import user from './queries/user';
 import piedatapoints from './queries/piedatapoints';
 import bardatapoints from './queries/bardatapoints';
 import reportsPageInit from './queries/ReportsPage/init';
-import createReport from './mutations/reports/create';
-import updateReport from './mutations/reports/update';
+import createOrUpdateReport from './mutations/reports/createOrUpdate';
 import reports from './queries/reports/all';
 
 
@@ -28,8 +27,7 @@ export default new Schema({
   mutation: new ObjectType({
     name: 'Mutations',
     fields: () => ({
-      createReport,
-      updateReport,
+      createOrUpdateReport,
     }),
   }),
 });

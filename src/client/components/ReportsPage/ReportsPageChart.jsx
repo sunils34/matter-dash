@@ -65,16 +65,6 @@ class ReportsPageChart extends React.Component {
 
   componentWillReceiveProps(newProps) {
     if(!this.props.isSubmitting && newProps.isSubmitting) {
-      const newObject = {
-        type: this.props.chart,
-        details: {
-          department: this.props.department,
-          measure: this.props.measure,
-          timeframe: this.props.timeframe,
-        },
-      };
-      const objects = _.clone(this.props.report.objects);
-      objects.push(newObject);
 
       this.props.mutate({ variables: { id: this.props.report.id, objects } })
         .then(({ data }) => {
@@ -91,7 +81,17 @@ class ReportsPageChart extends React.Component {
 
   submit() {
     if(this.props.disabled || this.props.isSubmitting) return false;
-    this.props.dispatch(reportActions.addToReportSubmit());
+
+    const newObject = {
+      type: this.props.chart,
+      details: {
+        department: this.props.department,
+        measure: this.props.measure,
+        timeframe: this.props.timeframe,
+      },
+    };
+    this.props.dispatch(reportActions.addObject(newObject));
+    this.props.dispatch(reportActions.reportDialogToggle('addobject', false));
     return false;
   }
 
@@ -184,7 +184,7 @@ class ReportsPageChart extends React.Component {
         <Column>
           {body}
           <Row right>
-            <ButtonAddToReport isSubmitting={isSubmitting} 
+            <ButtonAddToReport isSubmitting={isSubmitting}
             onClick={this.submit}
             disabled={disabled} />
           </Row>

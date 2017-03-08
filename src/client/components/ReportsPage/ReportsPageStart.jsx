@@ -37,10 +37,10 @@ class ReportsPageStart extends React.Component {
 
     const getStartedButton = (
       <div className="container reports-empty-container">
-        <button onClick={this.onReportCreate} className="get-started-button row align-center">
+        <Link to="/report/new" className="get-started-button row align-center">
           <div className="visibility-off-icon" />
           <div className='empty-text'>You don't have any reports! Let's create a new graph in order to get started.</div>
-        </button>
+        </Link>
       </div>
     );
 

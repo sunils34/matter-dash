@@ -50,18 +50,29 @@ export default {
   args: {
     id: { type: new NonNull(StringType) },
     name: { type: StringType },
+    details: { type: GraphQLJSON },
     objects: { type: new List(GraphQLJSON) },
   },
   async resolve(parent, args) {
     if (!parent.request.user) return null;
     const user = parent.request.user;
     const reportObjects = [];
-    let report = await Report.findOne({
-      where: {
-        id: args.id,
-        userId: user.id,
-      },
-    });
+    let report = null;
+
+    if (args.id === 'new') {
+      report = await Report.create({
+        name: args.name || 'New Report',
+        details: args.details || {},
+      });
+      await report.setOwner(user);
+    } else {
+      report = await Report.findOne({
+        where: {
+          id: args.id,
+          userId: user.id,
+        },
+      });
+    }
     if (!report) {
       throw new Error('This report does not exist');
     }

@@ -63,19 +63,31 @@ const companyPageInit = {
 
     // include report details if we're asking for it
     if (args.id) {
-      user.reports = await user.getReports({
-        where: {
-          id: args.id,
-        },
-      });
-
-      if (user.reports.length) {
-        results.report = user.reports[0];
-        results.report.objects = await results.report.getReportObjects({
-          order: 'orderNumber ASC',
-        });
+      if (args.id === 'new') {
+        results.report = {
+          id: 'new',
+          name: 'New Report',
+          details: {},
+          objects: [],
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          owner: user,
+        };
       } else {
-        throw new Error('Cannot find report');
+        user.reports = await user.getReports({
+          where: {
+            id: args.id,
+          },
+        });
+
+        if (user.reports.length) {
+          results.report = user.reports[0];
+          results.report.objects = await results.report.getReportObjects({
+            order: 'orderNumber ASC',
+          });
+        } else {
+          throw new Error('Cannot find report');
+        }
       }
     }
     return results;
