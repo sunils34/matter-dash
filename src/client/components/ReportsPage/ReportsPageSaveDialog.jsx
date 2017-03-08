@@ -1,17 +1,35 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import * as reportActions from '../../redux/actions/reports';
 import { connect } from 'react-redux';
+import * as reportActions from '../../redux/actions/reports';
+import { Row, Column } from '../Grid';
+import './ReportsPageDialogs.css';
+import '../../css/global-components.css';
 
 class ReportsPageSaveDialog extends React.Component {
   constructor(props) {
     super(props);
     this.submit = this.submit.bind(this);
+    this.state = {
+      reportName: props.report.name || 'New Report',
+    };
+    this.handleNameChange = this.handleNameChange.bind(this);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
+  }
+
+  handleKeyPress(target) {
+    if (target.charCode === 13) {
+      this.submit();
+    }
+  }
+
+  handleNameChange(event) {
+    this.setState({ reportName: event.target.value });
   }
 
   submit() {
-    this.props.mutate({ variables: { name: this.props.report.name, id: this.props.report.id, objects:this.props.report.objects } })
+    this.props.mutate({ variables: { name: this.state.reportName, id: this.props.report.id, objects:this.props.report.objects } })
       .then(({ data }) => {
         this.props.dispatch(reportActions.reportDialogToggle('save', false));
         if (this.props.report.id === 'new') {
@@ -24,7 +42,29 @@ class ReportsPageSaveDialog extends React.Component {
       });
   }
   render() {
-    return (<button onClick={this.submit}>Save</button>);
+    return (
+      <div className="dialog-container">
+        <Row middle extraClass="dialog-header">
+          <i className="material-icons">content_paste</i>
+          <span className="dialog-title">Save Report</span>
+        </Row>
+        <Row extraClass="dialog-body" middle>
+          <Column>
+            <Row center extraClass="dialog-description">Report Name</Row>
+            <Row center extraClass="dialog-input">
+              <input autoFocus
+                maxLength="100"
+                type="text"
+                value={this.state.reportName}
+                onKeyPress={this.handleKeyPress}
+                onChange={this.handleNameChange} 
+              />
+            </Row>
+            <Row center><button className="btn-primary" onClick={this.submit}>Save Report</button></Row>
+          </Column>
+        </Row>
+      </div>
+    );
   }
 }
 

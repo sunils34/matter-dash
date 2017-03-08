@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 import Select from 'react-select';
 import ReactModal from 'react-modal';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import 'react-select/dist/react-select.css';
 import ReportsPageChart from './ReportsPageChart';
 import ReportsPageSaveDialog from './ReportsPageSaveDialog';
@@ -112,6 +113,7 @@ class ReportsPage extends React.Component {
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
     this.saveModalToggle = this.saveModalToggle.bind(this);
+    this.openSaveModal = this.saveModalToggle.bind(this, true);
   }
 
   componentWillReceiveProps(newProps) {
@@ -130,7 +132,12 @@ class ReportsPage extends React.Component {
     this.props.dispatch(reportActions.reportDialogToggle('addobject', false));
   }
 
-  saveModalToggle(state) {
+  saveModalToggle(state, e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.nativeEvent.stopImmediatePropagation();
+    }
     this.props.dispatch(reportActions.reportDialogToggle('save', state));
     return false;
   }
@@ -197,8 +204,8 @@ class ReportsPage extends React.Component {
     return (
       <div className="container reports-page">
         <ReportsPageHeader report={report} isempty={isEmpty}>
-          <a href="#" onClick={() => { this.saveModalToggle(true); }} className="reports-options">Save</a>
-          <a href="#" className="reports-options">New</a>
+          <a href="#" onClick={this.openSaveModal} className="reports-options">Save</a>
+          <Link to="/report/new" className="reports-options">New</Link>
           <a href="#" className="reports-options">Open</a>
           <a href="#" className="reports-options">Reset</a>
         </ReportsPageHeader>
