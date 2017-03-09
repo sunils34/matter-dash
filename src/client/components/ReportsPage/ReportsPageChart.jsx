@@ -8,6 +8,7 @@ import './ReportsPageChart.css';
 import { Row, Column } from '../Grid';
 import MatterBarChart from '../Charts/MatterBarChart/MatterBarChart';
 import MatterLineChart from '../Charts/MatterLineChart/MatterLineChart';
+import MatterPieChart from '../Charts/MatterPieChart/MatterPieChart';
 import * as reportActions from '../../redux/actions/reports';
 
 const ButtonAddToReport = ({ disabled, onClick, isSubmitting }) => {
@@ -112,6 +113,9 @@ class ReportsPageChart extends React.Component {
       } else if (chart === 'line') {
         body = (<MatterLineChart height={height} legendAlign="right" query={query} />);
         disabled = false;
+      } else if (chart === 'donut') {
+        body = (<MatterPieChart showTotal height={height} legendAlign="right" query={query} />);
+        disabled = false;
       }
     }
 
@@ -184,7 +188,9 @@ class ReportsPageChart extends React.Component {
           </Row>
           <Row>
             <Column>
-              {body}
+              <Row center>
+                {body}
+              </Row>
               <Row right>
                 <ButtonAddToReport isSubmitting={isSubmitting}
                 onClick={this.submit}

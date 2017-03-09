@@ -5,6 +5,7 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import MatterLoadingIndicator from '../../LoadingIndicator';
 import './MatterPieChart.css';
+import { Row, Column } from '../../Grid';
 
 
 const Legend = (props) => {
@@ -67,8 +68,8 @@ class MatterPieChart extends React.Component {
 
   render () {
 
-    var props = this.props;
-    const height = props.height ? props.height : 380;
+    const props = this.props;
+    const { height, showTotal, title } = this.props;
     if (this.props.data.loading) {
       return (
         <ResponsiveContainer height={height} width="100%">
@@ -98,7 +99,7 @@ class MatterPieChart extends React.Component {
     }
 
     var leftLegend = (
-      <div className='large-2 column legend'>
+      <div className='legend'>
         <Legend payload={data} />
       </div>
     )
@@ -109,10 +110,22 @@ class MatterPieChart extends React.Component {
       leftLegend=null;
     }
 
+    let totalText = null;
+    if (showTotal && !title) {
+      totalText = (
+        <Row className="total-wrap">
+          <Column>
+            <Row center className="number">{total}</Row>
+            <Row center className="description">Total</Row>
+          </Column>
+        </Row>);
+    }
+
     return (
-      <div className='column large-11 matter-pie-chart'>
+      <div className="matter-pie-chart">
           {leftLegend}
-          <div className='column'>
+          <div className="column pie-wrap">
+            {totalText}
             <ResponsiveContainer height={height} width="100%">
               <PieChart onMouseEnter={this.onPieEnter}>
                 <Pie
@@ -139,6 +152,16 @@ class MatterPieChart extends React.Component {
   }
 }
 
+MatterPieChart.defaultProps = {
+  height: 380,
+  showTotal: false,
+};
+
+MatterPieChart.propTypes = {
+  height: React.PropTypes.number,
+  query: React.PropTypes.object.isRequired,
+  showTotal: React.PropTypes.bool.isRequired,
+};
 
 const GetPieDataPoints = gql`query GetPieDataPoints($query: JSON!) {
   piedatapoints(query: $query) {

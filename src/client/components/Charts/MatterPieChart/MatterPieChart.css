@@ -1,14 +1,38 @@
 .matter-pie-chart {
-
+  min-width: 490px;
   display: flex;
+
+  .pie-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 350px;
+
+    .total-wrap {
+      position:absolute;
+      color: #4A4A4A;
+      margin: auto;
+
+      .number {
+        font-size: 34px;
+      }
+
+      .description {
+        font-size: 
+
+
+      }
+    }
+  }
  
   .legend {
     display: flex;
+    align-items: center;
   }
 
   .legend-list {
     list-style: none;
-    margin: auto;
   }
 
   .legend-value {
