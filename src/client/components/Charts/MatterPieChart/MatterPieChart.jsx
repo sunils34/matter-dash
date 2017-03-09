@@ -172,25 +172,23 @@ class MatterPieChart extends React.Component {
             {leftLegend}
             <div className="column pie-wrap">
               {totalText}
-              <ResponsiveContainer height={height} width={width}>
-                <PieChart onMouseEnter={this.onPieEnter}>
-                  <Pie
-                    data={data}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius="50%"
-                    outerRadius="90%"
-                    activeShape={renderTitle}
-                    activeIndex={0}
-                    fill="#8884d8"
-                    //isAnimationActive={false}
-                  >
-                  {
-                    data.map(entry => <Cell key={`cell-${entry.name}`} fill={entry.color} />)
-                  }
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
+              <PieChart width={width} height={height} onMouseEnter={this.onPieEnter}>
+                <Pie
+                  data={data}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius="50%"
+                  outerRadius="90%"
+                  activeShape={renderTitle}
+                  activeIndex={0}
+                  fill="#8884d8"
+                  //isAnimationActive={false}
+                >
+                {
+                  data.map(entry => <Cell key={`cell-${entry.name}`} fill={entry.color} />)
+                }
+                </Pie>
+              </PieChart>
             </div>
             {rightLegend}
           </Row>
