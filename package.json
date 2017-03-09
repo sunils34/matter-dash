@@ -1,6 +1,6 @@
 {
   "name": "matter-app",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "Matter Application",
   "scripts": {
     "dev": "NODE_ENV=development babel-watch -L index.js --watch src/server",
