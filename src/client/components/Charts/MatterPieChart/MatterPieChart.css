@@ -49,6 +49,7 @@
     .legend-item {
       display: flex;
       align-items: center;
+      margin: 10px 0px;
 
       .legend-dot {
         margin-right: 15px;
