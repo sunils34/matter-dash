@@ -32,18 +32,29 @@ ButtonAddToReport.propTypes = {
   isSubmitting: React.PropTypes.bool.isRequired,
 };
 
-const UnselectedBody = () => (
+const UnselectedBody = ({ text }) => (
   <Row middle center extraClass="empty-state large-12">
-    <div>Add options to show visualization</div>
+    <div>{text || 'Add options to show visualization'}</div>
   </Row>
 );
 
+UnselectedBody.defaultProps = {
+  text: null,
+};
+
+UnselectedBody.proptypes = {
+  text: React.PropTypes.string.isRequired,
+};
+
 const DataViewIcon = ({ type, active, onClick }) => {
+  let icon = `${type}_unselected`;
   let c = 'data-view-icon';
-  if (active) c += ' active';
+  if (active) {
+    icon = `${type}_selected`;
+  }
   return (
     <a className={c} onClick={() => (onClick({ value: type }))}>
-      <img alt={type} src={`/images/icons/reports/${type}.svg`} />
+      <img alt={type} src={`/images/icons/reports/${icon}.svg`} />
     </a>);
 };
 
@@ -103,6 +114,10 @@ class ReportsPageChart extends React.Component {
 
     let body = <UnselectedBody />;
     let disabled = true;
+
+    let timeframeVal = timeframe;
+    let timeframePlaceholder = 'Choose a Timescale';
+
     if (department && measure) {
       const query = { department, measure, timeframe };
       const height = 345;
@@ -116,6 +131,11 @@ class ReportsPageChart extends React.Component {
       } else if (chart === 'donut') {
         body = (<MatterPieChart showTotal height={height} legendAlign="right" query={query} />);
         disabled = false;
+        timeframeVal = null;
+        timeframePlaceholder = 'Current Snapshot';
+      }
+      else {
+        body = <UnselectedBody text="Sorry, this view isn't supported yet" />;
       }
     }
 
@@ -175,11 +195,12 @@ class ReportsPageChart extends React.Component {
               <Row>
                 <Column>
                   <Select
+                    disabled={chart === "donut"}
                     onChange={this.handleChangeTimeframe}
-                    placeholder="Choose Time Scale"
+                    placeholder={timeframePlaceholder}
                     name="select-timeframes"
                     clearable={false}
-                    value={timeframe}
+                    value={timeframeVal}
                     options={timeframes}
                   />
                 </Column>

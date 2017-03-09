@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="22px" height="16px" viewBox="0 0 22 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>selected bar icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="selected-bar-icon">
+            <polygon id="Rectangle-4" fill="#F1BA00" points="0 8 4.16128193 8 4.16128193 16.0108746 0 16.0108746"></polygon>
+            <polygon id="Rectangle-4" fill="#8386ED" points="6 4 10.1612819 4 10.1612819 16.0319111 6 16.0319111"></polygon>
+            <polygon id="Rectangle-4" fill="#72D5C6" points="12 3 16.1612819 3 16.1612819 15.9875448 12 15.9875448"></polygon>
+            <rect id="Rectangle-4" fill="#E96DA4" x="18" y="0" width="4.16128193" height="16"></rect>
+        </g>
+    </g>
+</svg>

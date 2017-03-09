@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="29px" height="22px" viewBox="0 0 29 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>line icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="line-icon" stroke-width="2">
+            <polyline id="Path-6" stroke="#DEDEDE" points="2 9.99542956 7.9272448 4 17.5581073 13.7832129 26.3433765 4"></polyline>
+            <polyline id="Path-6" stroke="#ABABAB" points="2 13.5827311 8.08908083 18 16.0675974 2 26.3377122 9.67693466"></polyline>
+        </g>
+    </g>
+</svg>

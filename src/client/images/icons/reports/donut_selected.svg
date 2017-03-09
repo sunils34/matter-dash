@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="20px" height="21px" viewBox="0 0 20 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>selected donut icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="selected-donut-icon">
+            <ellipse id="Oval-2" stroke="#72D5C6" stroke-width="4" cx="10.2096585" cy="10.2151079" rx="7.20965853" ry="7.21510787"></ellipse>
+            <path d="M15.3928471,15.2302652 C16.6473852,13.9320062 17.4193171,12.1637724 17.4193171,10.2151079 C17.4193171,8.70636849 16.9565811,7.30578858 16.1653913,6.14775181" id="Oval-2" stroke="#8386ED" stroke-width="4"></path>
+            <polygon id="Path-21" fill="#FFFFFF" fill-rule="nonzero" points="12.6463131 13.3534198 17.7978287 18.5088291 18.5052025 17.8019895 13.3536869 12.6465802"></polygon>
+            <polygon id="Path-22" fill="#FFFFFF" fill-rule="nonzero" points="18.9271105 3.60515837 12.6932426 8.44832779 13.3067574 9.23801105 19.5406252 4.39484163"></polygon>
+        </g>
+    </g>
+</svg>

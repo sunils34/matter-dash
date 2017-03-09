@@ -236,7 +236,6 @@
           flex: 1 1 0px;
   padding-right: 0.625rem;
   padding-left: 0.625rem;
-  min-width: initial;
 }
 
 @media print, screen and (min-width: 40em) {
