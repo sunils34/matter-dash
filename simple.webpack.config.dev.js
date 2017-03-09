@@ -63,12 +63,6 @@ var config = {
                 include: [path.resolve(__dirname, 'src')]
             },
             {
-              // for some modules like foundation
-              test: /\.scss$/,
-              exclude: [/node_modules/], // sassLoader will include node_modules explicitly
-              loader: ExtractTextPlugin.extract("style", "css?sourceMap!postcss!sass?sourceMap&outputStyle=expanded")
-            },
-            {
                 test: /\.css?$/,
                 loader: "style-loader!css-loader!postcss-loader"
             },
@@ -92,10 +86,7 @@ var config = {
       includePaths: [path.resolve(__dirname, "node_modules")]
     },
     resolve: {
-        extensions: ['', '.js', '.jsx', '.css', '.scss'],
-        alias: {
-          foundation: path.join(__dirname, 'node_modules/foundation-sites/scss/foundation.scss')
-        }
+        extensions: ['', '.js', '.jsx', '.css'],
     },
     node: {
         dns: 'mock',
