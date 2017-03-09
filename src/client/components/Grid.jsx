@@ -26,7 +26,7 @@ const Column = ({ className, extraClass, children, small }) => {
     c += ` ${extraClass}`;
   }
   if (className) {
-    c += ` ${extraClass}`;
+    c += ` ${className}`;
   }
   if (small) c += ` small-${small}`;
   return (

@@ -151,7 +151,7 @@
 }
 
 .new-report-modal {
-  width: 60rem;
+  max-width: 60rem;
   height: 500px;
   position: absolute;
   margin: auto;

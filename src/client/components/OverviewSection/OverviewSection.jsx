@@ -189,10 +189,13 @@ class OverviewChartsPie extends React.Component {
           <div className='large-5 columns'>
             <MatterPieChart
               componentWillUpdate={onPieChartUpdate}
+              legendType="big"
               legendAlign='left' title="Gender" query={_.extend({}, query, {type: 'gender'})} />
           </div>
           <div className='large-5 columns'>
-            <MatterPieChart legendAlign='right' title="Ethnicity" query={_.extend({}, query, {type: 'ethnicity'})}/>
+            <MatterPieChart
+              legendType="big"
+              legendAlign='right' title="Ethnicity" query={_.extend({}, query, {type: 'ethnicity'})}/>
           </div>
         </div>
       </div>

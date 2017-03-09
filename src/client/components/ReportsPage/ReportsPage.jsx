@@ -247,6 +247,8 @@ class ReportsPage extends React.Component {
           case 'pie':
             objectElt = (
               <MatterPieChart
+                legendAlign="right"
+                legendType="small"
                 showTotal
                 animationDuration={0}
                 height={400}

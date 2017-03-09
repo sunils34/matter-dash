@@ -1,6 +1,4 @@
 .matter-pie-chart {
-  min-width: 490px;
-  display: flex;
 
   .pie-wrap {
     position: relative;
@@ -29,18 +27,46 @@
   .legend {
     display: flex;
     align-items: center;
+    min-width: 200px;
   }
 
   .legend-list {
     list-style: none;
   }
 
-  .legend-value {
-    font-size: 20px;
+  .legend-list.big {
+    .legend-value {
+      font-size: 20px;
+    }
+
+    .legend-name {
+      color: #B1B1B1;
+      font-size: 12px;
+    }
   }
 
-  .legend-name {
-    color: #B1B1B1;
-    font-size: 12px;
+  .legend-list.small {
+    .legend-item {
+      display: flex;
+      align-items: center;
+
+      .legend-dot {
+        margin-right: 15px;
+        display: inline-block;
+      }
+
+      .legend-name {
+        color: #B1B1B1;
+        font-size: 12px;
+        display: inline-block;
+      }
+
+      .legend-value {
+        font-size: 14px;
+        color: #4A4A4A;
+      }
+
+    }
   }
+
 }
