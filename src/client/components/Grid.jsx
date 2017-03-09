@@ -1,12 +1,15 @@
 import React from 'react';
 
-const Row = ({ extraClass, children, middle, center, right, onClick }) => {
+const Row = ({ className, extraClass, children, middle, center, right, onClick }) => {
   let c = 'row';
 
   if (middle) c += ' align-middle';
   if (center) c += ' align-center';
   if (right) c += ' align-right';
 
+  if (className) {
+    c += ` ${className}`;
+  }
   if (extraClass) {
     c += ` ${extraClass}`;
   }
@@ -17,9 +20,12 @@ const Row = ({ extraClass, children, middle, center, right, onClick }) => {
   );
 };
 
-const Column = ({ extraClass, children, small }) => {
+const Column = ({ className, extraClass, children, small }) => {
   let c = 'column';
   if (extraClass) {
+    c += ` ${extraClass}`;
+  }
+  if (className) {
     c += ` ${extraClass}`;
   }
   if (small) c += ` small-${small}`;
@@ -32,6 +38,7 @@ const Column = ({ extraClass, children, small }) => {
 
 Row.defaultProps = {
   extraClass: '',
+  className: '',
   align: '',
   middle: false,
   center: false,
@@ -41,6 +48,7 @@ Row.defaultProps = {
 
 Row.propTypes = {
   extraClass: React.PropTypes.string,
+  className: React.PropTypes.string,
   children: React.PropTypes.node.isRequired,
   middle: React.PropTypes.bool,
   center: React.PropTypes.bool,
@@ -50,12 +58,14 @@ Row.propTypes = {
 
 Column.defaultProps = {
   extraClass: '',
+  className: '',
   small: null,
 };
 
 Column.propTypes = {
   small: React.PropTypes.number,
   extraClass: React.PropTypes.string,
+  className: React.PropTypes.string,
   children: React.PropTypes.node.isRequired,
 };
 

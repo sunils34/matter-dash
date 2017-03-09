@@ -52,7 +52,7 @@ class ReportsPageSaveDialog extends React.Component {
           <Column>
             <Row center extraClass="dialog-description">Report Name</Row>
             <Row center extraClass="dialog-input">
-              <input autoFocus
+              <input className="matter-component" autoFocus
                 maxLength="100"
                 type="text"
                 value={this.state.reportName}

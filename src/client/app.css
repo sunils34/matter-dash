@@ -7,7 +7,6 @@ body {
 
 .container {
   padding: 20px;
-
 }
 
 a {
@@ -29,4 +28,13 @@ a {
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none; /* Non-prefixed version, currently
   supported by Chrome and Opera */
+}
+
+/* TODO this is a hack to fix overflow scroll bar showing up on charts */
+.recharts-responsive-container {
+  overflow: hidden;
+  div {
+    overflow: hidden !important;
+
+  }
 }

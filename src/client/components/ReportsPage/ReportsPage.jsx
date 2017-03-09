@@ -1,8 +1,9 @@
 import React from 'react';
-import { graphql, compose } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import Select from 'react-select';
 import ReactModal from 'react-modal';
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import DropdownMenu from 'react-dd-menu';
@@ -15,6 +16,7 @@ import * as reportActions from '../../redux/actions/reports';
 import MatterLoadingIndicator from '../LoadingIndicator';
 
 import MatterBarChart from '../Charts/MatterBarChart/MatterBarChart';
+import MatterPieChart from '../Charts/MatterPieChart/MatterPieChart';
 import MatterLineChart from '../Charts/MatterLineChart/MatterLineChart';
 
 
@@ -71,26 +73,37 @@ const ReportsPageHeader = ({ report, isempty, organization, children }) => {
   );
 };
 
-const ReportChartTitle = ({title, measure, department, timeframe}) => {
+const ReportChartTitle = ({ title, type, measure, department, timeframe }) => {
+  let titleText = title;
 
-  if(!title) {
-    //default title
+  if (!titleText) {
+    // default title
     let periodStmt = null;
-    if(_.lowerCase(timeframe) === 'monthly') {
-      periodStmt = 'Month over Month';
+    switch (type) {
+      case 'bar':
+      case 'line':
+        if (_.lowerCase(timeframe) === 'monthly') {
+          periodStmt = 'Month over Month';
+        } else if (_.lowerCase(timeframe) === 'yearly') {
+          periodStmt = 'Year over Year';
+        }
+        titleText = `${department} Growth by ${measure} ${periodStmt}`;
+        break;
+      case 'donut':
+        titleText = `${measure} Breakdown in ${department}`;
+        break;
+      default:
+        titleText = '';
     }
-    else if(_.lowerCase(timeframe) === 'yearly') {
-      periodStmt = 'Year over Year';
-    }
-    title = `${department} Growth by ${measure} ${periodStmt}`;
   }
 
   return (
-    <div className='report-chart-title'>{title}</div>
-  )
-}
+    <div className="report-chart-title">{titleText}</div>
+  );
+};
 
 ReportChartTitle.defaultProps = {
+  type: null,
   title: null,
   measure: null,
   department: null,
@@ -99,7 +112,8 @@ ReportChartTitle.defaultProps = {
 
 ReportChartTitle.propTypes = {
   title: React.PropTypes.string,
-  measure : React.PropTypes.string,
+  type: React.PropTypes.string,
+  measure: React.PropTypes.string,
   department: React.PropTypes.string,
   timeframe: React.PropTypes.string,
 };
@@ -123,7 +137,7 @@ class ReportChartMenu extends React.Component {
   }
 
   deleteModule() {
-    const answer = confirm("Double checking... Are you sure you want to delete this?");
+    const answer = confirm("Double Checking... Are you sure you want to delete this?");
     if (answer) {
       this.props.dispatch(reportActions.deleteObject(this.props.objectIdx));
     }
@@ -215,6 +229,7 @@ class ReportsPage extends React.Component {
           case 'line':
             objectElt = (
               <MatterLineChart
+                animationDuration={0}
                 height={400}
                 query={query}
               />);
@@ -222,6 +237,18 @@ class ReportsPage extends React.Component {
           case 'bar':
             objectElt = (
               <MatterBarChart
+                animationDuration={0}
+                type="stackedPercentage"
+                height={400}
+                query={query}
+              />);
+            break;
+          case 'donut':
+          case 'pie':
+            objectElt = (
+              <MatterPieChart
+                showTotal
+                animationDuration={0}
                 height={400}
                 query={query}
               />);
@@ -235,13 +262,14 @@ class ReportsPage extends React.Component {
             <Column>
               <Row center extraClass="report-title-wrap">
                 <ReportChartTitle
+                  type={object.type}
                   department={department}
                   measure={measure}
                   timeframe={timeframe}
                 />
                 <ReportChartMenu dispatch={dispatch} objectIdx={idx} />
               </Row>
-              <Row>
+              <Row center>
                 {objectElt}
               </Row>
             </Column>

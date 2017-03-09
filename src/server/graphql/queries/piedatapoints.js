@@ -1,20 +1,15 @@
-import Organization from '../../database/mysql/models/Organization';
-import User from '../../database/mysql/models/User';
-import {GraphQLID as ID,GraphQLNonNull as NonNull,GraphQLList as List} from 'graphql';
+import _ from 'lodash';
+import {
+  GraphQLList as List,
+  GraphQLObjectType as ObjectType,
+  GraphQLString as StringType,
+} from 'graphql';
+import GraphQLJSON from 'graphql-type-json';
 import PieDataPointType from '../types/PieDataPointType';
 import sequelize from '../../database/mysql/sequelize';
 import getFields from './fields';
 
-import {
-  GraphQLString as StringType,
-  GraphQLObjectType as ObjectType,
-} from 'graphql';
-
-import GraphQLJSON from 'graphql-type-json';
-
-
 const getPeriodStatement = (period) => {
-
   if(period == 'Last Quarter') {
     return ' AND hireDate <  NOW() - INTERVAL 3 MONTH';
   }
@@ -50,33 +45,38 @@ const pieDataPoints = {
   async resolve(parent, args) {
     if (!parent.request.user) return null;
     const user = parent.request.user;
-    const organizations = await user.getOrganizations({raw: true});
-    if(!organizations.length) return null;
-    var organization = organizations[0];
-    var query = args.query;
-    var type = query.type;
-    var results = null;
+    const organizations = await user.getOrganizations({ raw: true });
+    if (!organizations.length) return null;
+    const organization = organizations[0];
+    const query = args.query;
+    let measure = _.lowerCase(query.measure || query.type);
+    let results = null;
 
-    if(type == 'ethnicity') {
-      type = 'eeoEthnicDescription';
-    }
-    else {
-      type = 'gender';
+    if (measure === 'ethnicity') {
+      measure = 'eeoEthnicDescription';
+    } else if (measure === 'age') {
+      measure = 'ageRange';
+    } else if (measure === 'location') {
+      measure = 'location';
+    } else if (measure === 'pay grade') {
+      measure = 'payGradeCode';
+    } else {
+      measure = 'gender';
     }
 
-    var stmt = 'SELECT COUNT (*) as value, ' + type + ' as name FROM employees WHERE positionStatus = "Active" AND orgId = $orgId ';
+    let stmt = `SELECT COUNT (*) as value, ${measure} as name FROM employees WHERE positionStatus = "Active" AND orgId = $orgId `;
 
     stmt += getPeriodStatement(query.period);
 
-    if(query.department != 'All') {
+    if (query.department !== 'All') {
       stmt += ' AND department = $department ';
     }
-    stmt += ' GROUP BY ' + type;
+    stmt += ` GROUP BY ${measure}`;
     results = await sequelize.query(stmt, {
       bind: { orgId: organization.id, department: query.department },
       type: sequelize.QueryTypes.SELECT,
     });
-    const fields = await getFields(type, organization.id, sequelize);
+    const fields = await getFields(measure, organization.id, sequelize);
     return { results, fields };
   },
 };
