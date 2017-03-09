@@ -126,6 +126,7 @@ class ReportChartMenu extends React.Component {
     };
     this.toggle = this.toggle.bind(this);
     this.deleteModule = this.deleteModule.bind(this);
+    this.modifyModule = this.modifyModule.bind(this);
   }
 
   toggle() {
@@ -144,6 +145,10 @@ class ReportChartMenu extends React.Component {
     this.setState({ isMenuOpen: false });
   }
 
+  modifyModule() {
+
+  }
+
   render() {
     const menuOptions = {
       isOpen: this.state.isMenuOpen,
@@ -155,6 +160,7 @@ class ReportChartMenu extends React.Component {
     return (
       <DropdownMenu {...menuOptions}>
         <div className='caret'></div>
+        <li onClick={this.editModule}><i className="material-icons">filter_list</i><span>Modify Module</span></li>
         <li onClick={this.deleteModule}><i className="material-icons">delete</i><span>Delete Module</span></li>
       </DropdownMenu>
     );
@@ -171,6 +177,7 @@ class ReportsPage extends React.Component {
     this.handleCloseModal = this.handleCloseModal.bind(this);
     this.saveModalToggle = this.saveModalToggle.bind(this);
     this.openSaveModal = this.saveModalToggle.bind(this, true);
+    this.resetReport = this.resetReport.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -197,6 +204,16 @@ class ReportsPage extends React.Component {
     }
     this.props.dispatch(reportActions.reportDialogToggle('save', state));
     return false;
+  }
+
+  resetReport(e) {
+    if (e) {
+      console.log(e);
+      e.preventDefault();
+      e.stopPropagation();
+      e.nativeEvent.stopImmediatePropagation();
+    }
+    this.props.dispatch(reportActions.resetReport());
   }
 
 
@@ -285,7 +302,7 @@ class ReportsPage extends React.Component {
           <a href="#" onClick={this.openSaveModal} className="reports-options">Save</a>
           <Link to="/report/new" className="reports-options">New</Link>
           <a href="#" className="reports-options">Open</a>
-          <a href="#" className="reports-options">Reset</a>
+          <a href="#" onClick={this.resetReport} className="reports-options">Reset</a>
         </ReportsPageHeader>
         {body}
         <ReportsAddNewGraphButton onNewClick={this.handleOpenModal} />

@@ -55,6 +55,12 @@ export function addObject(object, activeView) {
   };
 }
 
+export function resetReport() {
+  return {
+    type: types.REPORT_RESET,
+  };
+}
+
 export function deleteObject(objectIdx) {
   return {
     type: types.REPORT_DELETE_OBJECT,

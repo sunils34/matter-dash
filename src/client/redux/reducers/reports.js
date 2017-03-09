@@ -8,6 +8,7 @@ import {
   REPORT_ADD_OBJECT,
   REPORT_DELETE_OBJECT,
   REPORT_UPDATE,
+  REPORT_RESET,
   REPORT_PAGE_DATA_FETCHED,
 } from '../actionTypes/reports';
 
@@ -26,6 +27,7 @@ const initialState = {
     save: false,
   },
   report: null,
+  lastSavedReport: null,
   unsaved: false,
   saveDialogOpen: false,
   start: {
@@ -38,9 +40,11 @@ export default function reports(state = initialState, action) {
   switch (action.type) {
     case REPORT_PAGE_DATA_FETCHED:
       newState.report = action.data.report;
+      newState.lastSavedReport = _.cloneDeep(newState.report);
       newState.measures = action.data.measures;
       newState.departments = action.data.departments;
       newState.timeframes = action.data.timeframes;
+      newState.unsaved = false;
       return newState;
     case REPORT_DIALOG_TOGGLE:
       newState.dialogOpenStates[action.dialog] = action.openState;
@@ -65,9 +69,14 @@ export default function reports(state = initialState, action) {
       newState.report.objects[action.objectIdx].deleted = true;
       newState.unsaved = true;
       return newState;
+    case REPORT_RESET:
+      newState.unsaved = false;
+      newState.report = _.cloneDeep(newState.lastSavedReport);
+      return newState;
     case REPORT_UPDATE:
       newState.dialog = _.clone(dialogDefaults);
       newState.report = action.report;
+      newState.lastSavedReport = _.cloneDeep(newState.report);
       newState.unsaved = false;
       newState.dialogOpenStates = {
         addobject: false,
