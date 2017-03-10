@@ -57,7 +57,7 @@ const ReportsPageHeader = ({ report, isempty, organization, children, dispatch }
     name = report.name;
     let viewType = 'grid';
     if (report.details && report.details.viewType && report.details.viewType === 'stacked') {
-      viewType = 'grid';
+      viewType = 'stacked';
     }
 
     viewTypeSelect = (
