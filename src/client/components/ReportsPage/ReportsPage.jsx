@@ -182,9 +182,14 @@ class ReportsPage extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if (this.props.data.loading && !newProps.data.loading) {
-      this.props.dispatch(reportActions.dataFetched(newProps.data.reportsPageInit));
+    if (this.props.loading && !newProps.loading) {
+      this.props.dispatch(reportActions.dataFetched(newProps.reportsPageInit));
     }
+  }
+
+  shouldComponentUpdate(nextProps) {
+    // TODO for some reason, the report is rerendering even though props are the same
+    return !_.isEqual(this.props, nextProps);
   }
 
   handleOpenModal() {
@@ -219,10 +224,10 @@ class ReportsPage extends React.Component {
 
   render() {
     let body = null;
-    const { unsaved, dialogIsOpen, data, report, dispatch } = this.props;
+    const { loading, unsaved, dialogIsOpen, data, report, dispatch } = this.props;
     let isEmpty = !report || !report.objects;
 
-    if (data.loading) {
+    if (loading) {
       return (
         <div className="container">
           <MatterLoadingIndicator />
@@ -375,9 +380,6 @@ const mapStateToProps = state => (
     dialogIsOpen: state.reports.dialogOpenStates.addobject,
     saveDialogIsOpen: state.reports.dialogOpenStates.save,
     report: state.reports.report,
-    measures: state.reports.measures,
-    departments: state.reports.departments,
-    timeframes: state.reports.timeframes,
   }
 );
 
@@ -385,7 +387,11 @@ export default
 connect(mapStateToProps)(
   graphql(GetReportsPageInit, {
     options: ({ params }) => {
-      return { variables: { id: params.id } , forceFetch: true };
+      return { variables: { id: params.id }, forceFetch: true };
     },
+    props: ({ data: { loading, reportsPageInit } }) => ({
+      loading,
+      reportsPageInit,
+    }),
   })(ReportsPage),
 );

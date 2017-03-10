@@ -50,7 +50,7 @@ const companyPageInit = {
         { label: 'Ethnicity', value: 'Ethnicity' },
         { label: 'Gender', value: 'Gender' },
         { label: 'Location', value: 'Location' },
-        { label: 'Pay Grade', value: 'Pay Grade' },
+     /*   { label: 'Pay Grade', value: 'Pay Grade' }, */
       ],
       timeframes: [
         { label: 'Monthly', value: 'Monthly' },

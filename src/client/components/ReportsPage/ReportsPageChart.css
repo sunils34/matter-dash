@@ -24,10 +24,6 @@
         display: inline-flex;
         cursor: pointer;
       }
-
-      .data-view-icon.active {
-        padding-left: 9px;
-      }
     }
 
   }

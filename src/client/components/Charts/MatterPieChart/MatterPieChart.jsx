@@ -95,25 +95,19 @@ class MatterPieChart extends React.Component {
     super(props);
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    if(this.props.componentWillUpdate) {
-      this.props.componentWillUpdate(nextProps, nextState);
-    }
-  }
-
-  render () {
+  render() {
 
     const props = this.props;
-    const { height, width, showTotal, title, legendType } = this.props;
-    if (this.props.data.loading) {
+    const { height, width, showTotal, title, legendType, loading, piedatapoints } = this.props;
+    if (loading) {
       return (
         <ResponsiveContainer height={height} width="100%">
           <MatterLoadingIndicator />
         </ResponsiveContainer>);
     }
 
-    const dataPoints = props.data.piedatapoints.results;
-    const fields = props.data.piedatapoints.fields;
+    const dataPoints = piedatapoints.results;
+    const fields = piedatapoints.fields;
 
     var total = 0;
     _.map(dataPoints, (element) => {
@@ -227,4 +221,8 @@ const GetPieDataPoints = gql`query GetPieDataPoints($query: JSON!) {
 
 module.exports = graphql(GetPieDataPoints, {
   options: ({ query }) => ({ variables: { query } }),
+  props: ({ data: { loading, piedatapoints } }) => ({
+    loading,
+    piedatapoints,
+  }),
 })(MatterPieChart);
