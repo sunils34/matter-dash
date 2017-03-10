@@ -26,10 +26,16 @@ const convertToPercentageData = (data, fields) => {
 };
 
 class MatterBarChart extends React.Component {
-  render() {
-    const { animationDuration, height } = this.props;
 
-    if(this.props.data.loading) {
+  shouldComponentUpdate(nextProps) {
+    // TODO for some reason, the report is rerendering even though props are the same
+    return !_.isEqual(this.props, nextProps);
+  }
+
+  render() {
+    const { animationDuration, height, bardatapoints, loading } = this.props;
+
+    if(loading) {
       var style = {
         height,
         width: '100%'
@@ -41,8 +47,8 @@ class MatterBarChart extends React.Component {
       );
     }
 
-    let data = this.props.data.bardatapoints.results;
-    let fields = this.props.data.bardatapoints.fields;
+    let data = bardatapoints.results;
+    let fields = bardatapoints.fields;
 
     let unit = '';
     let domain = [0, 'auto'];
@@ -85,16 +91,22 @@ const GetBarDataPoints = gql`query GetBarDataPoints($query: JSON!){
 MatterBarChart.defaultProps = {
   animationDuration: 1500,
   height: 300,
+  bardatapoints: {},
 };
 
 MatterBarChart.propTypes = {
   query: React.PropTypes.object.isRequired,
-  data: React.PropTypes.object,
+  loading: React.PropTypes.bool.isRequired,
+  bardatapoints: React.PropTypes.object,
   animationDuration: React.PropTypes.number,
   height: React.PropTypes.number,
 };
 
 module.exports = graphql(GetBarDataPoints, {
   options: ({ query }) => ({ variables: { query } }),
+  props: ({ data: { loading, bardatapoints } }) => ({
+    loading,
+    bardatapoints,
+  }),
 })(MatterBarChart);
 

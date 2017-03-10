@@ -2,7 +2,6 @@ body {
   margin: 0px;
   background: white;
   font-family: 'Nunito Sans', sans-serif;
-  min-width: 600px;
   overflow: scroll;
 }
 

@@ -55,8 +55,8 @@ const ReportsPageHeader = ({ report, isempty, organization, children, dispatch }
   let viewTypeSelect = null;
   if (report && report.name) {
     name = report.name;
-    let viewType = 'stacked';
-    if (report.details && report.details.viewType && report.details.viewType == 'grid') {
+    let viewType = 'grid';
+    if (report.details && report.details.viewType && report.details.viewType === 'stacked') {
       viewType = 'grid';
     }
 
@@ -273,12 +273,12 @@ class ReportsPage extends React.Component {
     const { loading, unsaved, dialogIsOpen, data, report, dispatch } = this.props;
     let isEmpty = !report || !report.objects;
 
-    let containerClass = 'report-object large-12';
-    let pieWidth = 360;
+    let containerClass = 'report-object large-6 medium-12';
+    let pieWidth = 200;
 
-    if (report && report.details && report.details.viewType === 'grid') {
-      containerClass = 'report-object large-6 medium-12';
-      pieWidth = 200;
+    if (report && report.details && report.details.viewType === 'stacked') {
+      pieWidth = 360;
+      containerClass = 'report-object large-12';
     }
 
     if (loading) {
@@ -305,7 +305,6 @@ class ReportsPage extends React.Component {
           case 'line':
             objectElt = (
               <MatterLineChart
-                animationDuration={0}
                 height={400}
                 query={query}
               />);
@@ -313,7 +312,6 @@ class ReportsPage extends React.Component {
           case 'bar':
             objectElt = (
               <MatterBarChart
-                animationDuration={0}
                 type="stackedPercentage"
                 height={400}
                 query={query}

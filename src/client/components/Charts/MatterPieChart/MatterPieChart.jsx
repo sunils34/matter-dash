@@ -93,10 +93,6 @@ const renderTitle = (props) => {
 
 class MatterPieChart extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   shouldComponentUpdate(nextProps) {
     // TODO for some reason, the report is rerendering even though props are the same
     return !_.isEqual(this.props, nextProps);
