@@ -25,16 +25,16 @@
 
 
   .reports-add {
-    width: 100%;
     background: #F8F8F8;
-    border: 1px solid #DEDEDE;
     border-radius: 4px;
-    padding: 12px;
-    cursor: pointer;
-    text-decoration: none;
-
-    font-size: 20px;
+    border: 1px solid #DEDEDE;
     color: #CBCBCB;
+    cursor: pointer;
+    font-size: 20px;
+    margin-bottom: 100px;
+    padding: 12px;
+    text-decoration: none;
+    width: 100%;
 
     i {
       margin-right: 15px;
