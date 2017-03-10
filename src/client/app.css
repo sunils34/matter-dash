@@ -39,3 +39,7 @@ a {
 
   }
 }
+
+.Select-control {
+  cursor: pointer;
+}

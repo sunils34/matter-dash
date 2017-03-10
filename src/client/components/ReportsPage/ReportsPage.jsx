@@ -64,6 +64,7 @@ const ReportsPageHeader = ({ report, isempty, organization, children, dispatch }
       <Column>
         <Row right>
           <Select
+            searchable={false}
             onChange={onChange}
             clearable={false}
             className="select-layout"

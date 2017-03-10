@@ -179,6 +179,7 @@ class ReportsPageChart extends React.Component {
                 <Column>
                   <Select
                     onChange={this.handleChangeMeasure}
+                    searchable={false}
                     placeholder="Choose Measure"
                     name="select-type"
                     clearable={false}
@@ -207,6 +208,7 @@ class ReportsPageChart extends React.Component {
                 <Column>
                   <Select
                     disabled={chart === "donut"}
+                    searchable={false}
                     onChange={this.handleChangeTimeframe}
                     placeholder={timeframePlaceholder}
                     name="select-timeframes"
