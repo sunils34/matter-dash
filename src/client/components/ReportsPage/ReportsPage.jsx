@@ -189,6 +189,15 @@ class _ReportsPageSaveFooter extends React.Component {
     this.save = this.save.bind(this);
   }
 
+  componentWillReceiveProps(newProps) {
+    // show in the title a star which indicates it's unsaved
+    if(newProps.isUnsaved) {
+      document.title = `* ${document.title}`;
+    } else {
+      document.title = document.title.replace('* ', '');
+    }
+  }
+
   save() {
     this.props.dispatch(reportActions.reportDialogToggle('save', true));
   }
