@@ -35,7 +35,9 @@ const LegendBig = (props) => {
 }
 
 const LegendDot = ({ color }) => (
-  <svg className="legend-dot recharts-surface" width="14" height="14" viewBox="0 0 32 32" version="1.1"><path fill={color} className="recharts-symbols" transform="translate(16, 16)" d="M16,0A16,16,0,1,1,-16,0A16,16,0,1,1,16,0"></path></svg>
+  <svg className="legend-dot recharts-surface" width="14" height="14" viewBox="0 0 32 32" version="1.1">
+    <path fill={color} className="recharts-symbols" transform="translate(16, 16)" d="M16,0A16,16,0,1,1,-16,0A16,16,0,1,1,16,0"></path>
+  </svg>
 );
 
 const LegendSmall = ({ payload }) => {
@@ -95,9 +97,14 @@ class MatterPieChart extends React.Component {
     super(props);
   }
 
+  shouldComponentUpdate(nextProps) {
+    // TODO for some reason, the report is rerendering even though props are the same
+    return !_.isEqual(this.props, nextProps);
+  }
+
   render() {
     const props = this.props;
-    const { height, width, showTotal, title, legendType, loading, piedatapoints } = this.props;
+    const { animationDuration, height, width, showTotal, title, legendType, loading, piedatapoints } = this.props;
     if (loading) {
       return (
         <ResponsiveContainer height={height} width="100%">
@@ -175,6 +182,7 @@ class MatterPieChart extends React.Component {
                   activeShape={renderTitle}
                   activeIndex={0}
                   fill="#8884d8"
+                  animationDuration={animationDuration}
                   //isAnimationActive={false}
                 >
                 {
@@ -192,18 +200,20 @@ class MatterPieChart extends React.Component {
 }
 
 MatterPieChart.defaultProps = {
+  animationDuration: 1500,
   height: 400,
-  width: 360,
-  showTotal: false,
   legendType: 'small',
+  showTotal: false,
+  width: 360,
 };
 
 MatterPieChart.propTypes = {
-  legendType: React.PropTypes.string,
+  animationDuration: React.PropTypes.number,
   height: React.PropTypes.number,
-  width: React.PropTypes.number,
+  legendType: React.PropTypes.string,
   query: React.PropTypes.object.isRequired,
   showTotal: React.PropTypes.bool.isRequired,
+  width: React.PropTypes.number,
 };
 
 const GetPieDataPoints = gql`query GetPieDataPoints($query: JSON!) {

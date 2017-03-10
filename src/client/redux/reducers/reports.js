@@ -126,6 +126,7 @@ export default function reports(state = initialState, action) {
         ...newState.report.details,
         viewType: action.viewType,
       };
+      newState.unsaved = true;
       return newState;
     default:
       return state;
