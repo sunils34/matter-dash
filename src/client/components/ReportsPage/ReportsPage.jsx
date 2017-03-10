@@ -146,7 +146,8 @@ class ReportChartMenu extends React.Component {
   }
 
   modifyModule() {
-
+    this.props.dispatch(reportActions.modifyObjectDialogOpen(this.props.objectIdx));
+    this.setState({ isMenuOpen: false });
   }
 
   render() {
@@ -160,7 +161,7 @@ class ReportChartMenu extends React.Component {
     return (
       <DropdownMenu {...menuOptions}>
         <div className='caret'></div>
-        <li onClick={this.editModule}><i className="material-icons">filter_list</i><span>Modify Module</span></li>
+        <li onClick={this.modifyModule}><i className="material-icons">filter_list</i><span>Modify Module</span></li>
         <li onClick={this.deleteModule}><i className="material-icons">delete</i><span>Delete Module</span></li>
       </DropdownMenu>
     );
@@ -208,7 +209,6 @@ class ReportsPage extends React.Component {
 
   resetReport(e) {
     if (e) {
-      console.log(e);
       e.preventDefault();
       e.stopPropagation();
       e.nativeEvent.stopImmediatePropagation();

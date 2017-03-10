@@ -5,7 +5,8 @@ import {
   REPORT_DIALOG_CHANGE_MEASURE,
   REPORT_DIALOG_CHANGE_CHART,
   REPORT_DIALOG_CHANGE_TIMEFRAME,
-  REPORT_ADD_OBJECT,
+  REPORT_DIALOG_MODIFY_OBJECT_OPEN,
+  REPORT_ADD_OR_SAVE_OBJECT,
   REPORT_DELETE_OBJECT,
   REPORT_UPDATE,
   REPORT_RESET,
@@ -29,6 +30,7 @@ const initialState = {
   report: null,
   lastSavedReport: null,
   unsaved: false,
+  editingObjIdx: -1,
   saveDialogOpen: false,
   start: {
     sort: 'DESC',
@@ -46,8 +48,23 @@ export default function reports(state = initialState, action) {
       newState.timeframes = action.data.timeframes;
       newState.unsaved = false;
       return newState;
+    case REPORT_DIALOG_MODIFY_OBJECT_OPEN:
+      newState.dialogOpenStates.addobject = true;
+
+      newState.dialog.chart = newState.report.objects[action.objectIdx].type;
+      newState.dialog.department = newState.report.objects[action.objectIdx].details.department;
+      newState.dialog.measure = newState.report.objects[action.objectIdx].details.measure;
+      newState.dialog.timeframe = newState.report.objects[action.objectIdx].details.timeframe;
+      newState.editingObjIdx = action.objectIdx;
+
+      return newState;
+
     case REPORT_DIALOG_TOGGLE:
       newState.dialogOpenStates[action.dialog] = action.openState;
+      // reset back to not editing an object
+      if (action.dialog === 'addobject' && !action.openState) {
+        newState.editingObjIdx = -1;
+      }
       return newState;
     case REPORT_DIALOG_CHANGE_MEASURE:
       newState.dialog.measure = action.measure;
@@ -61,10 +78,30 @@ export default function reports(state = initialState, action) {
     case REPORT_DIALOG_CHANGE_TIMEFRAME:
       newState.dialog.timeframe = action.timeframe;
       return newState;
-    case REPORT_ADD_OBJECT:
-      newState.report.objects.push(action.object);
+    case REPORT_ADD_OR_SAVE_OBJECT: {
+      const newObject = {
+        type: state.dialog.chart,
+        details: {
+          department: state.dialog.department,
+          measure: state.dialog.measure,
+          timeframe: state.dialog.timeframe,
+        },
+      };
+
+      // save new object
+      if (state.editingObjIdx >= 0) {
+        newState.report.objects[state.editingObjIdx] = {
+          ...newState.report.objects[state.editingObjIdx],
+          ...newObject,
+        };
+      } else {
+        // add new object
+        newState.report.objects.push(newObject);
+      }
+      newState.editingObjIdx = -1;
       newState.unsaved = true;
       return newState;
+    }
     case REPORT_DELETE_OBJECT:
       newState.report.objects[action.objectIdx].deleted = true;
       newState.unsaved = true;

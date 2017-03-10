@@ -11,16 +11,21 @@ import MatterLineChart from '../Charts/MatterLineChart/MatterLineChart';
 import MatterPieChart from '../Charts/MatterPieChart/MatterPieChart';
 import * as reportActions from '../../redux/actions/reports';
 
-const ButtonAddToReport = ({ disabled, onClick, isSubmitting }) => {
+let ButtonAddToReport = ({ disabled, onClick, isSubmitting, isEditing }) => {
   let c = 'add-button';
   if (disabled) {
     c += ' disabled';
   }
   let text = 'Add to Report';
-  if(isSubmitting) {
+  if (isSubmitting) {
     onClick = null;
     text = 'Adding to Report';
   }
+
+  if (isEditing) {
+    text = 'Update Report';
+  }
+
   return (
     <button onClick={onClick} className={c} >{text}</button>
   );
@@ -28,9 +33,14 @@ const ButtonAddToReport = ({ disabled, onClick, isSubmitting }) => {
 
 ButtonAddToReport.propTypes = {
   onClick: React.PropTypes.func.isRequired,
+  isEditing: React.PropTypes.bool.isRequired,
   disabled: React.PropTypes.bool.isRequired,
   isSubmitting: React.PropTypes.bool.isRequired,
 };
+
+ButtonAddToReport = connect(state => ({
+  isEditing: state.reports.editingObjIdx >= 0,
+}))(ButtonAddToReport);
 
 const UnselectedBody = ({ text }) => (
   <Row middle center extraClass="empty-state large-12">
@@ -102,7 +112,8 @@ class ReportsPageChart extends React.Component {
         timeframe: this.props.timeframe,
       },
     };
-    this.props.dispatch(reportActions.addObject(newObject));
+
+    this.props.dispatch(reportActions.addOrSaveObject());
     this.props.dispatch(reportActions.reportDialogToggle('addobject', false));
     return false;
   }

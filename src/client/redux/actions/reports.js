@@ -9,8 +9,8 @@ export function dataFetched(data) {
 
 export function createNewReport() {
   return {
-    type: types.REPORT_CREATE_NEW
-  }
+    type: types.REPORT_CREATE_NEW,
+  };
 }
 
 export function reportDialogToggle(dialog, openState) {
@@ -21,7 +21,7 @@ export function reportDialogToggle(dialog, openState) {
   };
 }
 
-export function changeReport({ type, value }, activeView) {
+export function changeReport({ type, value }) {
   switch (type) {
     case 'department':
       return {
@@ -48,16 +48,22 @@ export function changeReport({ type, value }, activeView) {
   }
 }
 
-export function addObject(object, activeView) {
+export function addOrSaveObject() {
   return {
-    type: types.REPORT_ADD_OBJECT,
-    object,
+    type: types.REPORT_ADD_OR_SAVE_OBJECT,
   };
 }
 
 export function resetReport() {
   return {
     type: types.REPORT_RESET,
+  };
+}
+
+export function modifyObjectDialogOpen(objectIdx) {
+  return {
+    type: types.REPORT_DIALOG_MODIFY_OBJECT_OPEN,
+    objectIdx,
   };
 }
 
@@ -68,7 +74,7 @@ export function deleteObject(objectIdx) {
   };
 }
 
-export function updateReport(report, activeView) {
+export function updateReport(report) {
   return {
     report,
     type: types.REPORT_UPDATE,
