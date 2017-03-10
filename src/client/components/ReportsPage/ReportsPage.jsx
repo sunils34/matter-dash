@@ -30,28 +30,37 @@ const ReportsAddNewGraphButton = ({onNewClick}) => {
 };
 
 
-const ReportsPageHeader = ({ report, isempty, organization, children }) => {
-  var viewTypeModel = [
+const ReportsPageHeader = ({ report, isempty, organization, children, dispatch }) => {
+
+  const onChange = (chosenItem) => {
+    dispatch(reportActions.switchReportViewType(chosenItem.value));
+  };
+
+  const viewTypeModel = [
     {
-      label: "Stacked View",
-      value: "stacked",
+      label: 'Stacked View',
+      value: 'stacked',
     },
     {
-      label: "Grid View",
-      value: "grid",
-    }
+      label: 'Grid View',
+      value: 'grid',
+    },
   ];
 
   let name = 'New Report';
   let viewTypeSelect = null;
   if (report && report.name) {
     name = report.name;
-    const viewType = report.details && report.details.viewType || 'stacked';
+    let viewType = 'stacked';
+    if (report.details && report.details.viewType && report.details.viewType == 'grid') {
+      viewType = 'grid';
+    }
 
     viewTypeSelect = (
       <Column>
         <Row right>
           <Select
+            onChange={onChange}
             clearable={false}
             className="select-layout"
             name="Dashboard View"
@@ -335,7 +344,7 @@ class ReportsPage extends React.Component {
 
     return (
       <div className="container reports-page">
-        <ReportsPageHeader report={report} isempty={isEmpty}>
+        <ReportsPageHeader report={report} isempty={isEmpty} dispatch={dispatch}>
           <a href="#" onClick={this.openSaveModal} className="reports-options">Save</a>
           <Link to="/report/new" className="reports-options">New</Link>
           <a href="#" className="reports-options">Open</a>
@@ -383,6 +392,7 @@ query GetReportsPageInit($id: String){
     report {
       id,
       name,
+      details,
       objects {
         id,
         orderNumber,

@@ -29,8 +29,14 @@ class ReportsPageSaveDialog extends React.Component {
   }
 
   submit() {
-    this.props.mutate({ variables: { name: this.state.reportName, id: this.props.report.id, objects:this.props.report.objects } })
-      .then(({ data }) => {
+    this.props.mutate({
+      variables: {
+        name: this.state.reportName,
+        id: this.props.report.id,
+        objects: this.props.report.objects,
+        details: this.props.report.details || {},
+      }
+    }).then(({ data }) => {
         this.props.dispatch(reportActions.reportDialogToggle('save', false));
         if (this.props.report.id === 'new') {
           this.props.router.push(`/report/${data.createOrUpdateReport.id}`);
@@ -70,8 +76,8 @@ class ReportsPageSaveDialog extends React.Component {
 
 
 const AddToReportMutation = gql`
-mutation createOrupdateReport($id: String!, $name: String, $objects: [JSON]) {
-  createOrUpdateReport(id:$id, name: $name, objects:$objects)
+mutation createOrupdateReport($id: String!, $details: JSON, $name: String, $objects: [JSON]) {
+  createOrUpdateReport(id:$id, details: $details, name: $name, objects:$objects)
   {
     id,
     name,
