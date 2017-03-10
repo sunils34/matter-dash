@@ -50,7 +50,7 @@ class ReportsPageStart extends React.Component {
 
     const reportList = _.map(reports, report => (
       <Link key={report.id} className="row report-list-item" to={`/report/${report.id}`}>
-        <Column extraClass="large-9"><Row>{report.name}</Row></Column>
+        <Column><Row>{report.name}</Row></Column>
         <Column extraClass="large-1">
           <Row>{dateformat(report.updatedAt, 'mmmm d, yyyy')}</Row>
         </Column>
@@ -67,7 +67,7 @@ class ReportsPageStart extends React.Component {
         <Row extraClass="report-list-container">
           <Column>
             <Row extraClass="reports-list-header">
-              <Column extraClass="large-9"><Row>Recent Reports</Row></Column>
+              <Column><Row>Recent Reports</Row></Column>
               <Column extraClass="large-1"><Row>Last Modified</Row></Column>
               <Column extraClass="large-1">
                 <Row right>
