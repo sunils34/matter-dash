@@ -136,6 +136,23 @@
     }
 
   }
+
+  .report-save-footer {
+    background: rgba(0,0,0,.8);
+    bottom: 0px;
+    left: 0px;
+    color: white;
+    height: 60px;
+    max-width: none;
+    position: fixed;
+    width: 100%;
+    z-index: 10000;
+
+    .btn-primary {
+      margin-right: 35px;
+      background: #83D3C7;
+    }
+  }
 }
 .save-modal {
   width: 30rem;

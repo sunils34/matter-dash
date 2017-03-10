@@ -96,7 +96,6 @@ class MatterPieChart extends React.Component {
   }
 
   render() {
-
     const props = this.props;
     const { height, width, showTotal, title, legendType, loading, piedatapoints } = this.props;
     if (loading) {

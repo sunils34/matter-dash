@@ -168,6 +168,38 @@ class ReportChartMenu extends React.Component {
   }
 }
 
+class _ReportsPageSaveFooter extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.save = this.save.bind(this);
+  }
+
+  save() {
+    this.props.dispatch(reportActions.reportDialogToggle('save', true));
+  }
+
+  render() {
+    if (!this.props.isUnsaved) return null;
+
+    return (
+      <Row middle className="report-save-footer">
+        <Column><span/></Column>
+        <Column><Row center> Unsaved changes to '{this.props.reportName}' </Row></Column>
+        <Column><Row right><button onClick={this.save} className="btn-primary">Save Changes</button></Row></Column>
+      </Row>);
+  }
+}
+
+_ReportsPageSaveFooter.propTypes = {
+  reportName: React.PropTypes.string.isRequired,
+  isUnsaved: React.PropTypes.bool.isRequired,
+};
+
+const ReportsPageSaveFooter = connect(state => ({
+  reportName: state.reports.report.name,
+  isUnsaved: state.reports.unsaved,
+}))(_ReportsPageSaveFooter);
 
 
 class ReportsPage extends React.Component {
@@ -331,6 +363,7 @@ class ReportsPage extends React.Component {
         >
           <ReportsPageSaveDialog router={this.props.router} dispatch={this.props.dispatch} />
         </ReactModal>
+        <ReportsPageSaveFooter />
       </div>
     );
   }
