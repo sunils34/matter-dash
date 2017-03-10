@@ -273,12 +273,12 @@ class ReportsPage extends React.Component {
     const { loading, unsaved, dialogIsOpen, data, report, dispatch } = this.props;
     let isEmpty = !report || !report.objects;
 
-    let containerClass = 'report-object large-6 medium-12';
+    let containerClass = 'report-object large-6 medium-12 small-12';
     let pieWidth = 200;
 
     if (report && report.details && report.details.viewType === 'stacked') {
       pieWidth = 360;
-      containerClass = 'report-object large-12';
+      containerClass = 'report-object large-12 medium-12 small-12';
     }
 
     if (loading) {
