@@ -284,9 +284,11 @@ class ReportsPage extends React.Component {
 
     let containerClass = 'report-object large-6 medium-12 small-12';
     let pieWidth = 200;
+    let pieHeight = 400;
 
     if (report && report.details && report.details.viewType === 'stacked') {
       pieWidth = 360;
+      pieHeight = 400;
       containerClass = 'report-object large-12 medium-12 small-12';
     }
 
@@ -333,7 +335,7 @@ class ReportsPage extends React.Component {
                 legendAlign="right"
                 legendType="small"
                 showTotal
-                height={400}
+                height={pieHeight}
                 width={pieWidth}
                 query={query}
               />);
