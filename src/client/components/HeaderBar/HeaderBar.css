@@ -35,6 +35,20 @@
       }
     }
   }
+
+  .org-header {
+    height: 100%;
+
+    .org-name {
+      font-size: 25px;
+      color: #FFFFFF;
+    }
+
+    .org-updated {
+      font-size: 11px;
+      color: #FFFFFF;
+    }
+  }
 }
 
 

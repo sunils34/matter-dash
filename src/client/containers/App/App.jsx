@@ -3,40 +3,65 @@ import { connect } from 'react-redux';
 import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
 import HeaderBar from '../../components/HeaderBar/HeaderBar';
+import * as appActions from '../../redux/actions/app';
 
 window.Period = 'All';
 window.Department = 'All';
 
 
 class App extends React.Component {
-  render() {
-    if (!this.props.children ||
-        this.props.userReq.loading ||
-        this.props.organizationReq.loading) {
-      return null;
-    }
-    else {
-      const user = this.props.userReq.user;
-      const organization = this.props.organizationReq.organization;
 
-      return (
-        <div>
-          <HeaderBar location={this.props.location}/>
-          {React.cloneElement(this.props.children, { user, organization })}
-        </div>
-      );
+  componentWillReceiveProps(newProps) {
+
+    if(this.props.loading && !newProps.loading) {
+      this.props.dispatch(appActions.setUser(newProps.user, newProps.organization));
     }
   }
-} 
 
-const CurrentUser = gql`query CurrentUser { user { id, name, email } }`;
-const CurrentOrg = gql`query CurrentOrg { organization { name, employee_count, departments} }`;
+  render() {
+    console.log(this.props);
+    if (!this.props.children ||
+        this.props.loading) {
+      return null;
+    }
 
+    const user = this.props.user;
+    const organization = this.props.organization;
+
+    return (
+      <div>
+        <HeaderBar location={this.props.location}/>
+        {React.cloneElement(this.props.children, { user, organization })}
+      </div>
+    );
+  }
+};
+
+const CurrentUserAndOrganization = gql`
+query query {
+  user {
+    id,
+    email
+    name,
+  }
+  organization {
+    id,
+    departments,
+    employee_count,
+    name,
+    updatedAt,
+  }
+}`;
 
 export default compose(
   connect(
     // stateToProps
     (state) => ({ })),
-  graphql(CurrentUser, { name: 'userReq' }),
-  graphql(CurrentOrg, { name: 'organizationReq' }),
-)(App)
+  graphql(CurrentUserAndOrganization, {
+    props: ({ data: { loading, user, organization } }) => ({
+      loading,
+      user,
+      organization
+    }),
+  }),
+)(App);
