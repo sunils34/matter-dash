@@ -41,4 +41,14 @@ a {
 
 .Select-control {
   cursor: pointer;
+
+  .Select-arrow-zone {
+    border-left: 1px solid #CBCBCB;
+    width: 30px;
+    padding-left: 1px;
+
+    .Select-arrow {
+      border-color: #8386ED transparent transparent;
+    }
+  }
 }
