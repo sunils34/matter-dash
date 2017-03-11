@@ -23,3 +23,18 @@ export function changeEmployeesCount(newCount, activeView) {
         activeView,
     };
 }
+
+export function setOrganization(organization) {
+  return {
+    type: types.SET_ORGANIZATION,
+    user,
+  }
+}
+
+export function setUser(user, organization) {
+  return {
+    type: types.SET_USER,
+    user,
+    organization,
+  }
+}

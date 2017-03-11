@@ -23,35 +23,49 @@ import MatterLineChart from '../Charts/MatterLineChart/MatterLineChart';
 const ReportsAddNewGraphButton = ({onNewClick}) => {
 
   return (
-    <button onClick={onNewClick} className='row align-center reports-add'>
-      <i>+</i><div>Add New Graph</div>
-    </button>
+    <div onClick={onNewClick} className='report-object-wrap align-center reports-add'>
+      <Column className="large-12">
+        <Row center>
+          <i>+</i><div>Add New Graph</div>
+        </Row>
+      </Column>
+    </div>
   );
 };
 
 
-const ReportsPageHeader = ({ report, isempty, organization, children }) => {
-  var viewTypeModel = [
+const ReportsPageHeader = ({ report, isempty, organization, children, dispatch }) => {
+
+  const onChange = (chosenItem) => {
+    dispatch(reportActions.switchReportViewType(chosenItem.value));
+  };
+
+  const viewTypeModel = [
     {
-      label: "Stacked View",
-      value: "stacked",
+      label: 'Stacked View',
+      value: 'stacked',
     },
     {
-      label: "Grid View",
-      value: "grid",
-    }
+      label: 'Grid View',
+      value: 'grid',
+    },
   ];
 
   let name = 'New Report';
   let viewTypeSelect = null;
   if (report && report.name) {
     name = report.name;
-    const viewType = report.details && report.details.viewType || 'stacked';
+    let viewType = 'grid';
+    if (report.details && report.details.viewType && report.details.viewType === 'stacked') {
+      viewType = 'stacked';
+    }
 
     viewTypeSelect = (
       <Column>
         <Row right>
           <Select
+            searchable={false}
+            onChange={onChange}
             clearable={false}
             className="select-layout"
             name="Dashboard View"
@@ -175,6 +189,15 @@ class _ReportsPageSaveFooter extends React.Component {
     this.save = this.save.bind(this);
   }
 
+  componentWillReceiveProps(newProps) {
+    // show in the title a star which indicates it's unsaved
+    if(newProps.isUnsaved) {
+      document.title = `* ${document.title}`;
+    } else {
+      document.title = document.title.replace('* ', '');
+    }
+  }
+
   save() {
     this.props.dispatch(reportActions.reportDialogToggle('save', true));
   }
@@ -259,6 +282,16 @@ class ReportsPage extends React.Component {
     const { loading, unsaved, dialogIsOpen, data, report, dispatch } = this.props;
     let isEmpty = !report || !report.objects;
 
+    let containerClass = 'report-object large-6 medium-12 small-12';
+    let pieWidth = 200;
+    let pieHeight = 400;
+
+    if (report && report.details && report.details.viewType === 'stacked') {
+      pieWidth = 360;
+      pieHeight = 400;
+      containerClass = 'report-object large-12 medium-12 small-12';
+    }
+
     if (loading) {
       return (
         <div className="container">
@@ -283,7 +316,6 @@ class ReportsPage extends React.Component {
           case 'line':
             objectElt = (
               <MatterLineChart
-                animationDuration={0}
                 height={400}
                 query={query}
               />);
@@ -291,7 +323,6 @@ class ReportsPage extends React.Component {
           case 'bar':
             objectElt = (
               <MatterBarChart
-                animationDuration={0}
                 type="stackedPercentage"
                 height={400}
                 query={query}
@@ -304,8 +335,8 @@ class ReportsPage extends React.Component {
                 legendAlign="right"
                 legendType="small"
                 showTotal
-                animationDuration={0}
-                height={400}
+                height={pieHeight}
+                width={pieWidth}
                 query={query}
               />);
             break;
@@ -314,35 +345,46 @@ class ReportsPage extends React.Component {
         }
 
         return (
-          <Row key={key} extraClass="report-object-wrap">
-            <Column>
-              <Row center extraClass="report-title-wrap">
-                <ReportChartTitle
-                  type={object.type}
-                  department={department}
-                  measure={measure}
-                  timeframe={timeframe}
-                />
-                <ReportChartMenu dispatch={dispatch} objectIdx={idx} />
-              </Row>
-              <Row center>
-                {objectElt}
-              </Row>
-            </Column>
-          </Row>);
+          <div key={key} className={containerClass}>
+            <div className="align-center align-middle report-object-wrap">
+              <Column extraClass="large-12">
+                <Row center extraClass="report-title-wrap">
+                  <ReportChartTitle
+                    type={object.type}
+                    department={department}
+                    measure={measure}
+                    timeframe={timeframe}
+                  />
+                  <ReportChartMenu dispatch={dispatch} objectIdx={idx} />
+                </Row>
+                <Row center>
+                  {objectElt}
+                </Row>
+              </Column>
+            </div>
+          </div>
+        );
       });
+
+      // append the add new graph button
+      body.push(
+        <div key="addnewgraph" className={containerClass}>
+          <ReportsAddNewGraphButton onNewClick={this.handleOpenModal} />
+        </div>
+      );
     }
 
     return (
       <div className="container reports-page">
-        <ReportsPageHeader report={report} isempty={isEmpty}>
+        <ReportsPageHeader report={report} isempty={isEmpty} dispatch={dispatch}>
           <a href="#" onClick={this.openSaveModal} className="reports-options">Save</a>
           <Link to="/report/new" className="reports-options">New</Link>
           <a href="#" className="reports-options">Open</a>
           <a href="#" onClick={this.resetReport} className="reports-options">Reset</a>
         </ReportsPageHeader>
-        {body}
-        <ReportsAddNewGraphButton onNewClick={this.handleOpenModal} />
+        <Row className='report-objects'>
+          {body}
+        </Row>
         <ReactModal
           isOpen={dialogIsOpen}
           contentLabel="Add New Graph"
@@ -383,6 +425,7 @@ query GetReportsPageInit($id: String){
     report {
       id,
       name,
+      details,
       objects {
         id,
         orderNumber,

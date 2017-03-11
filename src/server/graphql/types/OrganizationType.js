@@ -25,11 +25,11 @@ export default new ObjectType({
       type: new List(StringType),
       description: 'Departments in Organization'
     },
-    created_at: {
+    createdAt: {
       type: GraphQLDate,
       description: 'Date the organization was created'
     },
-    update_at: {
+    updatedAt: {
       type: GraphQLDate,
       description: 'Date the organization was updated'
     }

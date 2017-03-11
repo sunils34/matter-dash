@@ -5,47 +5,58 @@ import gql from 'graphql-tag';
 import MatterLoadingIndicator from '../../LoadingIndicator';
 
 
-const MatterLineChart = ({ height, data, animationDuration }) => {
+class MatterLineChart extends React.Component {
 
-  if (data.loading) {
-    var style = {
-      height,
-      width: '100%'
-    };
+  shouldComponentUpdate(nextProps) {
+    // TODO for some reason, the report is rerendering even though props are the same
+    return !_.isEqual(this.props, nextProps);
+  }
+
+  render() {
+
+    const { height, loading, bardatapoints, animationDuration } = this.props;
+
+    if (loading) {
+      const style = {
+        height,
+        width: '100%'
+      };
+      return (
+        <div style={style}>
+          <MatterLoadingIndicator />
+        </div>
+      );
+    }
+    const dataPoints = bardatapoints.results;
+    const fields = bardatapoints.fields;
+
     return (
-      <div style={style}>
-        <MatterLoadingIndicator />
-      </div>
+      <ResponsiveContainer height={height} width="100%">
+        <LineChart data={dataPoints} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+          <XAxis dataKey="name" />
+          <YAxis />
+          <CartesianGrid strokeDasharray="3 3" />
+          <Tooltip animationDuration={0} />
+          <Legend iconType="circle" />
+          {
+            fields.map(field => <Line animationDuration={animationDuration} type="monotone" key={`bar-${field.name}`} dataKey={field.name} strokeWidth={2} stroke={field.color} />)
+          }
+        </LineChart>
+      </ResponsiveContainer>
     );
   }
-  const dataPoints = data.bardatapoints.results;
-  const fields = data.bardatapoints.fields;
-
-  return (
-    <ResponsiveContainer height={height} width="100%">
-      <LineChart data={dataPoints} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-        <XAxis dataKey="name" />
-        <YAxis />
-        <CartesianGrid strokeDasharray="3 3" />
-        <Tooltip animationDuration={0} />
-        <Legend iconType="circle" />
-        {
-          fields.map(field => <Line animationDuration={animationDuration} type="monotone" key={`bar-${field.name}`} dataKey={field.name} strokeWidth={2} stroke={field.color} />)
-        }
-      </LineChart>
-    </ResponsiveContainer>
-  );
-};
+}
 
 MatterLineChart.defaultProps = {
   animationDuration: 1500,
-  data: {},
+  bardatapoints: {},
   height: 300,
 };
 
 MatterLineChart.propTypes = {
   animationDuration: React.PropTypes.number,
-  data: React.PropTypes.object,
+  loading: React.PropTypes.bool.isRequired,
+  bardatapoints: React.PropTypes.object,
   height: React.PropTypes.number,
   query: React.PropTypes.object.isRequired,
 };
@@ -63,4 +74,8 @@ const GetLineDataPoints = gql`query GetLineDataPoints($query: JSON!) {
 
 export default graphql(GetLineDataPoints, {
   options: ({ query }) => ({ variables: { query } }),
+  props: ({ data: { loading, bardatapoints } }) => ({
+    loading,
+    bardatapoints,
+  }),
 })(MatterLineChart);

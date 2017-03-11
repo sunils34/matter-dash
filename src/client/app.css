@@ -2,7 +2,6 @@ body {
   margin: 0px;
   background: white;
   font-family: 'Nunito Sans', sans-serif;
-  min-width: 600px;
   overflow: scroll;
 }
 
@@ -38,4 +37,22 @@ a {
     overflow: hidden !important;
 
   }
+}
+
+.Select-control {
+  cursor: pointer;
+
+  .Select-arrow-zone {
+    border-left: 1px solid #CBCBCB;
+    width: 30px;
+    padding-left: 1px;
+
+    .Select-arrow {
+      border-color: #8386ED transparent transparent;
+    }
+  }
+}
+
+.img-circle {
+  border-radius: 50%;
 }

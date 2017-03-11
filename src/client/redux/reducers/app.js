@@ -2,6 +2,7 @@ import {
   CHANGE_DEPARTMENT,
   CHANGE_PERIOD,
   CHANGE_EMPLOYEES_COUNT,
+  SET_USER,
 } from '../actionTypes/app';
 
 const initialState = {
@@ -9,10 +10,18 @@ const initialState = {
   period: 'Snapshot',
   employee_count: 0,
   loaded: false,
+  user: {},
+  organization: {},
 };
 
 export default function app(state = initialState, action) {
   switch (action.type) {
+    case SET_USER:
+      return {
+        ...state,
+        user: action.user,
+        organization: action.organization,
+      };
     case CHANGE_DEPARTMENT:
       return {
         ...state,

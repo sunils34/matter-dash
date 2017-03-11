@@ -23,26 +23,30 @@
     height: 100%;
 
     .inline-list {
-      margin: auto;
 
-      ul {
-        list-style: none;
-
+      a {
+        color: white;
+        text-decoration: none;
       }
 
-      li {
-        margin: 20px;
-        display: inline-block;
-
-        a {
-          color: white;
-          text-decoration: none;
-        }
-      }
-
-      li.active {
+      .active {
         font-weight: bolder;
+        text-decoration: underline;
       }
+    }
+  }
+
+  .org-header {
+    height: 100%;
+
+    .org-name {
+      font-size: 25px;
+      color: #FFFFFF;
+    }
+
+    .org-updated {
+      font-size: 11px;
+      color: #FFFFFF;
     }
   }
 }

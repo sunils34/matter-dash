@@ -109,6 +109,9 @@ export default {
     if (args.name) {
       report.name = args.name;
     }
+    if (args.details) {
+      report.details = args.details;
+    }
     report.changed('updatedAt', true);
     report = await report.save();
 

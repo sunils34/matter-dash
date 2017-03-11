@@ -11,6 +11,7 @@ import {
   REPORT_UPDATE,
   REPORT_RESET,
   REPORT_PAGE_DATA_FETCHED,
+  REPORT_CHANGE_VIEW_TYPE,
 } from '../actionTypes/reports';
 
 const dialogDefaults = {
@@ -119,6 +120,13 @@ export default function reports(state = initialState, action) {
         addobject: false,
         save: false,
       };
+      return newState;
+    case REPORT_CHANGE_VIEW_TYPE:
+      newState.report.details = {
+        ...newState.report.details,
+        viewType: action.viewType,
+      };
+      newState.unsaved = !_.isEqual(newState.lastSavedReport, newState.report);
       return newState;
     default:
       return state;

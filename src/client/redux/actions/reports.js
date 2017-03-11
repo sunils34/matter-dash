@@ -80,3 +80,10 @@ export function updateReport(report) {
     type: types.REPORT_UPDATE,
   };
 }
+
+export function switchReportViewType(viewType) {
+  return {
+    viewType,
+    type: types.REPORT_CHANGE_VIEW_TYPE
+  }
+}
