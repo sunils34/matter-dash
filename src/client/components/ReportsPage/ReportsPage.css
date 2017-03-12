@@ -139,24 +139,27 @@
 
   }
 
-  .report-object-wrap.reports-add {
-    background: #F8F8F8;
-    border-radius: 4px;
-    border: 1px solid #DEDEDE;
-    color: #CBCBCB;
+
+  .reports-add {
+    display: flex;
     cursor: pointer;
-    font-size: 20px;
-    margin-bottom: 100px;
-    padding: 12px;
-    text-decoration: none;
+    background: #6E6EE2;
+    border-radius: 50%;
+    font-family: 'Nunito Sans', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    bottom: 65px;
+    color: white;
+    font-size: 40px;
+    font-style: normal;
+    height: 60px;
+    position: fixed;
+    right: 35px;
+    width: 60px;
 
-    i {
-      margin-right: 15px;
+    span {
+      margin: auto;
     }
-  }
-
-  .report-object-wrap.reports-add:focus {
-    outline: none;
   }
 
   .report-save-footer {

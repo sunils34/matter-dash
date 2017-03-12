@@ -54,7 +54,7 @@ class HeaderBar extends React.Component {
 
     return (
       <nav className="menu matter-navbar row expanded align-justify">
-          <Column className="nav-list small-9 medium-6 large-4">
+          <Column className="nav-list small-12 medium-7 large-4">
               <Row center middle className="inline-list">
                 <div className='logo'><img src='/images/matter-logo-square.svg'></img></div>
                 <HeaderLink location={location} path='/dashboard'>Dashboard</HeaderLink>

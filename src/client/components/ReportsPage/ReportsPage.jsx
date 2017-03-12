@@ -23,12 +23,8 @@ import MatterLineChart from '../Charts/MatterLineChart/MatterLineChart';
 const ReportsAddNewGraphButton = ({onNewClick}) => {
 
   return (
-    <div onClick={onNewClick} className='report-object-wrap align-center reports-add'>
-      <Column className="large-12">
-        <Row center>
-          <i>+</i><div>Add New Graph</div>
-        </Row>
-      </Column>
+    <div onClick={onNewClick} className='reports-add'>
+      <span>+</span>
     </div>
   );
 };
@@ -365,13 +361,6 @@ class ReportsPage extends React.Component {
           </div>
         );
       });
-
-      // append the add new graph button
-      body.push(
-        <div key="addnewgraph" className={containerClass}>
-          <ReportsAddNewGraphButton onNewClick={this.handleOpenModal} />
-        </div>
-      );
     }
 
     return (
@@ -385,6 +374,7 @@ class ReportsPage extends React.Component {
         <Row className='report-objects'>
           {body}
         </Row>
+        <ReportsAddNewGraphButton onNewClick={this.handleOpenModal} />
         <ReactModal
           isOpen={dialogIsOpen}
           contentLabel="Add New Graph"
