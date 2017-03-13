@@ -3,11 +3,82 @@ import { graphql, compose } from 'react-apollo';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { Link } from 'react-router';
+import DropdownMenu from 'react-dd-menu';
 import gql from 'graphql-tag';
 import MatterLoadingIndicator from '../LoadingIndicator';
 import { Row, Column } from '../Grid';
 import './ReportsPageStart.css';
+import '../../css/dropdown.css';
 import dateformat from 'dateformat';
+
+
+class _ReportPageListItemOptionsMenu extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      isMenuOpen: false,
+    };
+    this.toggleMenu = this.toggleMenu.bind(this);
+    this.deleteReport = this.deleteReport.bind(this);
+  }
+
+  toggleMenu() {
+    this.setState({ isMenuOpen: !this.state.isMenuOpen });
+  }
+
+  closeMenu() {
+    this.setState({ isMenuOpen: false });
+  }
+
+  deleteReport() {
+    const refetch = this.props.refetch;
+    const answer = confirm("Double Checking... Are you sure you want to delete this report?");
+    if (answer) {
+      this.props.mutate({ reportId: { reportId: this.props.reportId } })
+        .then(({ data }) => {
+          refetch();
+        }).catch((error) => {
+          console.log('there was an error sending the query', error);
+        });
+    }
+  }
+
+  render() {
+
+    const menuOptions = {
+      isOpen: this.state.isMenuOpen,
+      close: this.closeMenu.bind(this),
+      align: 'right',
+      toggle: <i className="material-icons" onClick={this.toggleMenu}>more_vert</i>
+    };
+
+    return (
+      <div className="dd-wrap">
+        <DropdownMenu {...menuOptions}>
+          <div className='caret'></div>
+          <li onClick={this.deleteReport}><i className="material-icons">cancel</i><span>Delete Report</span></li>
+        </DropdownMenu>
+      </div>
+    );
+  }
+}
+
+const DeleteReportMutation = gql`
+mutation deleteReport($reportId: String!) {
+  deleteReport(reportId: $reportId)
+  {
+    success,
+    error
+  }
+}
+`;
+
+const ReportPageListItemOptionsMenu = graphql(DeleteReportMutation, {
+  options: ({ reportId }) => {
+    return { variables: { reportId }};
+  },
+})(_ReportPageListItemOptionsMenu);
+
 
 class ReportsPageStart extends React.Component {
 
@@ -24,6 +95,8 @@ class ReportsPageStart extends React.Component {
         console.log('there was an error sending the query', error);
       });
   }
+
+
   render() {
     if(this.props.data.loading) {
       return (
@@ -32,6 +105,10 @@ class ReportsPageStart extends React.Component {
         </div>
       );
     }
+
+    const { data, router } = this.props;
+    const refetch = data.refetch;
+
 
     const reports = this.props.data.reports.results;
 
@@ -48,19 +125,22 @@ class ReportsPageStart extends React.Component {
       return getStartedButton;
     }
 
-    const reportList = _.map(reports, report => (
-      <Link key={report.id} className="row report-list-item" to={`/report/${report.id}`}>
-        <Column><Row>{report.name}</Row></Column>
-        <Column extraClass="large-1 medium-2 small-3">
-          <Row>{dateformat(report.updatedAt, 'mmmm d, yyyy')}</Row>
-        </Column>
-        <Column extraClass="large-1 medium-1 small-1">
-          <Row right>
-            <i className="material-icons">more_vert</i>
-          </Row>
-        </Column>
-      </Link>
-    ));
+    const reportList = _.map(reports, report => {
+      const onClick = () => { router.push(`/report/${report.id}`); };
+      return (
+        <Row key={report.id} className="report-list-item">
+          <Column onClick={onClick}><Row>{report.name}</Row></Column>
+          <Column onClick={onClick} extraClass="large-1 medium-2 small-3">
+            <Row>{dateformat(report.updatedAt, 'mmmm d, yyyy')}</Row>
+          </Column>
+          <Column extraClass="large-1 medium-1 small-1">
+            <Row right>
+              <ReportPageListItemOptionsMenu refetch={refetch} reportId={report.id} />
+            </Row>
+          </Column>
+        </Row>
+      );
+    });
 
     return (
       <div className="container reports-empty-container">

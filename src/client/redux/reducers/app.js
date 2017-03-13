@@ -21,11 +21,12 @@ export default function app(state = initialState, action) {
         ...state,
         user: action.user,
         organization: action.organization,
+        employee_count: action.organization.employee_count,
       };
     case CHANGE_DEPARTMENT:
       return {
         ...state,
-        department: action.department
+        department: action.department,
       }
     case CHANGE_PERIOD:
       return {

@@ -7,7 +7,9 @@ import _ from 'lodash';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import DropdownMenu from 'react-dd-menu';
-import 'react-select/dist/react-select.css';
+import ReactTooltip from 'react-tooltip';
+import '../../css/select.css';
+import '../../css/dropdown.css';
 import ReportsPageChart from './ReportsPageChart';
 import ReportsPageSaveDialog from './ReportsPageSaveDialog';
 import './ReportsPage.css';
@@ -20,15 +22,17 @@ import MatterPieChart from '../Charts/MatterPieChart/MatterPieChart';
 import MatterLineChart from '../Charts/MatterLineChart/MatterLineChart';
 
 
-const ReportsAddNewGraphButton = ({onNewClick}) => {
+const ReportsAddNewGraphButton = ({ onNewClick, unsaved }) => {
+
+  let c = 'reports-add';
+  if (unsaved) c += ' unsaved';
 
   return (
-    <div onClick={onNewClick} className='report-object-wrap align-center reports-add'>
-      <Column className="large-12">
-        <Row center>
-          <i>+</i><div>Add New Graph</div>
-        </Row>
-      </Column>
+    <div onClick={onNewClick} className={c}>
+      <div className="tip">
+        <div className="caret downward" />
+        <span>New Graph</span></div>
+      <span>+</span>
     </div>
   );
 };
@@ -348,7 +352,7 @@ class ReportsPage extends React.Component {
           <div key={key} className={containerClass}>
             <div className="align-center align-middle report-object-wrap">
               <Column extraClass="large-12">
-                <Row center extraClass="report-title-wrap">
+                <Row center extraClass="dd-wrap report-title-wrap">
                   <ReportChartTitle
                     type={object.type}
                     department={department}
@@ -365,13 +369,6 @@ class ReportsPage extends React.Component {
           </div>
         );
       });
-
-      // append the add new graph button
-      body.push(
-        <div key="addnewgraph" className={containerClass}>
-          <ReportsAddNewGraphButton onNewClick={this.handleOpenModal} />
-        </div>
-      );
     }
 
     return (
@@ -385,6 +382,7 @@ class ReportsPage extends React.Component {
         <Row className='report-objects'>
           {body}
         </Row>
+        <ReportsAddNewGraphButton onNewClick={this.handleOpenModal} unsaved={unsaved} />
         <ReactModal
           isOpen={dialogIsOpen}
           contentLabel="Add New Graph"
@@ -406,6 +404,7 @@ class ReportsPage extends React.Component {
           <ReportsPageSaveDialog router={this.props.router} dispatch={this.props.dispatch} />
         </ReactModal>
         <ReportsPageSaveFooter />
+        <ReactTooltip />
       </div>
     );
   }

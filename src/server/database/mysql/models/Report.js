@@ -1,6 +1,7 @@
 import Sequelize from 'sequelize';
 import shortid from 'shortid';
 import Model from '../sequelize';
+import ReportObject from './ReportObject';
 
 const Report = Model.define('reports', {
   id: {
@@ -37,6 +38,16 @@ const Report = Model.define('reports', {
 }, {
   indexes: [
   ],
+  hooks: {
+    beforeDestroy: (report) => {
+      return ReportObject.destroy({
+        where: {
+          reportId: report.id,
+        },
+      });
+    },
+  },
 }, { tableName: 'reports' });
+
 
 export default Report;

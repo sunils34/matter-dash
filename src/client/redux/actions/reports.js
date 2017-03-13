@@ -81,6 +81,13 @@ export function updateReport(report) {
   };
 }
 
+export function deleteReport(reportId) {
+  return {
+    reportId,
+    type: types.REPORT_DELETE,
+  };
+}
+
 export function switchReportViewType(viewType) {
   return {
     viewType,
