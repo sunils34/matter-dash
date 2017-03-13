@@ -130,7 +130,7 @@ class ReportsPageStart extends React.Component {
       return (
         <Row key={report.id} className="report-list-item">
           <Column onClick={onClick}><Row>{report.name}</Row></Column>
-          <Column extraClass="large-1 medium-2 small-3">
+          <Column onClick={onClick} extraClass="large-1 medium-2 small-3">
             <Row>{dateformat(report.updatedAt, 'mmmm d, yyyy')}</Row>
           </Column>
           <Column extraClass="large-1 medium-1 small-1">

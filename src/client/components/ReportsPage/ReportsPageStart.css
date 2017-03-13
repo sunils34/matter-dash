@@ -47,7 +47,6 @@
       }
 
       .report-list-item {
-        padding: 15px 0px 15px 15px;
         font-size: 14px;
         color: #4A4A4A;
         border-bottom: 1px solid #CBCBCB;
@@ -56,7 +55,12 @@
         a {
           color: #4A4A4A;
         }
+
+        .row {
+          padding: 15px 0px 15px 15px;
+        }
       }
+
     }
   }
 }
