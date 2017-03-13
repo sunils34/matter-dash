@@ -57,13 +57,13 @@ const LegendSmall = ({ payload }) => {
                 {entry.name}
               </Row>
             </Column>
-            <div className="small-1">
+            <Column className="small-1">
               <Row className="legend-value">
                 {entry.value}%
               </Row>
-            </div>
+            </Column>
           </Row>
-        )
+        );
       })
     }
     </Column>
