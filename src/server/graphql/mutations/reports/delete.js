@@ -32,6 +32,11 @@ export default {
       }
     }
 
+    await ReportObject.destroy({
+      where: {
+        reportId: args.reportId,
+      },
+    });
     await reports[0].destroy();
 
     return {
