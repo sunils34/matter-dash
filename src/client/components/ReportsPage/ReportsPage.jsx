@@ -20,10 +20,13 @@ import MatterPieChart from '../Charts/MatterPieChart/MatterPieChart';
 import MatterLineChart from '../Charts/MatterLineChart/MatterLineChart';
 
 
-const ReportsAddNewGraphButton = ({onNewClick}) => {
+const ReportsAddNewGraphButton = ({ onNewClick, unsaved }) => {
+
+  let c = 'reports-add';
+  if (unsaved) c += ' unsaved';
 
   return (
-    <div onClick={onNewClick} className='reports-add'>
+    <div onClick={onNewClick} className={c}>
       <span>+</span>
     </div>
   );
@@ -374,7 +377,7 @@ class ReportsPage extends React.Component {
         <Row className='report-objects'>
           {body}
         </Row>
-        <ReportsAddNewGraphButton onNewClick={this.handleOpenModal} />
+        <ReportsAddNewGraphButton onNewClick={this.handleOpenModal} unsaved={unsaved} />
         <ReactModal
           isOpen={dialogIsOpen}
           contentLabel="Add New Graph"

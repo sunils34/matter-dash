@@ -139,23 +139,27 @@
 
   }
 
+  .reports-add.unsaved {
+    bottom: 65px;
+  }
 
   .reports-add {
-    display: flex;
-    cursor: pointer;
     background: #6E6EE2;
     border-radius: 50%;
-    font-family: 'Nunito Sans', sans-serif;
-    font-style: normal;
-    font-weight: 700;
-    bottom: 65px;
+    bottom: 10px;
     color: white;
+    cursor: pointer;
+    display: flex;
+    font-family: 'Nunito Sans', sans-serif;
     font-size: 40px;
     font-style: normal;
+    font-style: normal;
+    font-weight: 700;
     height: 60px;
     position: fixed;
     right: 35px;
     width: 60px;
+    z-index: 100;
 
     span {
       margin: auto;
