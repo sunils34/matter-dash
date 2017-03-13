@@ -21,6 +21,7 @@ export default function app(state = initialState, action) {
         ...state,
         user: action.user,
         organization: action.organization,
+        employee_count: action.organization.employee_count,
       };
     case CHANGE_DEPARTMENT:
       return {
