@@ -20,7 +20,7 @@ const Row = ({ className, extraClass, children, middle, center, right, onClick }
   );
 };
 
-const Column = ({ className, extraClass, children, small }) => {
+const Column = ({ className, extraClass, children, small, onClick }) => {
   let c = 'column';
   if (extraClass) {
     c += ` ${extraClass}`;
@@ -30,7 +30,7 @@ const Column = ({ className, extraClass, children, small }) => {
   }
   if (small) c += ` small-${small}`;
   return (
-    <div className={c}>
+    <div className={c} onClick={onClick} >
       {children}
     </div>
   );
@@ -60,6 +60,7 @@ Column.defaultProps = {
   extraClass: '',
   className: '',
   small: null,
+  onClick: null,
 };
 
 Column.propTypes = {
@@ -67,6 +68,7 @@ Column.propTypes = {
   extraClass: React.PropTypes.string,
   className: React.PropTypes.string,
   children: React.PropTypes.node.isRequired,
+  onClick: React.PropTypes.func,
 };
 
 export {

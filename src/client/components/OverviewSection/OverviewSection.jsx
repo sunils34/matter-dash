@@ -205,7 +205,6 @@ class OverviewChartsPie extends React.Component {
 
 class OverviewChartsBar extends React.Component {
 
-
   render() {
     var query = {
       department: this.props.department

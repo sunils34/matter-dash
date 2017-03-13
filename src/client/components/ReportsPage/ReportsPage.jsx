@@ -9,6 +9,7 @@ import { Link } from 'react-router';
 import DropdownMenu from 'react-dd-menu';
 import ReactTooltip from 'react-tooltip';
 import '../../css/select.css';
+import '../../css/dropdown.css';
 import ReportsPageChart from './ReportsPageChart';
 import ReportsPageSaveDialog from './ReportsPageSaveDialog';
 import './ReportsPage.css';
@@ -351,7 +352,7 @@ class ReportsPage extends React.Component {
           <div key={key} className={containerClass}>
             <div className="align-center align-middle report-object-wrap">
               <Column extraClass="large-12">
-                <Row center extraClass="report-title-wrap">
+                <Row center extraClass="dd-wrap report-title-wrap">
                   <ReportChartTitle
                     type={object.type}
                     department={department}
