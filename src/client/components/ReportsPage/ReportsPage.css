@@ -22,6 +22,7 @@
   .reports-page-header {
     border-bottom: 1px solid #DEDEDE;
     margin-bottom: 20px;
+    height: 60px;
   }
 
 
@@ -214,6 +215,11 @@
       margin-right: 35px;
       background: #83D3C7;
     }
+  }
+
+  .Select-control {
+    font-size: 14px;
+    color: #8C8C8C;
   }
 }
 .save-modal {

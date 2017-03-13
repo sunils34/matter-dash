@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import DropdownMenu from 'react-dd-menu';
 import ReactTooltip from 'react-tooltip';
-import 'react-select/dist/react-select.css';
+import '../../css/select.css';
 import ReportsPageChart from './ReportsPageChart';
 import ReportsPageSaveDialog from './ReportsPageSaveDialog';
 import './ReportsPage.css';
