@@ -56,3 +56,31 @@ a {
 .img-circle {
   border-radius: 50%;
 }
+
+.caret {
+  position: relative;
+}
+
+.caret.downward:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-top: 10px solid #DEDEDE;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+}
+
+.caret.downward:after {
+  content: '';
+  position: absolute;
+  left: 1px;
+  top: 0;
+  border-top: 9px solid #ffffff;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+}
+
+
+@-webkit-keyframes slide-in-bottom{0%{-webkit-transform:translateY(0);transform:translateY(0)}100%{-webkit-transform:translateY(-10px);transform:translateY(-10px)}}
+@keyframes slide-in-bottom{0%{-webkit-transform:translateY(0);transform:translateY(0)}100%{-webkit-transform:translateY(-10px);transform:translateY(-10px)}}

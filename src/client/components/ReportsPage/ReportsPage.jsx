@@ -7,6 +7,7 @@ import _ from 'lodash';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import DropdownMenu from 'react-dd-menu';
+import ReactTooltip from 'react-tooltip';
 import 'react-select/dist/react-select.css';
 import ReportsPageChart from './ReportsPageChart';
 import ReportsPageSaveDialog from './ReportsPageSaveDialog';
@@ -27,6 +28,9 @@ const ReportsAddNewGraphButton = ({ onNewClick, unsaved }) => {
 
   return (
     <div onClick={onNewClick} className={c}>
+      <div className="tip">
+        <div className="caret downward" />
+        <span>New Graph</span></div>
       <span>+</span>
     </div>
   );
@@ -399,6 +403,7 @@ class ReportsPage extends React.Component {
           <ReportsPageSaveDialog router={this.props.router} dispatch={this.props.dispatch} />
         </ReactModal>
         <ReportsPageSaveFooter />
+        <ReactTooltip />
       </div>
     );
   }

@@ -26,7 +26,7 @@ export default function app(state = initialState, action) {
     case CHANGE_DEPARTMENT:
       return {
         ...state,
-        department: action.department
+        department: action.department,
       }
     case CHANGE_PERIOD:
       return {
