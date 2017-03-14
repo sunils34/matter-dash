@@ -80,20 +80,25 @@ const ReportPageListItemOptionsMenu = graphql(DeleteReportMutation, {
 })(_ReportPageListItemOptionsMenu);
 
 
+const ReportPageStartTemplateHeader = () => (
+    <Row className="template-header" expanded>
+      <Link to="/report/new" className="template-item">
+        <div className="description">Start a New Report</div>
+        <div className="template-img-wrap">
+          <Column>
+            <Row className="plus" middle center>+</Row>
+            <Row className="title" center bottom>Blank</Row>
+          </Column>
+        </div>
+      </Link>
+    </Row>
+);
+
+
 class ReportsPageStart extends React.Component {
 
   constructor(props) {
     super(props);
-    this.onReportCreate = this.onReportCreate.bind(this);
-  }
-
-  onReportCreate() {
-    this.props.mutate({ variables: { name: 'New Report' } })
-      .then(({ data }) => {
-        this.props.router.push(`/report/${data.createReport.id}`);
-      }).catch((error) => {
-        console.log('there was an error sending the query', error);
-      });
   }
 
 
@@ -143,9 +148,10 @@ class ReportsPageStart extends React.Component {
     });
 
     return (
-      <div className="container reports-empty-container">
+      <div className="reports-empty-container">
+        <ReportPageStartTemplateHeader />
         <Row extraClass="report-list-container">
-          <Column>
+          <Column className="report-list-column">
             <Row extraClass="reports-list-header">
               <Column><Row>Recent Reports</Row></Column>
               <Column extraClass="large-1 medium-2 small-3"><Row>Last Modified</Row></Column>
@@ -162,7 +168,6 @@ class ReportsPageStart extends React.Component {
             </Row>
           </Column>
         </Row>
-        {getStartedButton}
       </div>);
   }
 }

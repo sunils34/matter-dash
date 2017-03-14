@@ -1,11 +1,24 @@
+ /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React from 'react';
 
-const Row = ({ className, extraClass, children, middle, center, right, onClick }) => {
+const Row = ({
+  className,
+  extraClass,
+  children,
+  middle,
+  bottom,
+  center,
+  right,
+  onClick,
+  expanded,
+}) => {
   let c = 'row';
 
   if (middle) c += ' align-middle';
   if (center) c += ' align-center';
   if (right) c += ' align-right';
+  if (bottom) c += ' align-bottom';
+  if (expanded) c += ' expanded';
 
   if (className) {
     c += ` ${className}`;
@@ -13,6 +26,7 @@ const Row = ({ className, extraClass, children, middle, center, right, onClick }
   if (extraClass) {
     c += ` ${extraClass}`;
   }
+
   return (
     <div className={c} onClick={onClick} >
       {children}
@@ -37,23 +51,27 @@ const Column = ({ className, extraClass, children, small, onClick }) => {
 };
 
 Row.defaultProps = {
-  extraClass: '',
-  className: '',
   align: '',
-  middle: false,
+  bottom: false,
   center: false,
-  right: false,
+  className: '',
+  expanded: false,
+  extraClass: '',
+  middle: false,
   onClick: null,
+  right: false,
 };
 
 Row.propTypes = {
-  extraClass: React.PropTypes.string,
-  className: React.PropTypes.string,
-  children: React.PropTypes.node.isRequired,
-  middle: React.PropTypes.bool,
+  bottom: React.PropTypes.bool,
   center: React.PropTypes.bool,
-  right: React.PropTypes.bool,
+  children: React.PropTypes.node.isRequired,
+  className: React.PropTypes.string,
+  expanded: React.PropTypes.bool,
+  extraClass: React.PropTypes.string,
+  middle: React.PropTypes.bool,
   onClick: React.PropTypes.func,
+  right: React.PropTypes.bool,
 };
 
 Column.defaultProps = {
@@ -75,3 +93,4 @@ export {
   Row,
   Column,
 };
+ /* eslint-enable jsx-a11y/no-static-element-interactions */
