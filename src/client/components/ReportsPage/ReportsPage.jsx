@@ -65,7 +65,7 @@ const ReportsPageHeader = ({ report, isempty, organization, children, dispatch }
     }
 
     viewTypeSelect = (
-      <Column>
+      <Column className="hide-for-small-only">
         <Row right>
           <Select
             searchable={false}
