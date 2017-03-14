@@ -7,10 +7,11 @@ import organization from './queries/organization';
 import user from './queries/user';
 import piedatapoints from './queries/piedatapoints';
 import bardatapoints from './queries/bardatapoints';
-import reportsPageInit from './queries/ReportsPage/init';
+import reports from './queries/reports/all';
+import comparison from './queries/comparison/all';
+import reportsPageInit from './queries/reports/pageinit';
 import createOrUpdateReport from './mutations/reports/createOrUpdate';
 import deleteReport from './mutations/reports/delete';
-import reports from './queries/reports/all';
 
 
 export default new Schema({
@@ -20,6 +21,7 @@ export default new Schema({
       user,
       organization,
       reports,
+      comparison,
       piedatapoints,
       bardatapoints,
       reportsPageInit,
