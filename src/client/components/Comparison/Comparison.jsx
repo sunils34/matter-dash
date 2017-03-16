@@ -7,7 +7,7 @@ import MatterLoadingIndicator from '../LoadingIndicator';
 import MatterHorizontalBarChart from '../Charts/MatterHorizontalBarChart/MatterHorizontalBarChart';
 import { Row, Column } from '../Grid';
 import * as comparisonActions from '../../redux/actions/comparison';
-import './comparison.css';
+import './Comparison.css';
 
 
 class Comparison extends React.Component {
