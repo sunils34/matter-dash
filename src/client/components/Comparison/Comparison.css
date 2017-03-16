@@ -1,0 +1,14 @@
+.comparison {
+  .comparison-data {
+    .column {
+      padding-right: 0px;
+    }
+
+    .column.ethnicity {
+      overflow: hidden;
+      .bar-container {
+        width: 150%
+      }
+    }
+  }
+}
