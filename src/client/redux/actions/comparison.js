@@ -8,10 +8,11 @@ export function dataFetched(gender, ethnicity) {
   };
 }
 
-export function sort(measure, value) {
+export function sort(measure, value, order = 'desc') {
   return {
     type: types.COMPARISON_SORT,
     measure,
     value,
+    order,
   };
 }

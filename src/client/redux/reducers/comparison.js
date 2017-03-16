@@ -1,24 +1,27 @@
+import _ from 'lodash';
 import {
   COMPARISON_DATA_FETCHED,
   COMPARISON_SORT,
 } from '../actionTypes/comparison';
 
-import _ from 'lodash';
 
 const initialState = {
   department: 'All',
   data: null,
   gender: null,
   ethnicity: null,
-  sort: 'name',
-  order: 'desc',
+  sortMeasure: 'name',
+  sortValue: null,
+  sortOrder: 'desc',
   year: '2016',
 };
 
 const sortResults = (state, measure, value, order) => {
   const nextState = {
     ...state,
-    order,
+    sortMeasure: measure,
+    sortOrder: order,
+    sortValue: value,
   };
 
   nextState.data = _.orderBy(
@@ -47,8 +50,7 @@ export default function comparison(state = initialState, action) {
         }),
       };
     case COMPARISON_SORT: {
-      const order = state.order === 'desc' ? 'asc' : 'desc';
-      return sortResults(state, action.measure, action.value, order);
+      return sortResults(state, action.measure, action.value, action.order);
     }
     default:
       return state;
