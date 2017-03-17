@@ -9,6 +9,7 @@ import piedatapoints from './queries/piedatapoints';
 import bardatapoints from './queries/bardatapoints';
 import reports from './queries/reports/all';
 import comparison from './queries/comparison/all';
+import comparisonFilters from './queries/comparison/filters';
 import reportsPageInit from './queries/reports/pageinit';
 import createOrUpdateReport from './mutations/reports/createOrUpdate';
 import deleteReport from './mutations/reports/delete';
@@ -22,6 +23,7 @@ export default new Schema({
       organization,
       reports,
       comparison,
+      comparisonFilters,
       piedatapoints,
       bardatapoints,
       reportsPageInit,

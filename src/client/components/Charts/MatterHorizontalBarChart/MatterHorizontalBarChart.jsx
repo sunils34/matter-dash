@@ -14,7 +14,7 @@ const CustomizedLabel = (props) => {
   const { x, y, stroke, index, value } = props;
 
   let val = _.round(Math.abs(value[0] - value[1]));
-  if (val < 5) val = _.round(Math.abs(value[0] - value[1]), 1);
+  // if (val < 5) val = _.round(Math.abs(value[0] - value[1]), 1);
   let dx = -1 * Math.min(20, x / 2);
   let fill = 'white';
 

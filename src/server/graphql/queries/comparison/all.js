@@ -23,14 +23,21 @@ const getFields = async (type = 'gender') => {
   return fields;
 };
 
-const getCompanyResults = (type = 'gender', department = '') => {
+const getCompanyResults = (type = 'gender', department = '', year = '2016') => {
   let departmentStmt = '';
   if (department && _.lowerCase(department) !== 'all') {
-    departmentStmt = `WHERE department='${department}'`;
+    departmentStmt = ` AND department='${department}'`;
   }
 
   const stmt = `
-    SELECT CONCAT(companyName, '-', year) as companyKey, companyName, year, ${type}, sum(total) as total FROM companyEeoRows ${departmentStmt} GROUP BY companyName, year, ${type}
+    SELECT CONCAT(companyName, '-', year) as companyKey,
+      companyName,
+      year, ${type},
+      sum(total) as total
+    FROM companyEeoRows 
+    WHERE year="${year}"
+      ${departmentStmt}
+    GROUP BY companyName, year, ${type}
     ORDER BY year DESC, companyName ASC`;
 
   return sequelize.query(stmt, {
@@ -55,6 +62,10 @@ const convertToPercentageData = (data, fields, measure) => {
         elt[`${measure}Raw`][f.name] = elt[f.name];
         elt[measure][f.name] = _.round((elt[f.name] / total) * 100, 1);
         delete elt[f.name];
+      } else {
+        // there is no entry for this field, which means we can assume the value is 0
+        elt[`${measure}Raw`][f.name] = 0;
+        elt[measure][f.name] = 0;
       }
     });
     return elt;
@@ -83,16 +94,18 @@ const comparison = {
     department: { type: StringType },
     measure: { type: StringType },
     sort: { type: StringType },
+    year: { type: StringType },
   },
   async resolve(parent, args) {
     if (!parent.request.user) return null;
     const department = args.department;
+    const year = args.year || '2016';
     let measure = 'gender';
     if (_.lowerCase(args.measure) === 'ethnicity') {
       measure = 'ethnicity';
     }
 
-    const r = await getCompanyResults(measure, department);
+    const r = await getCompanyResults(measure, department, year);
     const results = {};
     r.forEach((item) => {
       // initialize

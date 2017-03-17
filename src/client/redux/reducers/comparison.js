@@ -2,13 +2,18 @@ import _ from 'lodash';
 import {
   COMPARISON_DATA_FETCHED,
   COMPARISON_SORT,
+  COMPARISON_CHANGE_FILTER,
 } from '../actionTypes/comparison';
 
 
 const initialState = {
   department: 'All',
-  data: null,
+  displayData: null,
   gender: null,
+  filters: {
+    years: null,
+    departments: null,
+  },
   ethnicity: null,
   sortMeasure: 'name',
   sortValue: null,
@@ -24,8 +29,8 @@ const sortResults = (state, measure, value, order) => {
     sortValue: value,
   };
 
-  nextState.data = _.orderBy(
-    nextState.data,
+  nextState.displayData = _.orderBy(
+    nextState.displayData,
     [`${measure}.${value}`],
     [order],
   );
@@ -35,22 +40,33 @@ const sortResults = (state, measure, value, order) => {
 
 export default function comparison(state = initialState, action) {
   switch (action.type) {
-    case COMPARISON_DATA_FETCHED:
-      return {
+    case COMPARISON_DATA_FETCHED: {
+      const displayData = _.map(action.gender.results, (item) => {
+        const ethnicityItem = _.find(action.ethnicity.results, { companyKey: item.companyKey });
+        return {
+          ...item,
+          ethnicityRaw: ethnicityItem.ethnicityRaw,
+          ethnicity: ethnicityItem.ethnicity,
+        };
+      });
+
+      const nextState = {
         ...state,
+        filters: action.filters,
         gender: action.gender,
         ethnicity: action.ethnicity,
-        data: _.map(action.gender.results, (item) => {
-          const ethnicityItem = _.find(action.ethnicity.results, { companyKey: item.companyKey });
-          return {
-            ...item,
-            ethnicityRaw: ethnicityItem.ethnicityRaw,
-            ethnicity: ethnicityItem.ethnicity,
-          };
-        }),
+        displayData,
       };
+
+      return sortResults(nextState, nextState.sortMeasure, nextState.sortValue, nextState.sortOrder);
+    }
     case COMPARISON_SORT: {
       return sortResults(state, action.measure, action.value, action.order);
+    }
+    case COMPARISON_CHANGE_FILTER: {
+      const filter = {};
+      filter[action.filter] = action.value;
+      return _.extend({}, state, filter);
     }
     default:
       return state;
