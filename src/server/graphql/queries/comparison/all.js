@@ -10,7 +10,7 @@ import sequelize from '../../../database/mysql/sequelize';
 const getFields = async (type = 'gender') => {
   const COLORS = {
     gender: ['#CBCBCB', '#72D5C6', '#6E6EE2', '#F1BA00', '#E96DA4', '#E28D6E', '#3DBAEF', '#3481A5'],
-    ethnicity: ['#ABABAB', '#72D5C6', '#6E6EE2', '#F1BA00', '#E96DA4', '#E28D6E', '#3DBAEF', '#3481A5'],
+    ethnicity: ['#ABABAB', '#6E6EE2', '#F1BA00', '#E96DA4', '#E28D6E', '#3DBAEF', '#72D5C6', '#3481A5'],
   };
 
   let fields = await sequelize.query(`SELECT ${type} as name FROM companyEeoRows GROUP BY ${type} ORDER BY sum(total) DESC`, {
@@ -46,7 +46,7 @@ const getCompanyResults = (type = 'gender', department = '', year = '2016') => {
 };
 
 const convertToPercentageData = (data, fields, measure) => {
-  const retData = _.map(data, (element) => {
+  let retData = _.map(data, (element) => {
     let total = 0;
     const elt = _.extend({}, element);
     fields.forEach((f) => {
@@ -56,6 +56,7 @@ const convertToPercentageData = (data, fields, measure) => {
     });
     // move data to elt.gender or elt.enthnicity
     elt[measure] = {};
+    elt[`${measure}Total`] = total;
     elt[`${measure}Raw`] = {};
     fields.forEach((f) => {
       if (elt[f.name]) {
@@ -70,6 +71,8 @@ const convertToPercentageData = (data, fields, measure) => {
     });
     return elt;
   });
+
+  retData = _.filter(retData, (elt) => (elt[`${measure}Total`] > 0));
   return retData;
 };
 
