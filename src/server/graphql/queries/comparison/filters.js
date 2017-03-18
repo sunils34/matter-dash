@@ -10,7 +10,7 @@ import sequelize from '../../../database/mysql/sequelize';
 const getFilters = (type) => {
   const stmt = `
   SELECT ${type} as label, ${type} as value
-  FROM companyEeoRows
+  FROM companyComparisons
   GROUP BY ${type}`;
 
   return sequelize.query(stmt, {

@@ -34,6 +34,15 @@ const MatterHorizontalBarChart = ({ fields, data, yDataKey, xDataKey, stackedPer
 
   const d = _.cloneDeep(data);
   let completeBar = null;
+
+  if (!d[0][xDataKey]) {
+    return <div className="no-data">No Data Available</div>;
+  }
+
+  if (!d[0][xDataKey][fields[0].name]) {
+    d[0][xDataKey][fields[0].name] = 0;
+  }
+
   if (complete) {
     d[0].complete = 100 - d[0][xDataKey][fields[0].name];
     completeBar = (

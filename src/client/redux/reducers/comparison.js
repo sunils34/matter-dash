@@ -29,10 +29,12 @@ const sortResults = (state, measure, value, order) => {
     sortValue: value,
   };
 
-  nextState.displayData = _.orderBy(
-    nextState.displayData,
-    [`${measure}.${value}`],
-    [order],
+  nextState.displayData = _.concat(
+    _.orderBy(
+      _.filter(nextState.displayData, item => item[measure]),
+      [`${measure}.${value}`],
+      [order]),
+    _.filter(nextState.displayData, item => !item[measure]),
   );
 
   return nextState;
@@ -42,7 +44,7 @@ export default function comparison(state = initialState, action) {
   switch (action.type) {
     case COMPARISON_DATA_FETCHED: {
       const displayData = _.map(action.gender.results, (item) => {
-        const ethnicityItem = _.find(action.ethnicity.results, { companyKey: item.companyKey });
+        const ethnicityItem = _.find(action.ethnicity.results, { companyKey: item.companyKey }) || {};
         return {
           ...item,
           ethnicityRaw: ethnicityItem.ethnicityRaw,

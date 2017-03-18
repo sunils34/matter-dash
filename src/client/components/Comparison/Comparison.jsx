@@ -13,7 +13,6 @@ import './Comparison.css';
 
 let ComparisonFilterHeader = ({ dispatch, selectedYear, selectedDepartment, yearFilters, departmentFilters }) => {
 
-  const deptFilters = _.concat({ value: 'All', label: 'All Employees' }, departmentFilters);
   const changeFilter = (d, filter, chosen) => {
     d(comparisonActions.changeFilter(filter, chosen.value));
   };
@@ -30,7 +29,7 @@ let ComparisonFilterHeader = ({ dispatch, selectedYear, selectedDepartment, year
           className="comparison-filter"
           name="Dashboard View"
           value={selectedDepartment}
-          options={deptFilters}
+          options={departmentFilters}
         />
       </Column>
       <Column className="small-2">
@@ -172,7 +171,7 @@ class Comparison extends React.Component {
                     {
                       _.map(ethnicity.fields, field => (
                         <Column key={`${dataPoint.companyKey}-${field.name}`} className="small-1 ethnicity">
-                          <Row className="bar-container">
+                          <Row className="bar-container" center middle>
                             <MatterHorizontalBarChart complete stackedPercentage fields={[field]} data={[dataPoint]} yDataKey="companyKey" xDataKey="ethnicity" height={50} />
                           </Row>
                         </Column>
@@ -192,7 +191,7 @@ class Comparison extends React.Component {
 
 const ComparisonQuery = gql`
 query comparison($department: String, $year: String) {
-  gender: comparison (department: $department, year: $year, measure: "gender")
+  gender: comparisonCompanies (department: $department, year: $year, measure: "gender")
   {
     results
     fields {
@@ -200,7 +199,7 @@ query comparison($department: String, $year: String) {
       color
     }
   }
-  ethnicity: comparison (department: $department, year: $year, measure: "ethnicity")
+  ethnicity: comparisonCompanies (department: $department, year: $year, measure: "ethnicity")
   {
     results
     fields {

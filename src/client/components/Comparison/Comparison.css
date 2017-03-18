@@ -78,4 +78,9 @@
       }
     }
   }
+
+  .no-data {
+    color: #ABABAB;
+    font-size: 12px;
+  }
 }
