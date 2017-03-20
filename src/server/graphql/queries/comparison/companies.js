@@ -23,19 +23,29 @@ const getFields = async (type = 'gender') => {
   return fields;
 };
 
-const getCompanyResults = (measure = 'gender', department = 'All', year = '2016') => {
-  const stmt = `
-    SELECT CONCAT(companyName, '-', year) as companyKey,
-      companyName,
-      year, TRIM(${measure}) as ${measure},
-      pct as total
-    FROM companyComparisons
-    WHERE year="${year}"
-      AND department = "${department}"
-      AND ${measure} <> ''
-    GROUP BY companyName, year, ${measure}, pct
-    ORDER BY year DESC, companyName ASC`;
+const getCompanyResults = (measure = 'gender', department = 'All', year = 'latest') => {
+  const yearStmt = year === 'latest' ? '' : ` AND year = ${year}`;
 
+  const stmt = `
+    SELECT CONCAT(c.companyName, '-', c.year) as companyKey,
+      c.companyName as companyName,
+      c.year, TRIM(c.${measure}) as ${measure},
+      c.pct as total
+      FROM companyComparisons c
+      INNER JOIN
+      (
+        SELECT companyName, department, max(year) as year
+        FROM companyComparisons
+        WHERE
+          department = "${department}"
+          AND ${measure} <> ''
+          ${yearStmt}
+        GROUP BY companyName, department
+      ) cc ON c.companyName=cc.companyName
+        AND c.year=cc.year
+        AND c.department=cc.department
+      WHERE ${measure} <> ''
+      ORDER BY year DESC, companyName ASC;`;
   return sequelize.query(stmt, {
     type: sequelize.QueryTypes.SELECT,
   });
@@ -67,7 +77,7 @@ const comparison = {
   async resolve(parent, args) {
     if (!parent.request.user) return null;
     const department = args.department;
-    const year = args.year || '2016';
+    const year = args.year || 'latest';
     let measure = 'gender';
     if (_.lowerCase(args.measure) === 'ethnicity') {
       measure = 'ethnicity';

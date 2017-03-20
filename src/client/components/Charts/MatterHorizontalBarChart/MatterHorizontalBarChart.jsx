@@ -30,8 +30,7 @@ const CustomizedLabel = (props) => {
 };
 
 
-const MatterHorizontalBarChart = ({ fields, data, yDataKey, xDataKey, includeZeroFields, stackedPercentage, height , complete }) => {
-
+const MatterHorizontalBarChart = ({ fields, data, yDataKey, xDataKey, includeZeroFields, stackedPercentage, height, complete }) => {
   const d = _.cloneDeep(data);
   let completeBar = null;
 
@@ -51,7 +50,7 @@ const MatterHorizontalBarChart = ({ fields, data, yDataKey, xDataKey, includeZer
         isAnimationActive={false}
         key="bar-fill"
         dataKey="complete"
-        data={[{num:d[0][xDataKey][fields[0].name]}]}
+        data={ [{ num:d[0][xDataKey][fields[0].name] }] }
         stackId="a"
         fill="#ECECEC" />
     );

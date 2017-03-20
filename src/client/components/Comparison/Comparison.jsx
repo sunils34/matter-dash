@@ -19,6 +19,8 @@ let ComparisonFilterHeader = ({ dispatch, selectedYear, selectedDepartment, year
   const changeFilterDept = changeFilter.bind(this, dispatch, 'department');
   const changeFilterYear = changeFilter.bind(this, dispatch, 'year');
 
+  const yF = _.concat([{label:'Latest', value: 'latest'}], yearFilters);
+
   return (
     <Row right>
       <Column className="small-3">
@@ -40,7 +42,7 @@ let ComparisonFilterHeader = ({ dispatch, selectedYear, selectedDepartment, year
           className="comparison-filter"
           name="Dashboard View"
           value={selectedYear}
-          options={yearFilters}
+          options={yF}
         />
       </Column>
     </Row>

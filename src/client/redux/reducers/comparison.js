@@ -18,7 +18,7 @@ const initialState = {
   sortMeasure: 'name',
   sortValue: null,
   sortOrder: 'desc',
-  year: '2016',
+  year: 'latest',
 };
 
 // TODO clean this up as it's a mess and hard to follow.
