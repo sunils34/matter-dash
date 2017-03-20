@@ -57,7 +57,7 @@ ComparisonFilterHeader = connect(state => ({
 let ComparisonSortHeader = ({ dispatch, measure, value, sortMeasure, sortValue, sortOrder, }) => {
 
 
-  let c = 'sort-header align-bottom';
+  let c = 'sort-header align-bottom noselect';
   let sortArrow = 'keyboard_arrow_down';
   let newSortValue = 'desc';
   if (sortMeasure === measure && sortValue === value) {
