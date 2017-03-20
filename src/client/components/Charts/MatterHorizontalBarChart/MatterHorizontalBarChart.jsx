@@ -30,7 +30,7 @@ const CustomizedLabel = (props) => {
 };
 
 
-const MatterHorizontalBarChart = ({ fields, data, yDataKey, xDataKey, stackedPercentage, height , complete }) => {
+const MatterHorizontalBarChart = ({ fields, data, yDataKey, xDataKey, includeZeroFields, stackedPercentage, height , complete }) => {
 
   const d = _.cloneDeep(data);
   let completeBar = null;
@@ -39,7 +39,7 @@ const MatterHorizontalBarChart = ({ fields, data, yDataKey, xDataKey, stackedPer
     return <div className="no-data">No Data Available</div>;
   }
 
-  if (!d[0][xDataKey][fields[0].name]) {
+  if (includeZeroFields && !d[0][xDataKey][fields[0].name]) {
     d[0][xDataKey][fields[0].name] = 0;
   }
 
@@ -59,27 +59,40 @@ const MatterHorizontalBarChart = ({ fields, data, yDataKey, xDataKey, stackedPer
 
   return (
     <ResponsiveContainer height={height} width="100%">
-    <BarChart layout="vertical" data={d}>
-      <YAxis hide type="category" dataKey="companyKey"/>
-      <XAxis hide type="number" unit="%" domain={[0, 100]}/>
-      {completeBar}
-      {
-        fields.map((field) => (
-          <Bar
-            label={<CustomizedLabel />}
-            width={100}
-            isAnimationActive={false}
-            unit="%"
-            key={`bar-${field.name}`}
-            dataKey={`${xDataKey}.${field.name}`}
-            stackId='a'
-            fill={field.color}
-            />
-        ))
-      }
-    </BarChart>
+      <BarChart layout="vertical" data={d}>
+        <YAxis hide type="category" dataKey="companyKey" />
+        <XAxis hide type="number" unit="%" domain={[0, 100]} />
+        {completeBar}
+        {
+          fields.map((field) => {
+            if (!includeZeroFields && !Math.round(d[0][xDataKey][field.name])) {
+              return null;
+            }
+            return (
+              <Bar
+                label={<CustomizedLabel />}
+                width={100}
+                isAnimationActive={false}
+                unit="%"
+                key={`bar-${field.name}`}
+                dataKey={`${xDataKey}.${field.name}`}
+                stackId="a"
+                fill={field.color}
+              />
+            );
+          })
+        }
+      </BarChart>
     </ResponsiveContainer>
   );
-}
+};
+
+MatterHorizontalBarChart.defaultProps = {
+  includeZeroFields: false,
+};
+
+MatterHorizontalBarChart.propTypes = {
+  includeZeroFields: React.PropTypes.bool,
+};
 
 export default MatterHorizontalBarChart;

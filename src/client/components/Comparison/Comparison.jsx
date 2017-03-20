@@ -172,7 +172,7 @@ class Comparison extends React.Component {
                       _.map(ethnicity.fields, field => (
                         <Column key={`${dataPoint.companyKey}-${field.name}`} className="small-1 ethnicity">
                           <Row className="bar-container" center middle>
-                            <MatterHorizontalBarChart complete stackedPercentage fields={[field]} data={[dataPoint]} yDataKey="companyKey" xDataKey="ethnicity" height={50} />
+                            <MatterHorizontalBarChart complete includeZeroFields stackedPercentage fields={[field]} data={[dataPoint]} yDataKey="companyKey" xDataKey="ethnicity" height={50} />
                           </Row>
                         </Column>
                       ))

@@ -32,25 +32,24 @@ const sortResults = (state, measure, value, order) => {
     sortValue: value,
   };
 
-  let data = nextState.displayData;
+  let data = _.filter(nextState.displayData, item => item[measure]);
 
   // if a field doesn't exist in the data, assume it's at 0%
   if (measure === 'ethnicity' || measure === 'gender') {
-    data = _.map(nextState.displayData, item => ({
-      ...item,
-      [measure]: {
-        ...item[measure],
-        [value]: item[measure][value] || 0,
-      },
-    }));
+    data = _.map(
+      data,
+      item => ({
+        ...item,
+        [measure]: {
+          ...item[measure],
+          [value]: item[measure][value] || 0, // default to 0 if the element isn't included
+        },
+      }));
   }
 
   nextState.displayData = _.concat(
-    _.orderBy(
-      _.filter(data, item => item[measure]),
-      [`${measure}.${value}`],
-      [order]),
-    _.filter(data, item => !item[measure]),
+    _.orderBy(data, [`${measure}.${value}`], [order]),
+    _.filter(nextState.displayData, item => !item[measure]),
   );
 
   return nextState;
