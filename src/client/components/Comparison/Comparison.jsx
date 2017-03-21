@@ -165,7 +165,10 @@ class Comparison extends React.Component {
                     _.map(comparisonData, dataPoint => (
                       <Row key={dataPoint.companyKey} className={dataPoint.isMine ? 'company-wrap mine' : 'company-wrap'} middle center>
                         <Column className="small-1">
-                          <Row className="company-name">{dataPoint.companyName}</Row>
+                          <Row className="company-name" middle>
+                            <span>{dataPoint.companyName}</span>
+                            <span className="me">{dataPoint.isMine ? '(You)' : ''}</span>
+                          </Row>
                         </Column>
                         <Column className="small-2">
                           <Row>

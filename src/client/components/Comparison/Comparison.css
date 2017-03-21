@@ -73,6 +73,12 @@
     .company-name {
       font-size: 14px;
       color: #4A4A4A;
+
+      .me {
+        color: #ABABAB;
+        font-size: 12px;
+        margin-left: 5px;
+      }
     }
 
     .column:not(.companies-wrap) {
