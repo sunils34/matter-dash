@@ -106,4 +106,16 @@
     color: #ABABAB;
     font-size: 12px;
   }
+
+  .data-note {
+    font-size: 14px;
+    color: #CBCBCB;
+    letter-spacing: 0;
+    text-align: center;
+
+    a {
+      color: #CBCBCB;
+      text-decoration: underline;
+    }
+  }
 }

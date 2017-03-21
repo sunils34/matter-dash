@@ -130,7 +130,7 @@ class Comparison extends React.Component {
 
 
     return (
-      <Row className="comparison">
+      <Row className="comparison" center>
         <Column>
           <Row className="header-row">
             <Column>
@@ -189,6 +189,13 @@ class Comparison extends React.Component {
                   }
                 </Column>
               </Row>
+            </Column>
+          </Row>
+          <Row className="data-note" center middle>
+            <Column className="small-11 medium-9 large-7">
+              <p>Comparisons help you better understand where you’re at compared to other companies.</p>
+              <p>Gender breakdown typically represents the world-wide workforce, whereas the ethnicity breakdown is typically US only.  We use public EEOC data in addition to data provided through company blog posts and diversity dashboards. Because we're reliant on self-reporting from individual companies, we unfortunately cannot guarantee accuracy 100%.  However we promise to keep the data as reliable and up-to-date as possible.</p>
+              <p>Have a question? <a href='mailto:hello@matterapp.io'>get in touch!</a></p>
             </Column>
           </Row>
         </Column>
