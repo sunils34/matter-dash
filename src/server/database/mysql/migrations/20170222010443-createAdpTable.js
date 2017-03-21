@@ -40,6 +40,7 @@ module.exports = {
         eeoEthnicCode: Sequelize.STRING,
         eeoEthnicDescription: Sequelize.STRING,
         gender: Sequelize.STRING,
+        ethnicity: Sequelize.STRING,
         createdAt: {
           type: Sequelize.DATE
         },

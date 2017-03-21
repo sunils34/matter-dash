@@ -142,7 +142,7 @@ class Comparison extends React.Component {
           </Row>
           <Row>
             <Column className="comparison-data">
-              <Row className="sort-header-row">
+              <Row className="sort-header-row" center>
                 <Column className="small-offset-1 small-2 align-self-bottom">
                   <Row>
                     <Column><Row bottom><ComparisonSortHeader measure="gender" value="Female" /></Row></Column>
@@ -159,31 +159,35 @@ class Comparison extends React.Component {
                   ))
                 }
               </Row>
-              {
-                _.map(comparisonData, dataPoint => (
-                  <Row key={dataPoint.companyKey} middle>
-                    <Column className="small-1">
-                      <Row className="company-name">{dataPoint.companyName}</Row>
-                    </Column>
-                    <Column className="small-2">
-                      <Row>
-                        <MatterHorizontalBarChart stackedPercentage fields={gender.fields} data={[dataPoint]} yDataKey="companyKey" xDataKey="gender" height={50} />
-                      </Row>
-                    </Column>
-                    {
-                      _.map(ethnicity.fields, field => (
-                        <Column key={`${dataPoint.companyKey}-${field.name}`} className="small-1 ethnicity">
-                          <Row className="bar-container" center middle>
-                            <MatterHorizontalBarChart complete includeZeroFields stackedPercentage fields={[field]} data={[dataPoint]} yDataKey="companyKey" xDataKey="ethnicity" height={50} />
+              <Row>
+                <Column className="companies-wrap">
+                  {
+                    _.map(comparisonData, dataPoint => (
+                      <Row key={dataPoint.companyKey} className={dataPoint.isMine ? 'company-wrap mine' : 'company-wrap'} middle center>
+                        <Column className="small-1">
+                          <Row className="company-name">{dataPoint.companyName}</Row>
+                        </Column>
+                        <Column className="small-2">
+                          <Row>
+                            <MatterHorizontalBarChart stackedPercentage fields={gender.fields} data={[dataPoint]} yDataKey="companyKey" xDataKey="gender" height={50} />
                           </Row>
                         </Column>
-                      ))
-                    }
-                  </Row>
-                ))
-              }
-              </Column>
-            </Row>
+                        {
+                          _.map(ethnicity.fields, field => (
+                            <Column key={`${dataPoint.companyKey}-${field.name}`} className="small-1 ethnicity">
+                              <Row className="bar-container" center middle>
+                                <MatterHorizontalBarChart complete includeZeroFields stackedPercentage fields={[field]} data={[dataPoint]} yDataKey="companyKey" xDataKey="ethnicity" height={50} />
+                              </Row>
+                            </Column>
+                          ))
+                        }
+                      </Row>
+                    ))
+                  }
+                </Column>
+              </Row>
+            </Column>
+          </Row>
         </Column>
       </Row>
     );

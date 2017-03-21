@@ -53,7 +53,7 @@ const getCompanyResults = async (measure = 'gender', department = 'All', year = 
 
 const getMyCompanyResults = async (organization, measure = 'gender', department = 'All', year = 'latest') => {
   const departmentStmt = department === 'All' ? "<> ''" : ` = "${department}"`;
-  const measureField = measure === 'gender' ? 'gender' : 'eeoEthnicDescription';
+  const measureField = measure === 'gender' ? 'gender' : 'ethnicity';
   const yearStmt = year === 'latest' ? '' : ` AND YEAR(hireDate) <= ${year} `;
 
   const stmt = `
@@ -91,8 +91,8 @@ const getMyCompanyResults = async (organization, measure = 'gender', department 
     total += item.count;
   });
 
-  results = _.map(results, (item) => (
-    {...item, total: _.round((item.count * 100) / total, 2) }
+  results = _.map(results, item => (
+    { ...item, total: _.round((item.count * 100) / total, 2), isMine: true }
   ));
 
   return results;
@@ -148,6 +148,7 @@ const comparison = {
           companyName: item.companyName,
           [measure]: {},
         };
+        if (item.isMine) { results[item.companyKey].isMine = true; }
       }
       results[item.companyKey][measure][item[measure]] = item.total;
     });

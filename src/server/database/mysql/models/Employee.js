@@ -23,6 +23,7 @@ module.exports = function(sequelize, DataTypes) {
     ageRange: DataTypes.STRING,
     eeoEthnicCode: DataTypes.STRING,
     eeoEthnicDescription: DataTypes.STRING,
+    ethnicity: DataTypes.STRING,
     gender: DataTypes.STRING,
     createdAt: {
       type: DataTypes.DATE
