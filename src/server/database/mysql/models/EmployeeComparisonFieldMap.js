@@ -13,8 +13,8 @@ module.exports = function(sequelize, DataTypes) {
     },
     employeeType: DataTypes.STRING,
     comparisonType: DataTypes.STRING,
-    organizationObject: DataTypes.TEXT,
-    comparisonObject: DataTypes.TEXT,
+    employeeValue: DataTypes.TEXT,
+    comparisonValue: DataTypes.TEXT,
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
   }, {

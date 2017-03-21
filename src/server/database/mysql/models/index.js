@@ -26,6 +26,7 @@ function sync(...args) {
 }
 
 db.sync = sync;
+db.sequelize = sequelize;
 
 export default db;
 

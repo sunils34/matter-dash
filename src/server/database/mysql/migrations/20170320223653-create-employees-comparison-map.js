@@ -18,10 +18,10 @@ module.exports = {
       comparisonField: {
         type: Sequelize.STRING
       },
-      organizationObject: {
+      employeeValue: {
         type: Sequelize.TEXT
       },
-      comparisonObject: {
+      comparisonValue: {
         type: Sequelize.TEXT
       },
       createdAt: {
