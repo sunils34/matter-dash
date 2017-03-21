@@ -5,6 +5,8 @@ import OverviewSection from './components/OverviewSection/OverviewSection';
 import ReportsPage from './components/ReportsPage/ReportsPage';
 import ReportsPageStart from './components/ReportsPage/ReportsPageStart';
 
+import Comparison from './components/Comparison/Comparison';
+
 function refreshBugsnag() {
   // Bugsnag.refresh()
 }
@@ -15,6 +17,7 @@ const Routes = (
     <Route path="/dashboard" component={OverviewSection} />
     <Route path="/reports" component={ReportsPageStart} />
     <Route path="/report/:id" component={ReportsPage} />
+    <Route path="/comparison" component={Comparison} />
   </Route>
 );
 
