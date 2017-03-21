@@ -5,10 +5,10 @@ import {
 } from 'graphql';
 import GraphQLJSON from 'graphql-type-json';
 import ReportType from '../../types/ReportType';
-import { Report, ReportObject } from '../../../database/mysql/models';
+import db from '../../../database/mysql/models';
 
 const updateReportObject = async (report, newObject, idx) => {
-  const reportObject = await ReportObject.findOne({
+  const reportObject = await db.ReportObject.findOne({
     where: {
       id: newObject.id,
       reportId: report.id,
@@ -40,7 +40,7 @@ const createReportObject = async (report, newObject, idx) => {
     return { error: 'Report Objects must have details' };
   }
 
-  reportObject = await ReportObject.create(reportObject);
+  reportObject = await db.ReportObject.create(reportObject);
   return reportObject.setReport(report);
 };
 
@@ -60,13 +60,13 @@ export default {
     let report = null;
 
     if (args.id === 'new') {
-      report = await Report.create({
+      report = await db.Report.create({
         name: args.name || 'New Report',
         details: args.details || {},
       });
       await report.setOwner(user);
     } else {
-      report = await Report.findOne({
+      report = await db.Report.findOne({
         where: {
           id: args.id,
           userId: user.id,
@@ -84,7 +84,7 @@ export default {
         // delete objects first
         if (object.deleted) {
           if (object.id) {
-            await ReportObject.destroy({
+            await db.ReportObject.destroy({
               where: {
                 id: object.id,
               },

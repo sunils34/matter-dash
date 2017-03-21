@@ -1,84 +1,91 @@
-import Sequelize from 'sequelize';
-import Model from '../sequelize';
 import bcrypt from 'bcryptjs';
 import shortid from 'shortid';
 
 const SALT_WORK_FACTOR = 10;
-function hashPassword(password) {
-  var salt = bcrypt.genSaltSync(SALT_WORK_FACTOR);
-  var hash = bcrypt.hashSync(password || '', salt);
+const hashPassword = (password) => {
+  const salt = bcrypt.genSaltSync(SALT_WORK_FACTOR);
+  const hash = bcrypt.hashSync(password || '', salt);
   return hash;
-}
+};
 
 
-function comparePassword(password, hash) {
-  console.log(`comparing ${password} to ${hash}`);
-  return bcrypt.compareSync(password, hash); // true
-}
+const comparePassword = (password, hash) => (
+  bcrypt.compareSync(password, hash) // true
+);
 
-const User = Model.define('users', {
-  id: {
-    type: Sequelize.STRING,
-    defaultValue: function gen() {
-      return `u_${shortid.generate()}`;
+export default (Model, DataTypes) => {
+  const User = Model.define('users', {
+    id: {
+      type: DataTypes.STRING,
+      defaultValue: function gen() {
+        return `u_${shortid.generate()}`;
+      },
+      primaryKey: true,
     },
-    primaryKey: true
-  },
-  name: {
-    type: Sequelize.STRING
-  },
-  email: {
-    type: Sequelize.STRING(255),
-    validate: {isEmail: true}
-  },
-  emailConfirmed: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: false
-  },
-
-  picture: {
-    type: Sequelize.STRING(255)
-  },
-
-  gender: {
-    type: Sequelize.STRING(50)
-  },
-
-  location: {
-    type: Sequelize.STRING(100)
-  },
-
-  profileId: {
-    type: Sequelize.STRING(100)
-  },
-  profileType: {
-    type: Sequelize.STRING(100)
-  },
-  website: {
-    type: Sequelize.STRING(255)
-  },
-  passwordHash: Sequelize.STRING,
-  password: {
-    type: Sequelize.VIRTUAL,
-    set: function (val) {
-      this.setDataValue('password', val); // Remember to set the data value, otherwise it won't be validated
-      const hash = hashPassword(val);
-      this.setDataValue('passwordHash', hash);
+    name: {
+      type: DataTypes.STRING,
     },
-    validate: {
-      /* isLongEnough: function (val) {
-       if (val.length < 7) {
-       throw new Error("Please choose a longer password")
-       }
-       }*/
-    }
-  }
-}, {
-  indexes: [
-    {fields: ['email']},
-    {fields:['profileId']}
-  ]
-}, {tableName: 'users'} );
+    email: {
+      type: DataTypes.STRING(255),
+      validate: { isEmail: true },
+    },
+    emailConfirmed: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+
+    picture: {
+      type: DataTypes.STRING(255),
+    },
+
+    gender: {
+      type: DataTypes.STRING(50),
+    },
+
+    location: {
+      type: DataTypes.STRING(100),
+    },
+
+    profileId: {
+      type: DataTypes.STRING(100),
+    },
+    profileType: {
+      type: DataTypes.STRING(100),
+    },
+    website: {
+      type: DataTypes.STRING(255),
+    },
+    passwordHash: DataTypes.STRING,
+    password: {
+      type: DataTypes.VIRTUAL,
+      set: (val) => {
+        this.setDataValue('password', val); // Remember to set the data value, otherwise it won't be validated
+        const hash = hashPassword(val);
+        this.setDataValue('passwordHash', hash);
+      },
+      validate: {
+        /* isLongEnough: function (val) {
+      if (val.length < 7) {
+      throw new Error("Please choose a longer password")
+      }
+      }*/
+      },
+    },
+  }, {
+    classMethods: {
+      associate: (models) => {
+        // Associate the organization and user
+        User.belongsToMany(models.Organization, { through: 'UserOrganizations' });
+        User.hasMany(models.Report, { as: 'Reports', foreignKey: 'userId' });
+      },
+    },
+    indexes: [
+      { fields: ['email'] },
+      { fields: ['profileId'] },
+    ],
+  }, { tableName: 'users' });
+
+  return User;
+};
 
 export { comparePassword };
-export default User;
