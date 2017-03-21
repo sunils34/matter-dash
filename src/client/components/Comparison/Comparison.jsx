@@ -119,7 +119,7 @@ class Comparison extends React.Component {
   }
 
   render() {
-    const { data, comparisonData, gender, ethnicity, department } = this.props;
+    const { myOrgId, data, comparisonData, gender, ethnicity, department } = this.props;
     if (!comparisonData) {
        return (
          <div className="container">
@@ -142,50 +142,75 @@ class Comparison extends React.Component {
           </Row>
           <Row>
             <Column className="comparison-data">
-              <Row className="sort-header-row" center>
-                <Column className="small-offset-1 small-2 align-self-bottom">
-                  <Row>
-                    <Column><Row bottom><ComparisonSortHeader measure="gender" value="Female" /></Row></Column>
-                    <Column><Row right bottom><ComparisonSortHeader measure="gender" value="Male" /></Row></Column>
-                  </Row>
-                </Column>
-                {
-                  _.map(ethnicity.fields, field => (
-                    <Column key={field.name} className="small-1 align-self-bottom">
-                      <Row bottom>
-                        <ComparisonSortHeader measure="ethnicity" value={field.name} />
+              <Row>
+                <Column>
+                  <Row className="sort-header-row" center>
+                    <Column className="small-1"></Column>
+                    <Column className="small-2 bar-wrap align-self-bottom">
+                      <Row>
+                        <Column><Row bottom><ComparisonSortHeader measure="gender" value="Female" /></Row></Column>
+                        <Column><Row right bottom><ComparisonSortHeader measure="gender" value="Male" /></Row></Column>
                       </Row>
                     </Column>
-                  ))
-                }
+                    {
+                      _.map(ethnicity.fields, field => (
+                        <Column key={field.name} className="small-1 bar-wrap align-self-bottom">
+                          <Row bottom>
+                            <ComparisonSortHeader measure="ethnicity" value={field.name} />
+                          </Row>
+                        </Column>
+                      ))
+                    }
+                  </Row>
+                </Column>
               </Row>
               <Row>
                 <Column className="companies-wrap">
                   {
-                    _.map(comparisonData, dataPoint => (
-                      <Row key={dataPoint.companyKey} className={dataPoint.isMine ? 'company-wrap mine' : 'company-wrap'} middle center>
-                        <Column className="small-1">
-                          <Row className="company-name" middle>
-                            <span>{dataPoint.companyName}</span>
-                            <span className="me">{dataPoint.isMine ? '(You)' : ''}</span>
-                          </Row>
-                        </Column>
-                        <Column className="small-2">
-                          <Row>
-                            <MatterHorizontalBarChart stackedPercentage fields={gender.fields} data={[dataPoint]} yDataKey="companyKey" xDataKey="gender" height={50} />
-                          </Row>
-                        </Column>
-                        {
-                          _.map(ethnicity.fields, field => (
-                            <Column key={`${dataPoint.companyKey}-${field.name}`} className="small-1 ethnicity">
-                              <Row className="bar-container" center middle>
-                                <MatterHorizontalBarChart complete includeZeroFields stackedPercentage fields={[field]} data={[dataPoint]} yDataKey="companyKey" xDataKey="ethnicity" height={50} />
-                              </Row>
-                            </Column>
-                          ))
-                        }
-                      </Row>
-                    ))
+                    _.map(comparisonData, (dataPoint) => {
+                      let companyImgUrl = `/images/avatars/companies/${_.toLower(dataPoint.companyName)}_avatar.jpg`;
+
+                      if (dataPoint.isMine) {
+                        companyImgUrl = `/images/avatars/${myOrgId}.svg`;
+                      }
+
+                      return (
+                        <Row key={dataPoint.companyKey} className={dataPoint.isMine ? 'company-wrap mine' : 'company-wrap'} middle center>
+                          <Column className="small-1">
+                            <Row className="company-name" middle>
+                              <Column className="small-1 img-col">
+                                <Row center>
+                                  <img
+                                    className="img-circle"
+                                    src={companyImgUrl}
+                                    alt={dataPoint.companyName}
+                                  />
+                                </Row>
+                              </Column>
+                              <Column>
+                                <Row>
+                                  <span>{dataPoint.companyName}</span>
+                                  <span className="me">{dataPoint.isMine ? '(You)' : ''}</span>
+                                </Row>
+                              </Column>
+                            </Row>
+                          </Column>
+                          <Column className="small-2 bar-wrap">
+                            <Row>
+                              <MatterHorizontalBarChart stackedPercentage fields={gender.fields} data={[dataPoint]} yDataKey="companyKey" xDataKey="gender" height={50} />
+                            </Row>
+                          </Column>
+                          {
+                            _.map(ethnicity.fields, field => (
+                              <Column key={`${dataPoint.companyKey}-${field.name}`} className="small-1 ethnicity bar-wrap">
+                                <Row className="bar-container" center middle>
+                                  <MatterHorizontalBarChart complete includeZeroFields stackedPercentage fields={[field]} data={[dataPoint]} yDataKey="companyKey" xDataKey="ethnicity" height={50} />
+                                </Row>
+                              </Column>
+                            ))
+                          }
+                        </Row>
+                    )})
                   }
                 </Column>
               </Row>
@@ -247,6 +272,7 @@ const mapStateToProps = state => (
     gender: state.comparison.gender,
     ethnicity: state.comparison.ethnicity,
     comparisonData: state.comparison.displayData,
+    myOrgId: state.app.organization.id,
   }
 );
 

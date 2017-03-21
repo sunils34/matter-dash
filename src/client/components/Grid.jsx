@@ -55,6 +55,7 @@ Row.defaultProps = {
   bottom: false,
   center: false,
   className: '',
+  children: null,
   expanded: false,
   extraClass: '',
   middle: false,
