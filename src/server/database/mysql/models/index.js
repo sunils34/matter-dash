@@ -9,9 +9,11 @@ fs.readdirSync(__dirname)
     (file.indexOf('.') !== 0) && (file !== 'index.js')
   ))
   .forEach((file) => {
-    const model = sequelize.import(path.join(__dirname, file));
-    const modelName = file.replace('.js', '');
-    db[modelName] = model;
+    if (file.endsWith('.js')) {
+      const model = sequelize.import(path.join(__dirname, file));
+      const modelName = file.replace('.js', '');
+      db[modelName] = model;
+    }
   });
 
 Object.keys(db).forEach((modelName) => {
