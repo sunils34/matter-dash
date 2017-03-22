@@ -1,4 +1,5 @@
 .comparison {
+  width: 800px;
 
   .header-row {
     margin: 20px 0px;
@@ -63,7 +64,7 @@
       border: 1px solid #DEDEDE;
       box-shadow: 0 0 5px 0 rgba(0,0,0,0.04);
       margin-bottom: 20px;
-      margin-top: 20px;
+      margin-top: 15px;
 
       .company-wrap {
         border-bottom: 1px solid #ECECEC;
@@ -148,6 +149,7 @@
 
 
 @media print, screen and (min-width: 40em) {
+  width: 800px;
   .comparison {
     .comparison-data {
       .bar-wrap {
@@ -171,6 +173,8 @@
 
 @media print, screen and (min-width: 64em) {
   .comparison {
+    width: 1000px;
+
     .comparison-data {
       .bar-wrap {
         &.gender {

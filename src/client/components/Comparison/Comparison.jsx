@@ -133,7 +133,7 @@ class Comparison extends React.Component {
       <Row className="comparison" center>
         <Column className="small-11 medium-11 large-10">
           <Row className="header-row">
-            <Column>
+            <Column className="small-7">
               <Row className="page-header">Employee breakdown of key tech companies</Row>
             </Column>
             <Column>
