@@ -121,8 +121,8 @@ class Comparison extends React.Component {
   render() {
     const { myOrgId, data, comparisonData, gender, ethnicity, department } = this.props;
     if (!comparisonData) {
-       return (
-         <div className="container">
+      return (
+        <div className="container">
           <MatterLoadingIndicator />
         </div>
       );
@@ -140,12 +140,12 @@ class Comparison extends React.Component {
               <ComparisonFilterHeader />
             </Column>
           </Row>
-          <Row>
-            <Column className="comparison-data">
+          <Row center>
+            <Column className="comparison-data small-10">
               <Row>
                 <Column>
                   <Row className="sort-header-row" center>
-                    <Column className="small-1"></Column>
+                    <Column className="small-1" />
                     <Column className="small-2 bar-wrap align-self-bottom">
                       <Row>
                         <Column><Row bottom><ComparisonSortHeader measure="gender" value="Female" /></Row></Column>
