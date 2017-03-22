@@ -69,13 +69,23 @@ const getMyCompanyResults = async (organization, measure = 'gender', department 
           WHERE
             o.id = $orgId
             ${yearStmt}
-            AND e.department IN (
-              SELECT employeeValue
-              FROM EmployeeComparisonMappings
-              WHERE orgId =$orgId
-                AND employeeField='department'
-                AND comparisonField='department'
-                AND comparisonValue ${departmentStmt}
+            AND (
+              e.department IN (
+                SELECT employeeValue
+                FROM EmployeeComparisonMappings
+                WHERE orgId =$orgId
+                  AND employeeField='department'
+                  AND comparisonField='department'
+                  AND comparisonValue ${departmentStmt}
+              )
+              OR e.payGradeCode IN (
+                SELECT employeeValue
+                FROM EmployeeComparisonMappings
+                WHERE orgId =$orgId
+                  AND employeeField='payGradeCode'
+                  AND comparisonField='department'
+                  AND comparisonValue ${departmentStmt}
+              )
             )
         ) t
       GROUP BY t.companyName, t.${measure}
