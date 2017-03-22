@@ -135,7 +135,7 @@ class Comparison extends React.Component {
 
     return (
       <Row className="comparison" center>
-        <Column className="small-11 medium-11 large-10">
+        <Column className="small-11 medium-11 large-12">
           <Row className="header-row">
             <Column className="small-7">
               <Row className="page-header">Employee breakdown of key tech companies</Row>
@@ -183,7 +183,7 @@ class Comparison extends React.Component {
                           <Column className="small-1">
                             <Row className="company-name" middle>
                               <Column className="small-1 img-col">
-                                <Row center>
+                                <Row>
                                   <img
                                     className="img-circle"
                                     src={companyImgUrl}
@@ -192,10 +192,8 @@ class Comparison extends React.Component {
                                 </Row>
                               </Column>
                               <Column>
-                                <Row>
-                                  <span>{dataPoint.companyName}</span>
-                                  <span className="me">{dataPoint.isMine ? '(You)' : ''}</span>
-                                </Row>
+                                <Row>{dataPoint.companyName}</Row>
+                                <Row className="me">{dataPoint.isMine ? "(You)" : ""}</Row>
                               </Column>
                             </Row>
                           </Column>
