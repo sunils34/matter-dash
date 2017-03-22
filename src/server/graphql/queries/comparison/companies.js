@@ -14,16 +14,19 @@ const getFields = async (type = 'gender') => {
   };
 
   const stmt = `
-    SELECT
-      CASE TRIM(${type})
-        WHEN 'Two or more races' THEN '2+ Races'
-        WHEN 'American Indian or Alaska Native or Native Hawaiian or other Pacific Islander' THEN 'Other'
-        ELSE TRIM(${type})
-      END as name
-    FROM companyComparisons
-    WHERE ${type} <> ''
-    GROUP BY ${type}
-    ORDER BY SUM(pct) DESC`;
+    SELECT distinct(t.name) from (
+      SELECT
+        CASE TRIM(${type})
+          WHEN 'Two or more races' THEN '2+ Races'
+          WHEN 'American Indian or Alaska Native or Native Hawaiian or other Pacific Islander' THEN 'Other'
+          WHEN 'Other Identities' THEN 'Other'
+          ELSE TRIM(${type})
+        END as name
+      FROM companyComparisons
+      WHERE ${type} <> ''
+      GROUP BY ${type}
+      ORDER BY SUM(pct) DESC
+    ) t`;
 
   let fields = await sequelize.query(stmt, {
     type: sequelize.QueryTypes.SELECT,
@@ -32,6 +35,12 @@ const getFields = async (type = 'gender') => {
   fields = _.map(fields, (element, idx) => (
     _.extend(element, { color: COLORS[type][idx % COLORS[type].length] })
   ));
+
+  // TODO hardcoded (swap other for female);
+  if (type === 'gender') {
+    fields.splice(1, 0, fields.splice(2, 1)[0]);
+  }
+
   return fields;
 };
 
@@ -47,6 +56,7 @@ const getCompanyResults = async (measure = 'gender', department = 'All', year = 
       CASE TRIM(c.${measure})
         WHEN 'Two or more races' THEN '2+ Races'
         WHEN 'American Indian or Alaska Native or Native Hawaiian or other Pacific Islander' THEN 'Other'
+        WHEN 'Other Identities' THEN 'Other'
         ELSE TRIM(c.${measure})
       END as ${measure},
       c.pct as total
@@ -85,6 +95,7 @@ const getMyCompanyResults = async (organization, measure = 'gender', department 
         CASE TRIM(t.${measure})
           WHEN 'Two or more races' THEN '2+ Races'
           WHEN 'American Indian or Alaska Native or Native Hawaiian or other Pacific Islander' THEN 'Other'
+          WHEN 'Other Identities' THEN 'Other'
           ELSE TRIM(t.${measure})
         END as ${measure},
 

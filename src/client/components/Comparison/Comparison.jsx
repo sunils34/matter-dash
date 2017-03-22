@@ -99,7 +99,6 @@ class Comparison extends React.Component {
 
   constructor(props) {
     super(props);
-    this.sort = this.sort.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -116,10 +115,6 @@ class Comparison extends React.Component {
 
       newProps.dispatch(comparisonActions.dataFetched(newProps.data.gender, newProps.data.ethnicity, filters));
     }
-  }
-
-  sort() {
-    this.props.dispatch(comparisonActions.sort('gender', 'Female'));
   }
 
   render() {
@@ -153,6 +148,7 @@ class Comparison extends React.Component {
                     <Column className="bar-wrap gender align-self-bottom">
                       <Row>
                         <Column><Row bottom><ComparisonSortHeader measure="gender" value="Female" /></Row></Column>
+                        <Column><Row center bottom><ComparisonSortHeader measure="gender" value="Other" /></Row></Column>
                         <Column><Row right bottom><ComparisonSortHeader measure="gender" value="Male" /></Row></Column>
                       </Row>
                     </Column>
@@ -199,7 +195,7 @@ class Comparison extends React.Component {
                           </Column>
                           <Column className="bar-wrap gender">
                             <Row>
-                              <MatterHorizontalBarChart stackedPercentage fields={gender.fields} data={[dataPoint]} yDataKey="companyKey" xDataKey="gender" height={50} />
+                              <MatterHorizontalBarChart stackedPercentage fields={gender.fields} labelFill="#FFFFFF" data={[dataPoint]} yDataKey="companyKey" xDataKey="gender" height={50} />
                             </Row>
                           </Column>
                           {
