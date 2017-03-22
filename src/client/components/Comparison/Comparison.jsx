@@ -131,7 +131,7 @@ class Comparison extends React.Component {
 
     return (
       <Row className="comparison" center>
-        <Column>
+        <Column className="small-11 medium-11 large-10">
           <Row className="header-row">
             <Column>
               <Row className="page-header">Employee breakdown of key tech companies</Row>
@@ -141,20 +141,20 @@ class Comparison extends React.Component {
             </Column>
           </Row>
           <Row center>
-            <Column className="comparison-data small-10">
+            <Column className="comparison-data">
               <Row>
                 <Column>
                   <Row className="sort-header-row" center>
                     <Column className="small-1" />
-                    <Column className="small-2 bar-wrap align-self-bottom">
+                    <Column className="bar-wrap gender align-self-bottom">
                       <Row>
                         <Column><Row bottom><ComparisonSortHeader measure="gender" value="Female" /></Row></Column>
                         <Column><Row right bottom><ComparisonSortHeader measure="gender" value="Male" /></Row></Column>
                       </Row>
                     </Column>
                     {
-                      _.map(ethnicity.fields, field => (
-                        <Column key={field.name} className="small-1 bar-wrap align-self-bottom">
+                      _.map(ethnicity.fields, (field, idx) => (
+                        <Column key={field.name} className="bar-wrap align-self-bottom">
                           <Row bottom>
                             <ComparisonSortHeader measure="ethnicity" value={field.name} />
                           </Row>
@@ -195,14 +195,14 @@ class Comparison extends React.Component {
                               </Column>
                             </Row>
                           </Column>
-                          <Column className="small-2 bar-wrap">
+                          <Column className="bar-wrap gender">
                             <Row>
                               <MatterHorizontalBarChart stackedPercentage fields={gender.fields} data={[dataPoint]} yDataKey="companyKey" xDataKey="gender" height={50} />
                             </Row>
                           </Column>
                           {
                             _.map(ethnicity.fields, field => (
-                              <Column key={`${dataPoint.companyKey}-${field.name}`} className="small-1 ethnicity bar-wrap">
+                              <Column key={`${dataPoint.companyKey}-${field.name}`} className="ethnicity bar-wrap">
                                 <Row className="bar-container" center middle>
                                   <MatterHorizontalBarChart complete includeZeroFields stackedPercentage fields={[field]} data={[dataPoint]} yDataKey="companyKey" xDataKey="ethnicity" height={50} />
                                 </Row>
