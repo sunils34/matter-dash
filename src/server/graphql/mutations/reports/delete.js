@@ -4,8 +4,6 @@ import {
   GraphQLObjectType as ObjectType,
 } from 'graphql';
 
-import { Report, ReportObject, User } from '../../../database/mysql/models';
-
 export default {
   type: new ObjectType({
     name: 'DeleteReportResponse',
@@ -25,11 +23,11 @@ export default {
         id: args.reportId,
       },
     });
-    if(reports.length != 1) {
+    if (reports.length !== 1) {
       return {
         success: false,
-        error: "Could not find report",
-      }
+        error: 'Could not find report',
+      };
     }
 
     await reports[0].destroy();
@@ -37,6 +35,5 @@ export default {
     return {
       success: true,
     };
-
   },
 };

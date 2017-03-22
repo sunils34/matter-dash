@@ -1,53 +1,49 @@
-import Sequelize from 'sequelize';
 import shortid from 'shortid';
-import Model from '../sequelize';
-import ReportObject from './ReportObject';
 
-const Report = Model.define('reports', {
-  id: {
-    type: Sequelize.STRING,
-    defaultValue: function gen() {
-      return `r_${shortid.generate()}`;
+export default (Model, DataTypes) => {
+  const Report = Model.define('reports', {
+    id: {
+      type: DataTypes.STRING,
+      defaultValue: function gen() {
+        return `r_${shortid.generate()}`;
+      },
+      primaryKey: true,
     },
-    primaryKey: true,
-  },
-  name: {
-    type: Sequelize.STRING,
-  },
-  extraData: {
-    type: Sequelize.STRING,
-    defaultValue: '{}',
-  },
-  details: {
-    type: Sequelize.VIRTUAL,
-    set: function set(val) {
-      this.setDataValue('details', val); // need to do this to validate
-      this.setDataValue('extraData', JSON.stringify(val));
+    name: {
+      type: DataTypes.STRING,
     },
-    get: function get() {
-      return JSON.parse(this.get('extraData'));
+    extraData: {
+      type: DataTypes.STRING,
+      defaultValue: '{}',
     },
-    validate: {
-      isObject: (val) => {
-        if (typeof val !== 'object') {
-          throw new Error('Report must be of type data');
-        }
+    details: {
+      type: DataTypes.VIRTUAL,
+      set: function set(val) {
+        this.setDataValue('details', val); // need to do this to validate
+        this.setDataValue('extraData', JSON.stringify(val));
+      },
+      get: function get() {
+        return JSON.parse(this.get('extraData'));
+      },
+      validate: {
+        isObject: (val) => {
+          if (typeof val !== 'object') {
+            throw new Error('Report must be of type data');
+          }
+        },
       },
     },
-  },
-}, {
-  indexes: [
-  ],
-  hooks: {
-    beforeDestroy: (report) => {
-      return ReportObject.destroy({
-        where: {
-          reportId: report.id,
-        },
-      });
+  }, {
+    classMethods: {
+      associate: (models) => {
+        // Associate the organization and user
+        Report.hasMany(models.ReportObject, { as: 'ReportObjects', foreignKey: 'reportId' });
+        Report.belongsTo(models.User, { as: 'Owner', foreignKey: 'userId' });
+      },
     },
-  },
-}, { tableName: 'reports' });
+    indexes: [
+    ],
+  }, { tableName: 'reports' });
 
-
-export default Report;
+  return Report;
+};

@@ -55,6 +55,7 @@ Row.defaultProps = {
   bottom: false,
   center: false,
   className: '',
+  children: null,
   expanded: false,
   extraClass: '',
   middle: false,
@@ -77,6 +78,7 @@ Row.propTypes = {
 Column.defaultProps = {
   extraClass: '',
   className: '',
+  children: null,
   small: null,
   onClick: null,
 };
@@ -85,7 +87,7 @@ Column.propTypes = {
   small: React.PropTypes.number,
   extraClass: React.PropTypes.string,
   className: React.PropTypes.string,
-  children: React.PropTypes.node.isRequired,
+  children: React.PropTypes.node,
   onClick: React.PropTypes.func,
 };
 

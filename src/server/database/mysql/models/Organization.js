@@ -1,19 +1,25 @@
-import Sequelize from 'sequelize';
-import Model from '../sequelize';
 import shortid from 'shortid';
 
-const Organization = Model.define('organizations', {
-  id: {
-    type: Sequelize.STRING,
-    defaultValue: shortid.generate,
-    primaryKey: true
-  },
-  name: {
-    type: Sequelize.STRING
-  }
-}, {
-  indexes: [
-  ]
-}, {tableName: 'organizations'});
+export default (Model, DataTypes) => {
+  const Organization = Model.define('organizations', {
+    id: {
+      type: DataTypes.STRING,
+      defaultValue: shortid.generate,
+      primaryKey: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+    },
+  }, {
+    indexes: [],
+    classMethods: {
+      associate: (models) => {
+        // Associate the organization and user
+        Organization.belongsToMany(models.User, { through: 'UserOrganizations' });
+      },
+    },
+  }, { tableName: 'organizations' });
 
-export default Organization;
+  return Organization;
+};
+

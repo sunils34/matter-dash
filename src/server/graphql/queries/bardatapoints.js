@@ -115,7 +115,7 @@ const barDataPoints = {
     }
 
     if (measure === 'ethnicity') {
-      measure = 'eeoEthnicDescription';
+      measure = 'ethnicity';
     } else if (measure === 'age') {
       measure = 'ageRange';
     } else if (measure === 'location') {

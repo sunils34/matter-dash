@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import util from 'util';
 import auth from './config/auth';
 
-import {User, Organization} from './database/mysql/models';
+import db from './database/mysql/models';
 
 const WHITELISTED_EMAILS = ['l.widrich@gmail.com', 'hello@lauramcguigan.com', 'sunils34@gmail.com', 'mferber@xogrp.com'];
 
@@ -51,7 +51,7 @@ const configure = (app) => {
 
     const findOrCreateUserGoogleUser = async() => {
       if (profile) {
-        let user = await User.findOne({
+        let user = await db.User.findOne({
           where: {profileType: profile.provider, profileId: profile.id}
         });
 
@@ -66,10 +66,10 @@ const configure = (app) => {
             profileId: profile.id,
             profileType: profile.provider,
           }
-          user = await User.create(newUser);
+          user = await db.User.create(newUser);
 
           //TODO obtain real organization
-          let organization = await Organization.findOne({where: {id:'xogroup'}});
+          let organization = await db.Organization.findOne({where: {id:'xogroup'}});
           await organization.addUser(user);
         }
 
@@ -92,7 +92,7 @@ const configure = (app) => {
 
   passport.deserializeUser(function (obj, cb) {
     const findUser = async() => {
-      let user = await User.findOne({where: {id: obj.id}});
+      let user = await db.User.findOne({where: {id: obj.id}});
       cb(null, user);
     }
     findUser().catch(cb);

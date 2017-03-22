@@ -41,34 +41,42 @@ const generateEthnicityDetails = function() {
     ]);
 
     var eeoCode = 0;
+    var ethnicity = null;
 
     switch (eeoEthnicDescription) {
       case 'Hispanic or Latino':
         eeoCode = 3;
+        ethnicity = 'Hispanic or LatinX';
         break;
       case 'White':
         eeoCode = 1;
         break;
       case 'Black or African American':
         eeoCode = 2;
+        ethnicity = 'Black';
         break;
       case 'Native Hawaiian':
         eeoCode = 6;
+        ethnicity = 'American Indian or Alaska Native or Native Hawaiian or other Pacific Islander';
         break;
       case 'Asian':
         eeoCode = 4;
+        ethnicity = 'Asian';
         break;
       case 'American Indian or Alaska Native':
         eeoCode = 5;
+        ethnicity = 'American Indian or Alaska Native or Native Hawaiian or other Pacific Islander';
         break;
       case 'Two or more races':
         eeoCode = 9;
+        ethnicity = 'Two or more races';
         break;
       default:
+        ethnicity = 'Other';
         eeoCode = 1;
     }
 
-    return {eeoEthnicDescription: eeoEthnicDescription, eeoCode: eeoCode}
+    return { eeoEthnicDescription: eeoEthnicDescription, eeoCode: eeoCode, ethnicity:ethnicity }
 }
 
 module.exports = {
@@ -132,6 +140,7 @@ module.exports = {
         ageRange: ageDetails.ageRange,
         eeoEthnicCode: ethnicityDetails.eeoCode,
         eeoEthnicDescription: ethnicityDetails.eeoEthnicDescription,
+        ethnicity: ethnicityDetails.ethnicity,
         gender: rwc([
           {id:'Male',weight:70},
           {id:'Female',weight:20}

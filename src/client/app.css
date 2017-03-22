@@ -3,6 +3,7 @@ body {
   background: white;
   font-family: 'Nunito Sans', sans-serif;
   overflow: scroll;
+  min-width: 800px;
 }
 
 .container {

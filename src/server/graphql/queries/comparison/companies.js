@@ -23,7 +23,7 @@ const getFields = async (type = 'gender') => {
   return fields;
 };
 
-const getCompanyResults = (measure = 'gender', department = 'All', year = 'latest') => {
+const getCompanyResults = async (measure = 'gender', department = 'All', year = 'latest') => {
   const yearStmt = year === 'latest' ? '' : ` AND year = ${year}`;
 
   const stmt = `
@@ -51,15 +51,71 @@ const getCompanyResults = (measure = 'gender', department = 'All', year = 'lates
   });
 };
 
+const getMyCompanyResults = async (organization, measure = 'gender', department = 'All', year = 'latest') => {
+  const departmentStmt = department === 'All' ? "<> ''" : ` = "${department}"`;
+  const measureField = measure === 'gender' ? 'gender' : 'ethnicity';
+  const yearStmt = year === 'latest' ? '' : ` AND YEAR(hireDate) <= ${year} `;
+
+  const stmt = `
+      SELECT CONCAT(t.companyName, '-', '2016') as companyKey,
+        t.companyName as companyName,
+        '2016' as year,
+        t.${measure} as ${measure},
+        COUNT(t.${measure}) as count
+        FROM (SELECT
+          o.name as companyName,
+          TRIM(e.${measureField}) as ${measure}
+          FROM employees e LEFT JOIN organizations o ON e.orgId = o.id
+          WHERE
+            o.id = $orgId
+            ${yearStmt}
+            AND (
+              e.department IN (
+                SELECT employeeValue
+                FROM EmployeeComparisonMappings
+                WHERE orgId =$orgId
+                  AND employeeField='department'
+                  AND comparisonField='department'
+                  AND comparisonValue ${departmentStmt}
+              )
+              OR e.payGradeCode IN (
+                SELECT employeeValue
+                FROM EmployeeComparisonMappings
+                WHERE orgId =$orgId
+                  AND employeeField='payGradeCode'
+                  AND comparisonField='department'
+                  AND comparisonValue ${departmentStmt}
+              )
+            )
+        ) t
+      GROUP BY t.companyName, t.${measure}
+  `;
+
+  let results = await sequelize.query(stmt, {
+    type: sequelize.QueryTypes.SELECT,
+    bind: { orgId: organization.id },
+  });
+
+  let total = 0;
+  _.forEach(results, (item) => {
+    total += item.count;
+  });
+
+  results = _.map(results, item => (
+    { ...item, total: _.round((item.count * 100) / total, 2), isMine: true }
+  ));
+
+  return results;
+};
 
 const comparison = {
   type: new ObjectType({
-    name: 'ComparisonCompanyResults',
+    name: 'ComparisonCompaniesResults',
     fields: {
       results: { type: new List(GraphQLJSON) },
       fields: { type: new List(
         new ObjectType({
-          name: 'ComparisonCompanyField',
+          name: 'ComparisonCompaniesField',
           fields: {
             name: { type: StringType },
             color: { type: StringType },
@@ -75,7 +131,12 @@ const comparison = {
     year: { type: StringType },
   },
   async resolve(parent, args) {
-    if (!parent.request.user) return null;
+    const user = parent.request.user;
+    if (!user) { throw new Error('Must be logged in to access this API'); }
+    const organizations = await user.getOrganizations({ raw: true });
+    if (!organizations.length) { throw new Error('User does not have an organization'); }
+    const organization = organizations[0];
+
     const department = args.department;
     const year = args.year || 'latest';
     let measure = 'gender';
@@ -83,7 +144,11 @@ const comparison = {
       measure = 'ethnicity';
     }
 
-    const r = await getCompanyResults(measure, department, year);
+    let r = await getCompanyResults(measure, department, year);
+
+    // add my company results to the list
+    r = _.concat(r, await getMyCompanyResults(organization, measure, department, year));
+
     const results = {};
     r.forEach((item) => {
       // initialize
@@ -93,6 +158,7 @@ const comparison = {
           companyName: item.companyName,
           [measure]: {},
         };
+        if (item.isMine) { results[item.companyKey].isMine = true; }
       }
       results[item.companyKey][measure][item[measure]] = item.total;
     });
