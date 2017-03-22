@@ -23,27 +23,31 @@ let ComparisonFilterHeader = ({ dispatch, selectedYear, selectedDepartment, year
 
   return (
     <Row right>
-      <Column className="small-3">
-        <Select
-          searchable={false}
-          clearable={false}
-          onChange={changeFilterDept}
-          className="comparison-filter"
-          name="Dashboard View"
-          value={selectedDepartment}
-          options={departmentFilters}
-        />
+      <Column className="small-4">
+        <Row>
+          <Select
+            searchable={false}
+            clearable={false}
+            onChange={changeFilterDept}
+            className="comparison-filter department"
+            name="Department"
+            value={selectedDepartment}
+            options={departmentFilters}
+          />
+        </Row>
       </Column>
-      <Column className="small-2">
-        <Select
-          searchable={false}
-          clearable={false}
-          onChange={changeFilterYear}
-          className="comparison-filter"
-          name="Dashboard View"
-          value={selectedYear}
-          options={yF}
-        />
+      <Column className="small-4">
+        <Row>
+          <Select
+            searchable={false}
+            clearable={false}
+            onChange={changeFilterYear}
+            className="comparison-filter year"
+            name="Year"
+            value={selectedYear}
+            options={yF}
+          />
+        </Row>
       </Column>
     </Row>
   )
