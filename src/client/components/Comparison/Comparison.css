@@ -35,7 +35,17 @@
     }
   }
 
+  .line {
+    position: absolute;
+    left: 0px;
+    width: 100%;
+    height:0px;
+    border-bottom: 1px solid #ECECEC;
+  }
+
   .comparison-data {
+    margin-top: 40px;
+
     .sort-header-row {
       padding-left: 16px;
 

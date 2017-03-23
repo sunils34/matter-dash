@@ -139,8 +139,9 @@ class Comparison extends React.Component {
               <ComparisonFilterHeader />
             </Column>
           </Row>
-          <Row center>
-            <Column className="comparison-data">
+          <div className='line'></div>
+          <Row center className="comparison-data">
+            <Column>
               <Row>
                 <Column>
                   <Row className="sort-header-row" center>
