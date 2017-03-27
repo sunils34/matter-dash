@@ -309,6 +309,7 @@ class ReportsPage extends React.Component {
   constructor(props) {
     super(props);
     this.resetReport = this.resetReport.bind(this);
+    this.openSaveModal = this.openSaveModal.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -327,6 +328,15 @@ class ReportsPage extends React.Component {
     this.props.dispatch(reportActions.resetReport());
   }
 
+  openSaveModal(e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.nativeEvent.stopImmediatePropagation();
+    }
+    this.props.dispatch(reportActions.reportDialogToggle('save', true));
+    return false;
+  }
 
   render() {
     let body = null;
