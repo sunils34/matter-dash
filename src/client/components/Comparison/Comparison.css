@@ -1,8 +1,8 @@
 .comparison {
-  width: 800px;
+  width: 50em;
 
   .header-row {
-    margin: 20px 0px;
+    margin: 1.25em 0px;
 
     .page-header {
       font-size: 27px;
@@ -10,27 +10,36 @@
     }
   }
 
-  .comparison-filter {
-    font-size: 13px;
-    width: 100%;
+  .filter-row {
+    /* TODO this is a hack to get the right alignment with border */
+    .filter-col {
+      &:last-of-type {
+        margin-right: -0.0500em;
+      }
 
-    &.department {
-      margin-right: 10px;
-    }
+      .comparison-filter {
+        font-size: 13px;
+        width: 100%;
 
-    &.is-focused:not(.is-open) > .Select-control {
-      box-shadow: none;
-    }
+        &.department {
+          margin-right: .625em;
+        }
 
-    &:focus {
-      outline: none;
-    }
+        &.is-focused:not(.is-open) > .Select-control {
+          box-shadow: none;
+        }
 
-    .Select-value {
-      max-width: 88%;
+        &:focus {
+          outline: none;
+        }
 
-      &:focus {
-        outline: none;
+        .Select-value {
+          max-width: 88%;
+
+          &:focus {
+            outline: none;
+          }
+        }
       }
     }
   }
@@ -40,14 +49,14 @@
     left: 0px;
     width: 100%;
     height:0px;
-    border-bottom: 1px solid #ECECEC;
+    border-bottom: 0.0625em solid #ECECEC;
   }
 
   .comparison-data {
     margin-top: 40px;
 
     .sort-header-row {
-      padding-left: 16px;
+      padding-left: 1em;
 
       .sort-header {
         font-size: 12px;
@@ -68,16 +77,16 @@
     .companies-wrap {
       background: #FFFFFF;
       border-radius: 4px;
-      border: 1px solid #DEDEDE;
+      border: 0.0625em solid #DEDEDE;
       box-shadow: 0 0 5px 0 rgba(0,0,0,0.04);
-      margin-bottom: 20px;
+      margin-bottom: 1.25em;
       margin-top: 15px;
 
       .company-wrap {
-        border-bottom: 1px solid #ECECEC;
+        border-bottom: 0.0625em solid #ECECEC;
         height: 32px;
-        padding: 10px;
-        padding-left: 20px;
+        padding: .625em;
+        padding-left: 1.25em;
 
         &.mine {
           background: #E3F7F4
@@ -89,7 +98,7 @@
         }
 
         .recharts-responsive-container {
-          left: -5px;
+          left: -0.3125em;
         }
       }
     }
@@ -100,7 +109,7 @@
 
 
       .img-col {
-        padding-right: 5px;
+        padding-right: 0.3125em;
       }
 
       .img-circle {
@@ -108,9 +117,9 @@
         -webkit-box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.15);
         box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.15);
         display: inline-block;
-        height: 20px;
-        margin-right: 10px;
-        width: 20px;
+        height: 1.25em;
+        margin-right: .625em;
+        width: 1.25em;
       }
 
       .me {
@@ -121,21 +130,21 @@
 
     .bar-wrap {
       &.gender {
-        margin-right: 10px;
+        margin-right: .625em;
         > .row {
-          width: 150px;
+          width: 9.375em;
         }
       }
 
       &.ethnicity {
-        width: 90px;
+        width: 5.625em;
         overflow: hidden;
         > .row {
-          width: 95px;
+          width: 5.9375em;
         }
 
         &:not(:last-of-type) {
-          margin-right: 10px;
+          margin-right: .625em;
         }
       }
 
@@ -165,21 +174,21 @@
 
 
 @media print, screen and (min-width: 600px) {
-  width: 800px;
+  width: 50em;
   .comparison {
     .comparison-data {
       .bar-wrap {
         &.gender {
-          margin-right: 10px;
+          margin-right: .625em;
           > .row {
-            width: 150px;
+            width: 9.375em;
           }
         }
 
         &.ethnicity {
-          width: 90px;
+          width: 5.625em;
           > .row {
-            width: 95px;
+            width: 5.9375em;
           }
         }
       }
@@ -187,23 +196,23 @@
   }
 }
 
-@media print, screen and (min-width: 990px) {
+@media print, screen and (min-width: 1000px) {
   .comparison {
-    width: 1000px;
+    width: 62.5em;
 
     .comparison-data {
       .bar-wrap {
         &.gender {
-          margin-right: 10px;
+          margin-right: .625em;
           > .row {
-            width: 200px;
+            width: 12.5em;
           }
         }
 
         &.ethnicity {
-          width: 100px;
+          width: 6.25em;
           > .row {
-            width: 118px;
+            width: 7.375em;
           }
         }
       }

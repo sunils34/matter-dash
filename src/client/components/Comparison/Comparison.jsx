@@ -22,8 +22,8 @@ let ComparisonFilterHeader = ({ dispatch, selectedYear, selectedDepartment, year
   const yF = _.concat([{label:'Latest', value: 'latest'}], yearFilters);
 
   return (
-    <Row right>
-      <Column className="small-4">
+    <Row right className="filter-row">
+      <Column className="small-4 filter-col">
         <Row>
           <Select
             searchable={false}
@@ -36,7 +36,7 @@ let ComparisonFilterHeader = ({ dispatch, selectedYear, selectedDepartment, year
           />
         </Row>
       </Column>
-      <Column className="small-4">
+      <Column className="small-4 filter-col">
         <Row>
           <Select
             searchable={false}
@@ -130,9 +130,9 @@ class Comparison extends React.Component {
 
     return (
       <Row className="comparison" center>
-        <Column className="small-11 medium-11 large-12">
+        <Column>
           <Row className="header-row">
-            <Column className="small-7">
+            <Column>
               <Row className="page-header">Employee breakdown of key tech companies</Row>
             </Column>
             <Column>
@@ -165,8 +165,8 @@ class Comparison extends React.Component {
                   </Row>
                 </Column>
               </Row>
-              <Row>
-                <Column className="companies-wrap">
+              <Row className="companies-wrap">
+                <Column>
                   {
                     _.map(comparisonData, (dataPoint) => {
                       let companyImgUrl = `/images/avatars/companies/${_.toLower(dataPoint.companyName)}_avatar.jpg`;
