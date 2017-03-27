@@ -229,14 +229,85 @@ const ReportsPageSaveFooter = connect(state => ({
 }))(_ReportsPageSaveFooter);
 
 
+let ReportsAddNewGraphContainer = ({ dispatch, unsaved, dialogIsOpen }) => {
+  const handleOpenModal = () => {
+    dispatch(reportActions.reportDialogToggle('addobject', true));
+  };
+
+  const handleCloseModal = () => {
+    dispatch(reportActions.reportDialogToggle('addobject', false));
+  };
+
+  return (
+    <div>
+      <ReportsAddNewGraphButton onNewClick={handleOpenModal} unsaved={unsaved} />
+      <ReactModal
+        isOpen={dialogIsOpen}
+        contentLabel="Add New Graph"
+        onRequestClose={handleCloseModal}
+        shouldCloseOnOverlayClick
+        role="dialog"
+        className="new-report-modal"
+      >
+        <ReportsPageChart />
+      </ReactModal>
+    </div>
+  );
+};
+
+
+ReportsAddNewGraphContainer.propTypes = {
+  unsaved: React.PropTypes.bool.isRequired,
+  dialogIsOpen: React.PropTypes.bool.isRequired,
+  dispatch: React.PropTypes.func.isRequired,
+};
+
+ReportsAddNewGraphContainer = connect(state => ({
+  unsaved: state.reports.unsaved,
+  dialogIsOpen: state.reports.dialogOpenStates.addobject,
+}))(ReportsAddNewGraphContainer);
+
+
+let ReportsSaveReportDialogContainer = ({ dispatch, dialogIsOpen, router }) => {
+  const saveModalToggle = (state, e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.nativeEvent.stopImmediatePropagation();
+    }
+    dispatch(reportActions.reportDialogToggle('save', state));
+    return false;
+  }
+  const openSaveModal = saveModalToggle.bind(this, true);
+  return (
+    <ReactModal
+      isOpen={dialogIsOpen}
+      contentLabel="Add New Graph"
+      onRequestClose={() => { saveModalToggle(false); }}
+      shouldCloseOnOverlayClick
+      role="dialog"
+      className="save-modal"
+    >
+      <ReportsPageSaveDialog router={router} dispatch={dispatch} />
+    </ReactModal>
+  )
+}
+
+ReportsSaveReportDialogContainer.propTypes = {
+  dialogIsOpen: React.PropTypes.bool.isRequired,
+  dispatch: React.PropTypes.func.isRequired,
+  router: React.PropTypes.object.isRequired,
+}
+
+ReportsSaveReportDialogContainer = connect(state => ({
+  dialogIsOpen: state.reports.dialogOpenStates.save,
+}))(ReportsSaveReportDialogContainer)
+
+
 class ReportsPage extends React.Component {
 
   constructor(props) {
     super(props);
-    this.handleOpenModal = this.handleOpenModal.bind(this);
-    this.handleCloseModal = this.handleCloseModal.bind(this);
-    this.saveModalToggle = this.saveModalToggle.bind(this);
-    this.openSaveModal = this.saveModalToggle.bind(this, true);
     this.resetReport = this.resetReport.bind(this);
   }
 
@@ -246,30 +317,6 @@ class ReportsPage extends React.Component {
     }
   }
 
-  shouldComponentUpdate(nextProps) {
-    // TODO for some reason, the report is rerendering even though props are the same
-    return !_.isEqual(this.props, nextProps);
-  }
-
-  handleOpenModal() {
-    //dispatch
-    this.props.dispatch(reportActions.reportDialogToggle('addobject', true));
-  }
-
-  handleCloseModal() {
-    // dispatch
-    this.props.dispatch(reportActions.reportDialogToggle('addobject', false));
-  }
-
-  saveModalToggle(state, e) {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      e.nativeEvent.stopImmediatePropagation();
-    }
-    this.props.dispatch(reportActions.reportDialogToggle('save', state));
-    return false;
-  }
 
   resetReport(e) {
     if (e) {
@@ -283,7 +330,7 @@ class ReportsPage extends React.Component {
 
   render() {
     let body = null;
-    const { loading, unsaved, dialogIsOpen, data, report, dispatch } = this.props;
+    const { loading, data, report, dispatch } = this.props;
     let isEmpty = !report || !report.objects;
 
     let containerClass = 'report-object large-6 medium-12 small-12';
@@ -382,27 +429,8 @@ class ReportsPage extends React.Component {
         <Row className='report-objects'>
           {body}
         </Row>
-        <ReportsAddNewGraphButton onNewClick={this.handleOpenModal} unsaved={unsaved} />
-        <ReactModal
-          isOpen={dialogIsOpen}
-          contentLabel="Add New Graph"
-          onRequestClose={this.handleCloseModal}
-          shouldCloseOnOverlayClick
-          role="dialog"
-          className="new-report-modal"
-        >
-          <ReportsPageChart />
-        </ReactModal>
-        <ReactModal
-          isOpen={this.props.saveDialogIsOpen}
-          contentLabel="Add New Graph"
-          onRequestClose={() => { this.saveModalToggle(false); }}
-          shouldCloseOnOverlayClick
-          role="dialog"
-          className="save-modal"
-        >
-          <ReportsPageSaveDialog router={this.props.router} dispatch={this.props.dispatch} />
-        </ReactModal>
+        <ReportsAddNewGraphContainer />
+        <ReportsSaveReportDialogContainer router={this.props.router} />
         <ReportsPageSaveFooter />
         <ReactTooltip />
       </div>
@@ -411,7 +439,6 @@ class ReportsPage extends React.Component {
 }
 
 ReportsPage.propTypes = {
-  unsaved: React.PropTypes.bool.isRequired,
   data: React.PropTypes.object,
   user: React.PropTypes.object,
   organization: React.PropTypes.object,
@@ -451,9 +478,6 @@ query GetReportsPageInit($id: String){
 
 const mapStateToProps = state => (
   {
-    unsaved: state.reports.unsaved,
-    dialogIsOpen: state.reports.dialogOpenStates.addobject,
-    saveDialogIsOpen: state.reports.dialogOpenStates.save,
     report: state.reports.report,
   }
 );

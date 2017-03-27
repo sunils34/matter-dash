@@ -39,47 +39,87 @@ const initialState = {
 };
 
 export default function reports(state = initialState, action) {
-  const newState = _.cloneDeep(state);
+  let newState;
   switch (action.type) {
     case REPORT_PAGE_DATA_FETCHED:
-      newState.report = action.data.report;
-      newState.lastSavedReport = _.cloneDeep(newState.report);
-      newState.measures = action.data.measures;
-      newState.departments = action.data.departments;
-      newState.timeframes = action.data.timeframes;
-      newState.unsaved = false;
-      return newState;
+
+      return {
+        ...state,
+        report: action.data.report,
+        // TODO do we need to do a clone deep here?
+        lastSavedReport: _.cloneDeep(action.data.report),
+        measures: action.data.measures,
+        departments: action.data.departments,
+        timeframes: action.data.timeframes,
+        unsaved: false,
+      };
+
     case REPORT_DIALOG_MODIFY_OBJECT_OPEN:
-      newState.dialogOpenStates.addobject = true;
 
-      newState.dialog.chart = newState.report.objects[action.objectIdx].type;
-      newState.dialog.department = newState.report.objects[action.objectIdx].details.department;
-      newState.dialog.measure = newState.report.objects[action.objectIdx].details.measure;
-      newState.dialog.timeframe = newState.report.objects[action.objectIdx].details.timeframe;
-      newState.editingObjIdx = action.objectIdx;
-
-      return newState;
-
-    case REPORT_DIALOG_TOGGLE:
-      newState.dialogOpenStates[action.dialog] = action.openState;
+      return {
+        ...state,
+        dialogOpenStates: {
+          ...state.dialogOpenStates,
+          addobject: true,
+        },
+        dialog: {
+          ...state.dialog,
+          chart: state.report.objects[action.objectIdx].type,
+          department: state.report.objects[action.objectIdx].details.department,
+          measure: state.report.objects[action.objectIdx].details.measure,
+          timeframe: state.report.objects[action.objectIdx].details.timeframe,
+        },
+        editingObjIdx: action.objectIdx,
+      };
+    case REPORT_DIALOG_TOGGLE: {
+      let editingObjIdx = state.editingObjIdx;
       // reset back to not editing an object
       if (action.dialog === 'addobject' && !action.openState) {
-        newState.editingObjIdx = -1;
+        editingObjIdx = -1;
       }
-      return newState;
+      return {
+        ...state,
+        dialogOpenStates: {
+          ...state.dialogOpenStates,
+          [action.dialog]: action.openState,
+        },
+        editingObjIdx,
+      };
+    }
     case REPORT_DIALOG_CHANGE_MEASURE:
-      newState.dialog.measure = action.measure;
-      return newState;
+      return {
+        ...state,
+        dialog: {
+          ...state.dialog,
+          measure: action.measure,
+        },
+      };
     case REPORT_DIALOG_CHANGE_DEPARTMENT:
-      newState.dialog.department = action.department;
-      return newState;
+      return {
+        ...state,
+        dialog: {
+          ...state.dialog,
+          department: action.department,
+        },
+      };
     case REPORT_DIALOG_CHANGE_CHART:
-      newState.dialog.chart = action.chart;
-      return newState;
+      return {
+        ...state,
+        dialog: {
+          ...state.dialog,
+          chart: action.chart,
+        },
+      };
     case REPORT_DIALOG_CHANGE_TIMEFRAME:
-      newState.dialog.timeframe = action.timeframe;
-      return newState;
+      return {
+        ...state,
+        dialog: {
+          ...state.dialog,
+          timeframe: action.timeframe,
+        },
+      };
     case REPORT_ADD_OR_SAVE_OBJECT: {
+      newState = _.cloneDeep(state);
       const newObject = {
         type: state.dialog.chart,
         details: {
@@ -104,30 +144,49 @@ export default function reports(state = initialState, action) {
       return newState;
     }
     case REPORT_DELETE_OBJECT:
-      newState.report.objects[action.objectIdx].deleted = true;
-      newState.unsaved = true;
-      return newState;
+      const objects = _.cloneDeep(state.report.objects);
+      objects[action.objectIdx].deleted = true;
+      return {
+        ...state,
+        report: {
+          ...state.report,
+          objects,
+        },
+        unsaved: true,
+      };
     case REPORT_RESET:
-      newState.unsaved = false;
-      newState.report = _.cloneDeep(newState.lastSavedReport);
-      return newState;
+      return {
+        ...state,
+        unsaved: false,
+        report: _.cloneDeep(state.lastSavedReport), // TODO should this be cloned?
+      };
     case REPORT_UPDATE:
-      newState.dialog = _.clone(dialogDefaults);
-      newState.report = action.report;
-      newState.lastSavedReport = _.cloneDeep(newState.report);
-      newState.unsaved = false;
-      newState.dialogOpenStates = {
-        addobject: false,
-        save: false,
-      };
-      return newState;
+      return {
+        ...state,
+        dialog: _.clone(dialogDefaults),
+        report: action.report,
+        lastSavedReport: _.cloneDeep(action.report),
+        unsaved: false,
+        dialogOpenstates: {
+          addobject: false,
+          save: false,
+        },
+      }
     case REPORT_CHANGE_VIEW_TYPE:
-      newState.report.details = {
-        ...newState.report.details,
-        viewType: action.viewType,
+      newState = {
+        ...state,
+        report: {
+          ...state.report,
+          details: {
+            ...state.report.details,
+            viewType: action.viewType,
+          },
+        },
       };
-      newState.unsaved = !_.isEqual(newState.lastSavedReport, newState.report);
-      return newState;
+      return {
+        ...newState,
+        unsaved: !_.isEqual(newState.lastSavedReport, newState.report),
+      };
     default:
       return state;
   }
