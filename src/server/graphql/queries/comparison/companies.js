@@ -13,23 +13,52 @@ const getFields = async (type = 'gender') => {
     ethnicity: ['#ABABAB', '#6E6EE2', '#F1BA00', '#E96DA4', '#E28D6E', '#3DBAEF', '#72D5C6', '#3481A5'],
   };
 
-  let fields = await sequelize.query(`SELECT TRIM(${type}) as name FROM companyComparisons WHERE ${type} <> '' GROUP BY ${type} ORDER BY SUM(pct) DESC`, {
+  const stmt = `
+    SELECT distinct(t.name) from (
+      SELECT
+        CASE TRIM(${type})
+          WHEN 'Two or more races' THEN '2+ Races'
+          WHEN 'American Indian or Alaska Native or Native Hawaiian or other Pacific Islander' THEN 'Other'
+          WHEN 'Other Identities' THEN 'Other'
+          ELSE TRIM(${type})
+        END as name
+      FROM companyComparisons
+      WHERE ${type} <> ''
+      GROUP BY ${type}
+      ORDER BY SUM(pct) DESC
+    ) t`;
+
+  let fields = await sequelize.query(stmt, {
     type: sequelize.QueryTypes.SELECT,
   });
 
   fields = _.map(fields, (element, idx) => (
     _.extend(element, { color: COLORS[type][idx % COLORS[type].length] })
   ));
+
+  // TODO hardcoded (swap other for female);
+  if (type === 'gender') {
+    fields.splice(1, 0, fields.splice(2, 1)[0]);
+  }
+
   return fields;
 };
 
 const getCompanyResults = async (measure = 'gender', department = 'All', year = 'latest') => {
   const yearStmt = year === 'latest' ? '' : ` AND year = ${year}`;
 
+  // TODO this is very hacky. Plesae ask sunil if you're confused.
+  // Eventually abstract this out instead of hard code mappings
   const stmt = `
     SELECT CONCAT(c.companyName, '-', c.year) as companyKey,
       c.companyName as companyName,
-      c.year, TRIM(c.${measure}) as ${measure},
+      c.year,
+      CASE TRIM(c.${measure})
+        WHEN 'Two or more races' THEN '2+ Races'
+        WHEN 'American Indian or Alaska Native or Native Hawaiian or other Pacific Islander' THEN 'Other'
+        WHEN 'Other Identities' THEN 'Other'
+        ELSE TRIM(c.${measure})
+      END as ${measure},
       c.pct as total
       FROM companyComparisons c
       INNER JOIN
@@ -56,11 +85,20 @@ const getMyCompanyResults = async (organization, measure = 'gender', department 
   const measureField = measure === 'gender' ? 'gender' : 'ethnicity';
   const yearStmt = year === 'latest' ? '' : ` AND YEAR(hireDate) <= ${year} `;
 
+  // TODO this is very hacky. Plesae ask sunil if you're confused.
+  // Eventually abstract this out instead of hard code mappings
   const stmt = `
       SELECT CONCAT(t.companyName, '-', '2016') as companyKey,
         t.companyName as companyName,
         '2016' as year,
-        t.${measure} as ${measure},
+
+        CASE TRIM(t.${measure})
+          WHEN 'Two or more races' THEN '2+ Races'
+          WHEN 'American Indian or Alaska Native or Native Hawaiian or other Pacific Islander' THEN 'Other'
+          WHEN 'Other Identities' THEN 'Other'
+          ELSE TRIM(t.${measure})
+        END as ${measure},
+
         COUNT(t.${measure}) as count
         FROM (SELECT
           o.name as companyName,

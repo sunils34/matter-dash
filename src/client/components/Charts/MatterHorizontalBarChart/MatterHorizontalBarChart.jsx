@@ -11,26 +11,30 @@ const COLORS = {
 
 let h = 0;
 const CustomizedLabel = (props) => {
-  const { x, y, stroke, index, value } = props;
+  const { x, y, dx, stroke, index, value, labelFill } = props;
 
   let val = _.round(Math.abs(value[0] - value[1]));
   // if (val < 5) val = _.round(Math.abs(value[0] - value[1]), 1);
-  let dx = -1 * Math.min(20, x / 2);
+  let xPos = -1 * Math.min(20, x / 2);
   let fill = 'white';
 
   // only adjust labels for ethnicity
-  if(x < 30) {
+  if(val < 5 || x < 30) {
     fill = "#ABABAB";
-    dx = 5;
+    xPos = 5;
+  }
+
+  if (labelFill) {
+    fill = labelFill;
   }
 
   return (
-    <text x={x} y={y} dx={dx} fill={fill} fontSize={12} textAnchor="middle">{val}</text>
+    <text x={x} y={y} dx={xPos} fill={fill} fontSize={12} textAnchor="middle">{val}</text>
   )
 };
 
 
-const MatterHorizontalBarChart = ({ fields, data, yDataKey, xDataKey, includeZeroFields, stackedPercentage, height, complete }) => {
+const MatterHorizontalBarChart = ({ fields, data, yDataKey, labelFill, xDataKey, includeZeroFields, stackedPercentage, height, complete }) => {
   const d = _.cloneDeep(data);
   let completeBar = null;
 
@@ -69,7 +73,7 @@ const MatterHorizontalBarChart = ({ fields, data, yDataKey, xDataKey, includeZer
             }
             return (
               <Bar
-                label={<CustomizedLabel />}
+                label={<CustomizedLabel labelFill={labelFill} />}
                 width={100}
                 isAnimationActive={false}
                 unit="%"

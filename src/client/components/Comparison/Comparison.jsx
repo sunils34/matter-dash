@@ -22,28 +22,32 @@ let ComparisonFilterHeader = ({ dispatch, selectedYear, selectedDepartment, year
   const yF = _.concat([{label:'Latest', value: 'latest'}], yearFilters);
 
   return (
-    <Row right>
-      <Column className="small-3">
-        <Select
-          searchable={false}
-          clearable={false}
-          onChange={changeFilterDept}
-          className="comparison-filter"
-          name="Dashboard View"
-          value={selectedDepartment}
-          options={departmentFilters}
-        />
+    <Row right className="filter-row">
+      <Column className="small-4 filter-col">
+        <Row>
+          <Select
+            searchable={false}
+            clearable={false}
+            onChange={changeFilterDept}
+            className="comparison-filter department"
+            name="Department"
+            value={selectedDepartment}
+            options={departmentFilters}
+          />
+        </Row>
       </Column>
-      <Column className="small-2">
-        <Select
-          searchable={false}
-          clearable={false}
-          onChange={changeFilterYear}
-          className="comparison-filter"
-          name="Dashboard View"
-          value={selectedYear}
-          options={yF}
-        />
+      <Column className="small-4 filter-col">
+        <Row>
+          <Select
+            searchable={false}
+            clearable={false}
+            onChange={changeFilterYear}
+            className="comparison-filter year"
+            name="Year"
+            value={selectedYear}
+            options={yF}
+          />
+        </Row>
       </Column>
     </Row>
   )
@@ -95,7 +99,6 @@ class Comparison extends React.Component {
 
   constructor(props) {
     super(props);
-    this.sort = this.sort.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -114,10 +117,6 @@ class Comparison extends React.Component {
     }
   }
 
-  sort() {
-    this.props.dispatch(comparisonActions.sort('gender', 'Female'));
-  }
-
   render() {
     const { myOrgId, data, comparisonData, gender, ethnicity, department } = this.props;
     if (!comparisonData) {
@@ -131,7 +130,7 @@ class Comparison extends React.Component {
 
     return (
       <Row className="comparison" center>
-        <Column className="small-11 medium-11 large-10">
+        <Column>
           <Row className="header-row">
             <Column>
               <Row className="page-header">Employee breakdown of key tech companies</Row>
@@ -140,8 +139,9 @@ class Comparison extends React.Component {
               <ComparisonFilterHeader />
             </Column>
           </Row>
-          <Row center>
-            <Column className="comparison-data">
+          <div className='line'></div>
+          <Row center className="comparison-data">
+            <Column>
               <Row>
                 <Column>
                   <Row className="sort-header-row" center>
@@ -149,6 +149,7 @@ class Comparison extends React.Component {
                     <Column className="bar-wrap gender align-self-bottom">
                       <Row>
                         <Column><Row bottom><ComparisonSortHeader measure="gender" value="Female" /></Row></Column>
+                        <Column><Row center bottom><ComparisonSortHeader measure="gender" value="Other" /></Row></Column>
                         <Column><Row right bottom><ComparisonSortHeader measure="gender" value="Male" /></Row></Column>
                       </Row>
                     </Column>
@@ -164,8 +165,8 @@ class Comparison extends React.Component {
                   </Row>
                 </Column>
               </Row>
-              <Row>
-                <Column className="companies-wrap">
+              <Row className="companies-wrap">
+                <Column>
                   {
                     _.map(comparisonData, (dataPoint) => {
                       let companyImgUrl = `/images/avatars/companies/${_.toLower(dataPoint.companyName)}_avatar.jpg`;
@@ -179,7 +180,7 @@ class Comparison extends React.Component {
                           <Column className="small-1">
                             <Row className="company-name" middle>
                               <Column className="small-1 img-col">
-                                <Row center>
+                                <Row>
                                   <img
                                     className="img-circle"
                                     src={companyImgUrl}
@@ -188,16 +189,14 @@ class Comparison extends React.Component {
                                 </Row>
                               </Column>
                               <Column>
-                                <Row>
-                                  <span>{dataPoint.companyName}</span>
-                                  <span className="me">{dataPoint.isMine ? '(You)' : ''}</span>
-                                </Row>
+                                <Row>{dataPoint.companyName}</Row>
+                                <Row className="me">{dataPoint.isMine ? "(You)" : ""}</Row>
                               </Column>
                             </Row>
                           </Column>
                           <Column className="bar-wrap gender">
                             <Row>
-                              <MatterHorizontalBarChart stackedPercentage fields={gender.fields} data={[dataPoint]} yDataKey="companyKey" xDataKey="gender" height={50} />
+                              <MatterHorizontalBarChart stackedPercentage fields={gender.fields} labelFill="#FFFFFF" data={[dataPoint]} yDataKey="companyKey" xDataKey="gender" height={50} />
                             </Row>
                           </Column>
                           {
@@ -217,7 +216,7 @@ class Comparison extends React.Component {
             </Column>
           </Row>
           <Row className="data-note" center middle>
-            <Column className="small-11 medium-9 large-7">
+            <Column>
               <p>Comparisons help you better understand where you’re at compared to other companies.</p>
               <p>Gender breakdown typically represents the world-wide workforce, whereas the ethnicity breakdown is typically US only.  We use public EEOC data in addition to data provided through company blog posts and diversity dashboards. Because we're reliant on self-reporting from individual companies, we unfortunately cannot guarantee accuracy 100%.  However we promise to keep the data as reliable and up-to-date as possible.</p>
               <p>Have a question? <a href='mailto:hello@matterapp.io'>get in touch!</a></p>
