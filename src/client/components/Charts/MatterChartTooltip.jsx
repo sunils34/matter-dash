@@ -14,11 +14,12 @@ const getChangeDescription = (total, prevTotal, from) => {
 };
 
 const MatterChartTooltipLabel = ({item, prevItem, total, small}) => {
-  const prevItemTotal = prevItem[item.name];
-  const representationPercent = _.round((item.value / total) * 100);
+  const prevItemTotal = prevItem[item.name] || 0;
+  const itemTotal = item.value || 0;
+  const representationPercent = _.round((item.value / total) * 100) || 0;
 
   const changeDescription = getChangeDescription(
-    item.value,
+    itemTotal,
     prevItemTotal,
     prevItem.name);
 
@@ -28,7 +29,7 @@ const MatterChartTooltipLabel = ({item, prevItem, total, small}) => {
         <div className="circle" style={{ background: item.stroke }} />
       </div>
       <div className="col-text">
-        <div className="top-item">{item.value - prevItemTotal}&nbsp;{item.name}&nbsp;({representationPercent}%)</div>
+        <div className="top-item">{itemTotal - prevItemTotal}&nbsp;{item.name}&nbsp;({representationPercent}%)</div>
         {!small &&
           <div className="change-description">{changeDescription}</div>
         }
