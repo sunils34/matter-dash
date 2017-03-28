@@ -13,7 +13,7 @@ const MatterChartTooltip = (props) => {
   const idx = _.findIndex(data, { name: label });
   let body = null;
   if (idx > 0) {
-    const rPayload = _.reverse(payload);
+    const rPayload = _.reverse(_.cloneDeep(payload));
     const firstElements = rPayload.splice(0, 2);
 
     body = (
@@ -35,7 +35,7 @@ const MatterChartTooltip = (props) => {
               changeDescription += ` from ${prevItem.name}`;
 
               return (
-                <div key={item.name}>
+                <div key={item.name} className="top-item-wrap">
                   <div className="col-circle">
                     <div className="circle" style={{ background: item.stroke }} />
                   </div>
