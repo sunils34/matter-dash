@@ -92,6 +92,7 @@
 
     .tip {
       visibility: hidden;
+      opacity: 0;
       background: #FFFFFF;
       border-radius: 4px;
       border: 1px solid #DEDEDE;
@@ -105,6 +106,9 @@
       right: -12px;
       width: 72px;
 
+      transition: opacity .25s ease-in-out;
+      -moz-transition: opacity .25s ease-in-out;
+      -webkit-transition: opacity .25s ease-in-out;
 
       .caret {
         position: absolute;
@@ -121,9 +125,10 @@
   .reports-add:hover {
     .tip {
       visibility: visible;
-      -webkit-animation: slide-in-bottom 2s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-      -moz-animation: slide-in-bottom 2s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-      animation: slide-in-bottom 2s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+      opacity: 1;
+      -webkit-animation: slide-in-bottom 1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+      -moz-animation: slide-in-bottom 1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+      animation: slide-in-bottom 1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 
     }
   }
