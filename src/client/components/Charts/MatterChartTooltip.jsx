@@ -102,22 +102,29 @@ const MatterChartTooltip = (props) => {
             <MatterChartTooltipLabel key={item.name} item={item} prevItem={data[idx - 1]} total={total} />
           ))
         }
-        <div className="label-wrap other">
-          <div className="col-circle">
-            <div className="circle" />
-          </div>
-          <div className="col-text">
-            <div className="top-item">{otherTotal}&nbsp;Other&nbsp;<span>({otherChangeDescription.raw})</span></div>
-            <div className="change-description">{otherChangeDescription.percentage}</div>
-          </div>
-        </div>
-        <div className="other-wrap">
         {
-          _.map(rPayload, item => (
-            <MatterChartTooltipLabel key={item.name} item={item} prevItem={data[idx - 1]} total={total} small/>
-        ))
+          otherTotal > 0 &&
+          <div className="label-wrap other">
+            <div className="col-circle">
+              <div className="circle" />
+            </div>
+            <div className="col-text">
+              <div className="top-item">{otherTotal}&nbsp;Other&nbsp;<span>({otherChangeDescription.raw})</span></div>
+              <div className="change-description">{otherChangeDescription.percentage}</div>
+            </div>
+          </div>
         }
-        </div>
+        {
+          otherTotal > 0 &&
+          <div className="other-wrap">
+          {
+            _.map(rPayload, item => (
+              item.value > 0 &&
+                <MatterChartTooltipLabel key={item.name} item={item} prevItem={data[idx - 1]} total={total} small/>
+            ))
+          }
+          </div>
+        }
       </div>
     </div>
   );
