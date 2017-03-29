@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import './MatterChartTooltip.css';
+import './MatterLineChartTooltip.css';
 
 const getChangeDescription = (total, prevTotal, from) => {
   let change = total - prevTotal;
@@ -12,10 +12,10 @@ const getChangeDescription = (total, prevTotal, from) => {
   changeDescription += ` from ${from}`;
 
   change = (change >= 0) ? `+${change}` : `-${Math.abs(change)}`;
-  return {percentage: changeDescription, raw: change};
+  return { percentage: changeDescription, raw: change };
 };
 
-const MatterChartTooltipLabel = ({item, prevItem, total, small}) => {
+const MatterLineChartTooltipLabel = ({item, prevItem, total, small}) => {
   const prevItemTotal = prevItem[item.name] || 0;
   const itemTotal = item.value || 0;
   const representationPercent = _.round((item.value / total) * 100) || 0;
@@ -41,15 +41,15 @@ const MatterChartTooltipLabel = ({item, prevItem, total, small}) => {
   );
 };
 
-MatterChartTooltipLabel.defaultProps = {
+MatterLineChartTooltipLabel.defaultProps = {
   small: false,
 };
 
-MatterChartTooltipLabel.propTypes = {
+MatterLineChartTooltipLabel.propTypes = {
   small: React.PropTypes.bool,
 };
 
-const MatterChartTooltip = (props) => {
+const MatterLineChartTooltip = (props) => {
   const { payload, data, label } = props;
 
   if (!payload.length) {
@@ -99,7 +99,7 @@ const MatterChartTooltip = (props) => {
         {
           _.map(firstElements, item => (
             // obtain the previous ts object to share relative change
-            <MatterChartTooltipLabel key={item.name} item={item} prevItem={data[idx - 1]} total={total} />
+            <MatterLineChartTooltipLabel key={item.name} item={item} prevItem={data[idx - 1]} total={total} />
           ))
         }
         {
@@ -120,7 +120,7 @@ const MatterChartTooltip = (props) => {
           {
             _.map(rPayload, item => (
               item.value > 0 &&
-                <MatterChartTooltipLabel key={item.name} item={item} prevItem={data[idx - 1]} total={total} small/>
+                <MatterLineChartTooltipLabel key={item.name} item={item} prevItem={data[idx - 1]} total={total} small/>
             ))
           }
           </div>
@@ -138,8 +138,8 @@ const MatterChartTooltip = (props) => {
   );
 };
 
-MatterChartTooltip.propTypes = {
+MatterLineChartTooltip.propTypes = {
   data: React.PropTypes.array.isRequired,
 };
 
-export default MatterChartTooltip;
+export default MatterLineChartTooltip;

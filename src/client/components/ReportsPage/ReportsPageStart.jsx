@@ -1,15 +1,16 @@
-import React from 'react';
-import { graphql, compose } from 'react-apollo';
-import { connect } from 'react-redux';
-import _ from 'lodash';
-import { Link } from 'react-router';
+import DocumentTitle from 'react-document-title';
 import DropdownMenu from 'react-dd-menu';
+import React from 'react';
+import _ from 'lodash';
+import dateformat from 'dateformat';
 import gql from 'graphql-tag';
+import { Link } from 'react-router';
+import { connect } from 'react-redux';
+import { graphql, compose } from 'react-apollo';
 import MatterLoadingIndicator from '../LoadingIndicator';
 import { Row, Column } from '../Grid';
 import './ReportsPageStart.css';
 import '../../css/dropdown.css';
-import dateformat from 'dateformat';
 
 
 class _ReportPageListItemOptionsMenu extends React.Component {
@@ -53,12 +54,14 @@ class _ReportPageListItemOptionsMenu extends React.Component {
     };
 
     return (
-      <div className="dd-wrap">
-        <DropdownMenu {...menuOptions}>
-          <div className='caret'></div>
-          <li onClick={this.deleteReport}><i className="material-icons">cancel</i><span>Delete Report</span></li>
-        </DropdownMenu>
-      </div>
+      <DocumentTitle title="Reports | Matter">
+        <div className="dd-wrap">
+          <DropdownMenu {...menuOptions}>
+            <div className='caret'></div>
+            <li onClick={this.deleteReport}><i className="material-icons">cancel</i><span>Delete Report</span></li>
+          </DropdownMenu>
+        </div>
+      </DocumentTitle>
     );
   }
 }

@@ -76,6 +76,7 @@
     "react-bootstrap-dropdown": "^0.3.0",
     "react-bootstrap-navbar": "^1.1.0",
     "react-dd-menu": "^2.0.0",
+    "react-document-title": "^2.0.2",
     "react-dom": "^15.4.2",
     "react-dropdown": "^1.2.1",
     "react-flexbox-grid": "^0.10.2",

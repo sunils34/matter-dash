@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import DropdownMenu from 'react-dd-menu';
 import ReactTooltip from 'react-tooltip';
+import DocumentTitle from 'react-document-title';
 import '../../css/select.css';
 import '../../css/dropdown.css';
 import ReportsPageChart from './ReportsPageChart';
@@ -193,28 +194,31 @@ class _ReportsPageSaveFooter extends React.Component {
     this.save = this.save.bind(this);
   }
 
-  componentWillReceiveProps(newProps) {
-    // show in the title a star which indicates it's unsaved
-    if(newProps.isUnsaved) {
-      document.title = `* ${document.title}`;
-    } else {
-      document.title = document.title.replace('* ', '');
-    }
-  }
-
   save() {
     this.props.dispatch(reportActions.reportDialogToggle('save', true));
   }
 
   render() {
-    if (!this.props.isUnsaved) return null;
+    const { isUnsaved, reportName } = this.props;
+    let title = reportName;
+    if (isUnsaved) title = '* ' + title;
+    title += ' | Matter';
+
+    if (!this.props.isUnsaved) {
+      return (
+        <DocumentTitle title={title} />
+      );
+    }
 
     return (
-      <Row middle className="report-save-footer">
-        <Column><span/></Column>
-        <Column><Row center> Unsaved changes to '{this.props.reportName}' </Row></Column>
-        <Column><Row right><button onClick={this.save} className="btn-primary">Save Changes</button></Row></Column>
-      </Row>);
+      <DocumentTitle title={title}>
+        <Row middle className="report-save-footer">
+          <Column><span /></Column>
+          <Column><Row center> Unsaved changes to '{this.props.reportName}' </Row></Column>
+          <Column><Row right><button onClick={this.save} className="btn-primary">Save Changes</button></Row></Column>
+        </Row>
+      </DocumentTitle>
+    );
   }
 }
 
@@ -429,21 +433,21 @@ class ReportsPage extends React.Component {
     }
 
     return (
-      <div className="container reports-page">
-        <ReportsPageHeader report={report} isempty={isEmpty} dispatch={dispatch}>
-          <a href="#" onClick={this.openSaveModal} className="reports-options">Save</a>
-          <Link to="/report/new" className="reports-options">New</Link>
-          <a href="#" className="reports-options">Open</a>
-          <a href="#" onClick={this.resetReport} className="reports-options">Reset</a>
-        </ReportsPageHeader>
-        <Row className='report-objects'>
-          {body}
-        </Row>
-        <ReportsAddNewGraphContainer />
-        <ReportsSaveReportDialogContainer router={this.props.router} />
-        <ReportsPageSaveFooter />
-        <ReactTooltip />
-      </div>
+        <div className="container reports-page">
+          <ReportsPageHeader report={report} isempty={isEmpty} dispatch={dispatch}>
+            <a href="#" onClick={this.openSaveModal} className="reports-options">Save</a>
+            <Link to="/report/new" className="reports-options">New</Link>
+            <a href="#" className="reports-options">Open</a>
+            <a href="#" onClick={this.resetReport} className="reports-options">Reset</a>
+          </ReportsPageHeader>
+          <Row className='report-objects'>
+            {body}
+          </Row>
+          <ReportsAddNewGraphContainer />
+          <ReportsSaveReportDialogContainer router={this.props.router} />
+          <ReportsPageSaveFooter />
+          <ReactTooltip />
+        </div>
     );
   }
 }
