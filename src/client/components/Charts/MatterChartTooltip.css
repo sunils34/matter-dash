@@ -30,6 +30,12 @@
     .top-item {
       font-size: 22px;
       color: #4A4A4A;
+
+      span {
+        font-size: 13px;
+        color: #ABABAB;
+      }
+
     }
 
     .col-text {

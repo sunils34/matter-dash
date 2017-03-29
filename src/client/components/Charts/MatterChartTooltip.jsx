@@ -3,14 +3,16 @@ import _ from 'lodash';
 import './MatterChartTooltip.css';
 
 const getChangeDescription = (total, prevTotal, from) => {
-  const change = total - prevTotal;
+  let change = total - prevTotal;
   let changeDescription = 'No change';
   if (change !== 0) {
-    changeDescription = _.round((change / prevTotal) * 100, 0);
+    changeDescription = _.round((change / (prevTotal || 1)) * 100, 0);
     changeDescription += change >= 0 ? '% increase' : '% decrease';
   }
   changeDescription += ` from ${from}`;
-  return changeDescription;
+
+  change = (change >= 0) ? `+${change}` : `-${Math.abs(change)}`;
+  return {percentage: changeDescription, raw: change};
 };
 
 const MatterChartTooltipLabel = ({item, prevItem, total, small}) => {
@@ -29,9 +31,10 @@ const MatterChartTooltipLabel = ({item, prevItem, total, small}) => {
         <div className="circle" style={{ background: item.stroke }} />
       </div>
       <div className="col-text">
-        <div className="top-item">{itemTotal - prevItemTotal}&nbsp;{item.name}&nbsp;({representationPercent}%)</div>
+        <div className="top-item">{itemTotal}&nbsp;{item.name}&nbsp;<span>({changeDescription.raw})</span>
+        </div>
         {!small &&
-          <div className="change-description">{changeDescription}</div>
+          <div className="change-description">{changeDescription.percentage}</div>
         }
       </div>
     </div>
@@ -85,7 +88,7 @@ const MatterChartTooltip = (props) => {
 
   body = (
     <div>
-      <div className="name">{label} Hires</div>
+      <div className="name">{label}</div>
       <div>
         {
           _.map(firstElements, item => (
@@ -98,8 +101,8 @@ const MatterChartTooltip = (props) => {
             <div className="circle" />
           </div>
           <div className="col-text">
-            <div className="top-item">{otherTotal - prevOtherTotal}&nbsp;Other ({otherRepresentationPercent}%)</div>
-            <div className="change-description">{otherChangeDescription}</div>
+            <div className="top-item">{otherTotal}&nbsp;Other&nbsp;<span>({otherChangeDescription.raw})</span></div>
+            <div className="change-description">{otherChangeDescription.percentage}</div>
           </div>
         </div>
         <div className="other-wrap">
