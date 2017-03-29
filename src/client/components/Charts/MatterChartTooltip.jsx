@@ -63,7 +63,13 @@ const MatterChartTooltip = (props) => {
     return null;
   }
 
-  const rPayload = _.reverse(_.cloneDeep(payload));
+  const rPayload = _.orderBy(_.map(_.cloneDeep(payload), item => (
+    {
+      ...item,
+      value: item.value || 0,
+    }
+  )),
+  ['value', 'name'], ['desc', 'asc']);
 
   // total number of employees for this snapshot
   let total = 0;
