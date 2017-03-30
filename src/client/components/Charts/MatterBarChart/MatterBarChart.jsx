@@ -5,6 +5,7 @@ import gql from 'graphql-tag';
 import _ from 'lodash';
 import './MatterBarChart.css';
 import MatterLoadingIndicator from '../../LoadingIndicator';
+import MatterBarChartTooltip from './MatterBarChartTooltip.jsx';
 
 const convertToPercentageData = (data, fields) => {
   const retData = _.map(data, (element) => {
@@ -68,7 +69,7 @@ class MatterBarChart extends React.Component {
           <XAxis dataKey='name'/>
           <YAxis allowDataOverflow={true} scale="linear" type="number" unit={unit} allowDecimals={false} domain={domain} />
           <CartesianGrid strokeDasharray="3" vertical={false}/>
-          <Tooltip animationDuration={0}/>
+          <Tooltip animationDuration={0} content={MatterBarChartTooltip}/>
           {
             fields.map((field, index) => <Bar animationDuration={animationDuration}unit={unit} key={`bar-${field.name}`} dataKey={field.name} stackId='a' fill={field.color}/>)
           }

@@ -1,0 +1,44 @@
+{
+  .barchart-tooltip {
+    background: #FFFFFF;
+    border: 1px solid #DEDEDE;
+    box-shadow: 0 0 5px 0 rgba(0,0,0,0.04);
+    border-radius: 4px;
+    padding: 10px;
+
+
+    .title {
+      font-size: 14px;
+      color: #9B9B9B;
+    }
+
+    .label-wrap {
+      display: flex;
+      font-size: 14px;
+      margin: 5px 0px;
+
+      .circle-wrap {
+        width: 20px;
+        display: flex;
+        justify-content: center;
+
+        .circle {
+          width: 10px;
+          height: 10px;
+          border-radius: 50px;
+        }
+      }
+
+      .value {
+        display: flex;
+        width: 60px;
+      }
+
+      .label {
+        color: #4A4A4A;
+        max-width: 150px;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}
