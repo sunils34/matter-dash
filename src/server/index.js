@@ -1,51 +1,48 @@
-
-import 'babel-polyfill'
+import 'babel-polyfill';
 import express from 'express';
 import path from 'path';
-import graphqlHTTP from 'express-graphql';
 import bodyParser from 'body-parser';
-import expressJWT from 'express-jwt';
 import session from 'express-session';
 import expressGraphQL from 'express-graphql';
+import sequelizeStore from 'connect-sequelize';
+import expressReactViews from 'express-react-views';
+
 import schema from './graphql/schema';
-import cookieParser from 'cookie-parser';
 import configureAuth from './configureAuth';
 import db from './database/mysql/sequelize';
 import sequelizeTables from './database/mysql/models';
-import sequelizeStore from 'connect-sequelize';
-
-var SequelizeStore = sequelizeStore(session);
 
 
-import React from 'react'
-import { render } from 'react-dom'
-import { Provider } from 'react-redux'
-import ReactDOM from 'react-dom/server';
-import expressReactViews from 'express-react-views';
+const SequelizeStore = sequelizeStore(session);
 
-
-
-const env = process.env.NODE_ENV == 'production' ? 'prod' : 'dev';
+const env = process.env.NODE_ENV === 'production' ? 'prod' : 'dev';
 const appdir = path.resolve(__dirname + '/../../build/' + env);
 
 const app = express();
+console.log(app.get('NODE_ENV'))
 
-const store = new SequelizeStore(db, {}, 'sessions')
+const store = new SequelizeStore(db, {}, 'sessions');
 
 // set up middleware limits
-app.use(bodyParser({limit: '50mb'}));
-app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser({ limit: '50mb' }));
+app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 
-app.use(session({
+const sessionDetails = {
   secret: process.env.COOKIE_SECRET,
   resave: false,
-  store: store,
+  store,
   saveUninitialized: false,
-  cookie: {maxAge: 86400000}
-}));
+  cookie: { maxAge: 86400000 },
+};
 
+if (env === 'prod') {
+  app.set('trust proxy', 1)
+  sessionDetails.cookie.secure = true;
+}
+
+app.use(session(sessionDetails));
 app.set('views', __dirname + '/views');
 app.engine('html', require('ejs').renderFile);
 
