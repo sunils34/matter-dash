@@ -1,5 +1,6 @@
  /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React from 'react';
+import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
@@ -118,7 +119,7 @@ class Comparison extends React.Component {
   }
 
   render() {
-    const { myOrgId, data, comparisonData, gender, ethnicity, department } = this.props;
+    const { myOrgId, data, comparisonData, gender, ethnicity, department, year } = this.props;
     if (!comparisonData) {
       return (
         <div className="container">
@@ -129,101 +130,103 @@ class Comparison extends React.Component {
 
 
     return (
-      <Row className="comparison" center>
-        <Column>
-          <Row className="header-row">
-            <Column>
-              <Row className="page-header">Employee breakdown of key tech companies</Row>
-            </Column>
-            <Column>
-              <ComparisonFilterHeader />
-            </Column>
-          </Row>
-          <div className='line'></div>
-          <Row center className="comparison-data">
-            <Column>
-              <Row>
-                <Column>
-                  <Row className="sort-header-row" center>
-                    <Column className="small-1" />
-                    <Column className="bar-wrap gender align-self-bottom">
-                      <Row>
-                        <Column><Row bottom><ComparisonSortHeader measure="gender" value="Female" /></Row></Column>
-                        <Column><Row center bottom><ComparisonSortHeader measure="gender" value="Other" /></Row></Column>
-                        <Column><Row right bottom><ComparisonSortHeader measure="gender" value="Male" /></Row></Column>
-                      </Row>
-                    </Column>
-                    {
-                      _.map(ethnicity.fields, (field, idx) => (
-                        <Column key={field.name} className="bar-wrap align-self-bottom">
-                          <Row bottom>
-                            <ComparisonSortHeader measure="ethnicity" value={field.name} />
-                          </Row>
-                        </Column>
-                      ))
-                    }
-                  </Row>
-                </Column>
-              </Row>
-              <Row className="companies-wrap">
-                <Column>
-                  {
-                    _.map(comparisonData, (dataPoint) => {
-                      let companyImgUrl = `/images/avatars/companies/${_.toLower(dataPoint.companyName)}_avatar.jpg`;
-
-                      if (dataPoint.isMine) {
-                        companyImgUrl = `/images/avatars/${myOrgId}.svg`;
-                      }
-
-                      return (
-                        <Row key={dataPoint.companyKey} className={dataPoint.isMine ? 'company-wrap mine' : 'company-wrap'} middle center>
-                          <Column className="small-1">
-                            <Row className="company-name" middle>
-                              <Column className="small-1 img-col">
-                                <Row>
-                                  <img
-                                    className="img-circle"
-                                    src={companyImgUrl}
-                                    alt={dataPoint.companyName}
-                                  />
-                                </Row>
-                              </Column>
-                              <Column>
-                                <Row>{dataPoint.companyName}</Row>
-                                <Row className="me">{dataPoint.isMine ? "(You)" : ""}</Row>
-                              </Column>
-                            </Row>
-                          </Column>
-                          <Column className="bar-wrap gender">
-                            <Row>
-                              <MatterHorizontalBarChart stackedPercentage fields={gender.fields} labelFill="#FFFFFF" data={[dataPoint]} yDataKey="companyKey" xDataKey="gender" height={50} />
-                            </Row>
-                          </Column>
-                          {
-                            _.map(ethnicity.fields, field => (
-                              <Column key={`${dataPoint.companyKey}-${field.name}`} className="ethnicity bar-wrap">
-                                <Row className="bar-container" center middle>
-                                  <MatterHorizontalBarChart complete includeZeroFields stackedPercentage fields={[field]} data={[dataPoint]} yDataKey="companyKey" xDataKey="ethnicity" height={50} />
-                                </Row>
-                              </Column>
-                            ))
-                          }
+      <DocumentTitle title={`Comparison - ${department} ${year} | Matter`}>
+        <Row className="comparison" center>
+          <Column>
+            <Row className="header-row">
+              <Column>
+                <Row className="page-header">Employee breakdown of key tech companies</Row>
+              </Column>
+              <Column>
+                <ComparisonFilterHeader />
+              </Column>
+            </Row>
+            <div className='line'></div>
+            <Row center className="comparison-data">
+              <Column>
+                <Row>
+                  <Column>
+                    <Row className="sort-header-row" center>
+                      <Column className="small-1" />
+                      <Column className="bar-wrap gender align-self-bottom">
+                        <Row>
+                          <Column><Row bottom><ComparisonSortHeader measure="gender" value="Female" /></Row></Column>
+                          <Column><Row center bottom><ComparisonSortHeader measure="gender" value="Other" /></Row></Column>
+                          <Column><Row right bottom><ComparisonSortHeader measure="gender" value="Male" /></Row></Column>
                         </Row>
-                    )})
-                  }
-                </Column>
-              </Row>
-            </Column>
-          </Row>
-          <Row className="data-note" center middle>
-            <Column>
-              <p>Comparisons help you better understand where you’re at compared to other companies.</p>
-              <p>Gender breakdown typically represents the world-wide workforce, whereas the ethnicity breakdown is typically US only.  We use public EEOC data in addition to data provided through company blog posts and diversity dashboards. Because we're reliant on self-reporting from individual companies, we unfortunately cannot guarantee accuracy 100%.  However we promise to keep the data as reliable and up-to-date as possible.</p>
-              <p>Have a question? <a href='mailto:hello@matterapp.io'>get in touch!</a></p>
-            </Column>
-          </Row>
-        </Column>
-      </Row>
+                      </Column>
+                      {
+                        _.map(ethnicity.fields, (field, idx) => (
+                          <Column key={field.name} className="bar-wrap align-self-bottom">
+                            <Row bottom>
+                              <ComparisonSortHeader measure="ethnicity" value={field.name} />
+                            </Row>
+                          </Column>
+                        ))
+                      }
+                    </Row>
+                  </Column>
+                </Row>
+                <Row className="companies-wrap">
+                  <Column>
+                    {
+                      _.map(comparisonData, (dataPoint) => {
+                        let companyImgUrl = `/images/avatars/companies/${_.toLower(dataPoint.companyName)}_avatar.jpg`;
+
+                        if (dataPoint.isMine) {
+                          companyImgUrl = `/images/avatars/${myOrgId}.svg`;
+                        }
+
+                        return (
+                          <Row key={dataPoint.companyKey} className={dataPoint.isMine ? 'company-wrap mine' : 'company-wrap'} middle center>
+                            <Column className="small-1">
+                              <Row className="company-name" middle>
+                                <Column className="small-1 img-col">
+                                  <Row>
+                                    <img
+                                      className="img-circle"
+                                      src={companyImgUrl}
+                                      alt={dataPoint.companyName}
+                                    />
+                                  </Row>
+                                </Column>
+                                <Column>
+                                  <Row>{dataPoint.companyName}</Row>
+                                  <Row className="me">{dataPoint.isMine ? "(You)" : ""}</Row>
+                                </Column>
+                              </Row>
+                            </Column>
+                            <Column className="bar-wrap gender">
+                              <Row>
+                                <MatterHorizontalBarChart stackedPercentage fields={gender.fields} labelFill="#FFFFFF" data={[dataPoint]} yDataKey="companyKey" xDataKey="gender" height={50} />
+                              </Row>
+                            </Column>
+                            {
+                              _.map(ethnicity.fields, field => (
+                                <Column key={`${dataPoint.companyKey}-${field.name}`} className="ethnicity bar-wrap">
+                                  <Row className="bar-container" center middle>
+                                    <MatterHorizontalBarChart complete includeZeroFields stackedPercentage fields={[field]} data={[dataPoint]} yDataKey="companyKey" xDataKey="ethnicity" height={50} />
+                                  </Row>
+                                </Column>
+                              ))
+                            }
+                          </Row>
+                      )})
+                    }
+                  </Column>
+                </Row>
+              </Column>
+            </Row>
+            <Row className="data-note" center middle>
+              <Column>
+                <p>Comparisons help you better understand where you’re at compared to other companies.</p>
+                <p>Gender breakdown typically represents the world-wide workforce, whereas the ethnicity breakdown is typically US only.  We use public EEOC data in addition to data provided through company blog posts and diversity dashboards. Because we're reliant on self-reporting from individual companies, we unfortunately cannot guarantee accuracy 100%.  However we promise to keep the data as reliable and up-to-date as possible.</p>
+                <p>Have a question? <a href='mailto:hello@matterapp.io'>get in touch!</a></p>
+              </Column>
+            </Row>
+          </Column>
+        </Row>
+      </DocumentTitle>
     );
   }
 

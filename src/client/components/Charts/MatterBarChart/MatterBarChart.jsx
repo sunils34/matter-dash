@@ -52,11 +52,13 @@ class MatterBarChart extends React.Component {
 
     let unit = '';
     let domain = [0, 'auto'];
+    let hide = false;
     // stacked percentage
     if (this.props.type === 'stackedPercentage') {
       data = convertToPercentageData(data, fields);
       unit = '%';
-      domain = [0, 'dataMax'];
+      domain = [0, 100];
+      hide = true;
     }
 
 
@@ -64,7 +66,7 @@ class MatterBarChart extends React.Component {
       <ResponsiveContainer height={height} width="100%">
         <BarChart data={data} margin={{top: 20, right: 30, left: 20, bottom: 5}}>
           <XAxis dataKey='name'/>
-          <YAxis type="number" unit={unit} domain={domain} interval="preserveStart" />
+          <YAxis allowDataOverflow={true} scale="linear" type="number" unit={unit} allowDecimals={false} domain={domain} />
           <CartesianGrid strokeDasharray="3" vertical={false}/>
           <Tooltip animationDuration={0}/>
           {

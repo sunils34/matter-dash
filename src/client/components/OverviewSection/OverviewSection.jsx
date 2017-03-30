@@ -1,4 +1,5 @@
 import React from 'react';
+import DocumentTitle from 'react-document-title';
 import './OverviewSection.css';
 import MatterPieChart from '../Charts/MatterPieChart/MatterPieChart.jsx';
 import MatterBarChart from '../Charts/MatterBarChart/MatterBarChart.jsx';
@@ -255,20 +256,22 @@ class OverviewSection extends React.Component {
 
   render () {
     return (
-      <div className='container'>
-        <div className='overview-section'>
-          <OverviewChartsPie dispatch={this.props.dispatch}
-            employee_count={this.props.employee_count}
-            department={this.props.department}
-            period={this.props.period} />
+      <DocumentTitle title="Dashboard | Matter">
+        <div className='container'>
+          <div className='overview-section'>
+            <OverviewChartsPie dispatch={this.props.dispatch}
+              employee_count={this.props.employee_count}
+              department={this.props.department}
+              period={this.props.period} />
+          </div>
+          <div className='overview-section'>
+            <OverviewChartsBar dispatch={this.props.dispatch}
+              employee_count={this.props.employee_count}
+              department={this.props.department}
+              period={this.props.period} />
+          </div>
         </div>
-        <div className='overview-section'>
-          <OverviewChartsBar dispatch={this.props.dispatch}
-            employee_count={this.props.employee_count}
-            department={this.props.department}
-            period={this.props.period} />
-        </div>
-      </div>
+      </DocumentTitle>
     )
   }
 }
