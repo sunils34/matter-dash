@@ -275,3 +275,27 @@
     }
   }
 }
+
+@media print, screen and (min-width: 1200px) {
+  .comparison {
+    width: 75em;
+
+    .comparison-data {
+      .bar-wrap {
+        &.gender {
+          margin-right: .625em;
+          > .row {
+            width: 15em;
+          }
+        }
+
+        &.ethnicity {
+          width: 7.5em;
+          > .row {
+            width: 8.82em;
+          }
+        }
+      }
+    }
+  }
+}
