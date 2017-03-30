@@ -37,10 +37,18 @@ HeaderOrgDetails = connect(state => ({
 
 const HeaderLink = (props) => {
 
+  const {path, activePathInclude, location} = props;
+
   let activeClassName = null;
-  if(props.location.pathname == props.path) {
+  if(location.pathname == path) {
     activeClassName = 'active';
   }
+
+  if (activePathInclude &&
+      activePathInclude.indexOf(location.pathname.split('/')[1]) > -1) {
+    activeClassName = 'active';
+  }
+
 
   return (
     <Column className={activeClassName} ><Link to={props.path}>{props.children}</Link></Column>
@@ -58,7 +66,7 @@ class HeaderBar extends React.Component {
               <Row center middle className="inline-list">
                 <div className='logo'><img src='/images/matter-logo-square.svg'></img></div>
                 <HeaderLink location={location} path='/dashboard'>Dashboard</HeaderLink>
-                <HeaderLink location={location} path='/reports'>Reports</HeaderLink>
+                <HeaderLink location={location} path='/reports' activePathInclude={['report']}>Reports</HeaderLink>
                 <HeaderLink location={location} path='/comparison'>Comparison</HeaderLink>
               </Row>
           </Column>
