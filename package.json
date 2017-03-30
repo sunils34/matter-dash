@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/sunils34/matter-api#readme",
   "dependencies": {
-    "apollo-client": "^0.8.7",
+    "apollo-client": "^1.0.0",
     "autoprefixer": "^6.7.4",
     "babel-cli": "^6.23.0",
     "babel-core": "6.18.2",
@@ -72,7 +72,7 @@
     "precss": "^1.4.0",
     "react": "^15.4.2",
     "react-addons-css-transition-group": "^15.4.2",
-    "react-apollo": "^0.11.2",
+    "react-apollo": "^1.0.0",
     "react-bootstrap-dropdown": "^0.3.0",
     "react-bootstrap-navbar": "^1.1.0",
     "react-dd-menu": "^2.0.0",

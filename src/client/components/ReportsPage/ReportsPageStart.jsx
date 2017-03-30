@@ -14,7 +14,7 @@ import '../../css/dropdown.css';
 
 
 class _ReportPageListItemOptionsMenu extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       isMenuOpen: false,
@@ -221,8 +221,8 @@ export default compose(
   connect(mapStateToProps),
   graphql(CreateReportMutation),
   graphql(GetReports, {
-    options: ({ sort }) => {
-      return { variables: { sort }, forceFetch: true };
-    },
+    options: ({ sort }) => (
+      { variables: { sort }, fetchPolicy: 'network-only' }
+    ),
   }),
 )(ReportsPageStart);

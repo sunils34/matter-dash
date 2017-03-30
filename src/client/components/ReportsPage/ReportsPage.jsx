@@ -499,9 +499,9 @@ const mapStateToProps = state => (
 export default
 connect(mapStateToProps)(
   graphql(GetReportsPageInit, {
-    options: ({ params }) => {
-      return { variables: { id: params.id }, forceFetch: true };
-    },
+    options: ({ params }) => (
+      { variables: { id: params.id }, fetchPolicy: 'network-only' }
+    ),
     props: ({ data: { loading, reportsPageInit } }) => ({
       loading,
       reportsPageInit,

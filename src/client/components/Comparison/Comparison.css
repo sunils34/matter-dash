@@ -33,30 +33,59 @@
           outline: none;
         }
 
-        .Select-arrow {
-          position: relative;
-          border: none;
-          top: -5px;
-          left: -5px;
+        &:not(.is-open) {
+          .Select-arrow {
+            position: relative;
+            border: none;
+            top: -5px;
+            left: -5px;
+            &:before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              border-top: 5px solid #8386ED;
+              border-left: 5px solid transparent;
+              border-right: 5px solid transparent;
+            }
 
-          &:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            border-top: 5px solid #8386ED;
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
+            &:after {
+              content: '';
+              position: absolute;
+              left: 1px;
+              top: 0;
+              border-top: 4px solid #ffffff;
+              border-left: 4px solid transparent;
+              border-right: 4px solid transparent;
+            }
           }
+        }
 
-          &:after {
-            content: '';
-            position: absolute;
-            left: 1px;
-            top: 0;
-            border-top: 4px solid #ffffff;
-            border-left: 4px solid transparent;
-            border-right: 4px solid transparent;
+        &.is-open {
+          .Select-arrow {
+            position: relative;
+            border: none;
+            top: -5px;
+            left: -5px;
+            &:before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              border-bottom: 5px solid #8386ED;
+              border-left: 5px solid transparent;
+              border-right: 5px solid transparent;
+            }
+
+            &:after {
+              content: '';
+              position: absolute;
+              left: 1px;
+              top: 1px;
+              border-bottom: 4px solid #ffffff;
+              border-left: 4px solid transparent;
+              border-right: 4px solid transparent;
+            }
           }
         }
 
@@ -240,6 +269,30 @@
           width: 6.25em;
           > .row {
             width: 7.375em;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media print, screen and (min-width: 1200px) {
+  .comparison {
+    width: 75em;
+
+    .comparison-data {
+      .bar-wrap {
+        &.gender {
+          margin-right: .625em;
+          > .row {
+            width: 15em;
+          }
+        }
+
+        &.ethnicity {
+          width: 7.5em;
+          > .row {
+            width: 8.82em;
           }
         }
       }
