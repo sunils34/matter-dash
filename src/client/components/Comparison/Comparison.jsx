@@ -61,27 +61,40 @@ ComparisonFilterHeader = connect(state => ({
   departmentFilters: state.comparison.filters.departments,
 }))(ComparisonFilterHeader);
 
-let ComparisonSortHeader = ({ dispatch, measure, value, sortMeasure, sortValue, sortOrder, }) => {
+let ComparisonSortHeader = ({ dispatch, measure, value, sortMeasure, sortValue, sortOrder, textAsc, textDesc, inverse }) => {
 
 
   let c = 'sort-header align-bottom noselect';
   let sortArrow = 'keyboard_arrow_down';
-  let newSortValue = 'desc';
-  if (sortMeasure === measure && sortValue === value) {
+  let text = value;
+
+  if (textAsc && textDesc) {
+    text = inverse ? textAsc : textDesc;
+  }
+
+  //set default sort order
+  let newSortValue = inverse ? 'asc' : 'desc';
+
+  if (sortMeasure === measure && (!value || sortValue === value)) {
     c += ' active';
     if (sortOrder === 'asc') {
-      sortArrow = 'keyboard_arrow_up';
+      sortArrow = inverse ? 'keyboard_arrow_down' : 'keyboard_arrow_up';
+      newSortValue = 'desc';
+      if (textAsc) text = textAsc;
     } else {
+      sortArrow = inverse ? 'keyboard_arrow_up' : 'keyboard_arrow_down';
       newSortValue = 'asc';
+      if (textDesc) text = textDesc;
     }
   }
+
 
   // dispatch a sort event
   const onClick = () => { dispatch(comparisonActions.sort(measure, value, newSortValue)); };
 
   return (
     <div className={c} onClick={onClick}>
-      <span>{value}</span>
+      <span>{text}</span>
       <i className="material-icons">{sortArrow}</i>
     </div>
   );
@@ -147,7 +160,11 @@ class Comparison extends React.Component {
                 <Row>
                   <Column>
                     <Row className="sort-header-row" center>
-                      <Column className="small-1" />
+                      <Column className="small-1">
+                        <Row>
+                          <ComparisonSortHeader measure="companyName" textAsc="A-Z" textDesc="Z-A" inverse/>
+                        </Row>
+                      </Column>
                       <Column className="bar-wrap gender align-self-bottom">
                         <Row>
                           <Column><Row bottom><ComparisonSortHeader measure="gender" value="Female" /></Row></Column>
