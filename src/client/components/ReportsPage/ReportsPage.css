@@ -3,6 +3,7 @@
     margin-right: 10px;
     font-size: 27px;
     color: #4A4A4A;
+    font-weight: 600;
   }
 
   .reports-options {
@@ -59,6 +60,9 @@
     .report-title-wrap {
       position: relative;
 
+      .report-chart-title {
+        font-weight: 600;
+      }
 
       .settings {
         color: #8386ED;
