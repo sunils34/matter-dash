@@ -3,8 +3,6 @@ FROM node:6.2-slim
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
+COPY package.json /usr/src/app/
+RUN npm install
 ENV NODE_ENV development
-RUN npm install -g nodemon
-
-ENV PORT 80
-EXPOSE 80
