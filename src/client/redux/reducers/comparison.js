@@ -48,7 +48,6 @@ const sortResults = (state, measure, value, order) => {
       }));
     sortField = `${measure}.${value}`;
   }
-  debugger;
 
   nextState.displayData = _.concat(
     _.orderBy(data, [sortField], [order]),
