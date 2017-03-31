@@ -16,9 +16,7 @@
       }
 
       .description {
-        font-size: 
-
-
+        font-weight: 300;
       }
     }
   }
@@ -40,7 +38,7 @@
 
     .legend-name {
       color: #B1B1B1;
-      font-size: 12px;
+      font-size: 14px;
     }
   }
 
@@ -57,7 +55,7 @@
 
       .legend-name {
         color: #B1B1B1;
-        font-size: 12px;
+        font-size: 14px;
         display: inline-block;
       }
 
