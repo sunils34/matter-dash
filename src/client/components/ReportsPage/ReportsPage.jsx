@@ -436,8 +436,8 @@ class ReportsPage extends React.Component {
         <div className="container reports-page">
           <ReportsPageHeader report={report} isempty={isEmpty} dispatch={dispatch}>
             <a href="#" onClick={this.openSaveModal} className="reports-options">Save</a>
-            <Link to="/report/new" className="reports-options">New</Link>
-            <a href="#" className="reports-options">Open</a>
+            <Link to="/report/new" className="reports-options">New Report</Link>
+            <Link to="/reports" className="reports-options">Open</Link>
             <a href="#" onClick={this.resetReport} className="reports-options">Reset</a>
           </ReportsPageHeader>
           <Row className='report-objects'>
