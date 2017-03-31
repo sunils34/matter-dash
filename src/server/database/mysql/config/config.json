@@ -1,17 +1,9 @@
 {
   "development": {
-    "username": "root",
-    "password": "test_pass",
-    "database": "matter_dev",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "use_env_variable": "MYSQL_DEVELOPMENT_URI"
   },
   "test": {
-    "username": "root",
-    "password": "test_pass",
-    "database": "matter_test",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "use_env_variable": "MYSQL_DEVELOPMENT_URI"
   },
   "staging": {
     "use_env_variable": "MYSQL_STAGING_URI"
