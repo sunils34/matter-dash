@@ -5,7 +5,7 @@ import dateformat from 'dateformat';
 import './HeaderBar.css';
 import { Column, Row } from '../Grid';
 
-let HeaderOrgDetails = ({ id, name, updatedAt }) => {
+let HeaderOrgDetails = ({ id, name, updatedAt, logoUrl }) => {
   if (!id || !name || !updatedAt) return null;
   return (
     <Column className="hide-for-small-only">
@@ -15,7 +15,7 @@ let HeaderOrgDetails = ({ id, name, updatedAt }) => {
           <Row className="org-updated" right>Last Updated: {dateformat(updatedAt, 'mmmm d, yyyy')}</Row>
         </Column>
         <Column className="large-1 medium-1">
-          <Row center><img className="org-avatar img-circle" src={`/images/avatars/${id}.svg`} alt={name} /></Row>
+          <Row center><img className="org-avatar img-circle" src={logoUrl} alt={name} /></Row>
         </Column>
       </Row>
     </Column>
@@ -26,6 +26,7 @@ HeaderOrgDetails.propTypes = {
   id: React.PropTypes.string.isRequired,
   name: React.PropTypes.string.isRequired,
   updatedAt: React.PropTypes.string.isRequired,
+  logoUrl: React.PropTypes.string.isRequired,
 };
 
 
@@ -33,6 +34,7 @@ HeaderOrgDetails = connect(state => ({
   id: state.app.organization.id,
   name: state.app.organization.name,
   updatedAt: state.app.organization.updatedAt,
+  logoUrl: state.app.organization.logoUrl,
 }))(HeaderOrgDetails);
 
 const HeaderLink = (props) => {

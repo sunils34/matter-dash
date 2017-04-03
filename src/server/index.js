@@ -19,7 +19,6 @@ const env = process.env.NODE_ENV === 'production' ? 'prod' : 'dev';
 const appdir = path.resolve(__dirname + '/../../build/' + env);
 
 const app = express();
-console.log(app.get('NODE_ENV'))
 
 const store = new SequelizeStore(db, {}, 'sessions');
 

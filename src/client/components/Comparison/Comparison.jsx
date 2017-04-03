@@ -132,7 +132,7 @@ class Comparison extends React.Component {
   }
 
   render() {
-    const { myOrgId, data, comparisonData, gender, ethnicity, department, year } = this.props;
+    const { myOrgLogoUrl, data, comparisonData, gender, ethnicity, department, year } = this.props;
     if (!comparisonData) {
       return (
         <div className="container">
@@ -191,7 +191,7 @@ class Comparison extends React.Component {
                         let companyImgUrl = `/images/avatars/companies/${_.toLower(dataPoint.companyName)}_avatar.jpg`;
 
                         if (dataPoint.isMine) {
-                          companyImgUrl = `/images/avatars/${myOrgId}.svg`;
+                          companyImgUrl = myOrgLogoUrl;
                         }
 
                         return (
@@ -291,7 +291,7 @@ const mapStateToProps = state => (
     gender: state.comparison.gender,
     ethnicity: state.comparison.ethnicity,
     comparisonData: state.comparison.displayData,
-    myOrgId: state.app.organization.id,
+    myOrgLogoUrl: state.app.organization.logoUrl,
   }
 );
 
@@ -299,9 +299,9 @@ const mapStateToProps = state => (
 export default
 connect(mapStateToProps)(
   graphql(ComparisonQuery, {
-    options: ({ department, year }) => {
-      return { variables: { department, year } };
-    },
+    options: ({ department, year }) => (
+      { variables: { department, year } }
+    ),
   })(Comparison),
 );
 /* eslint-enable jsx-a11y/no-static-element-interactions */

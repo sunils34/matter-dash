@@ -6,6 +6,7 @@
     "dev": "concurrently --kill-others \"npm run dev-server\" \"npm run watch-dev\"",
     "dev-server": "NODE_ENV=development babel-watch -L index.js --watch src/server",
     "start": "NODE_ENV=production node ./build/server/index.js",
+    "build-start-prod": "npm run build-prod && npm run build-server && npm start",
     "watch-dev": "webpack -d --watch --config ./simple.webpack.config.dev.js",
     "build-dev": "NODE_ENV=development webpack -d --config ./simple.webpack.config.dev.js",
     "build-prod": "NODE_ENV=production webpack --config ./simple.webpack.config.prod.js",
