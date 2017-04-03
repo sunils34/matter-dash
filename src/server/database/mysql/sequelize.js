@@ -6,9 +6,9 @@ var config    = require('./config/config.json')[env];
 var winston   = require('winston');
 
 if (config.use_env_variable) {
-  var sequelize = new Sequelize(process.env[config.use_env_variable], { logging: winston.debug });
+  var sequelize = new Sequelize(process.env[config.use_env_variable], { logging: winston.verbose });
 } else {
-  config.logging = winston.debug;
+  config.logging = winston.verbose;
   var sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 

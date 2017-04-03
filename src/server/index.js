@@ -123,7 +123,6 @@ app.get('*', function (req, res) {
 
 const port = process.env.PORT || 4000;
 
-logger.info('Starting server');
 //sync tables
 sequelizeTables.sync({force: false}).catch(err => console.error(err.stack)).then(() => {
   app.listen(port, () => logger.info('Now browse to localhost:'+port+'/graphql'));
