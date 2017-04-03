@@ -7,6 +7,7 @@
     .page-header {
       font-size: 27px;
       color: #4A4A4A;
+      font-weight: 600;
     }
   }
 
@@ -122,6 +123,7 @@
 
         &.active {
           color: #8386ED;
+          font-weight: 700;
         }
 
         .material-icons {
@@ -161,6 +163,7 @@
 
     .company-name {
       font-size: 14px;
+      font-weight: 700;
       color: #4A4A4A;
 
 

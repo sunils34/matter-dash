@@ -12,9 +12,12 @@
     text-align: center;
     height: 100%;
     background: #6F73E3;
+    margin-right: 0.9375rem;
 
     img {
       margin: auto;
+      width: 30px;
+      height: 30px;
     }
   }
 
@@ -24,14 +27,16 @@
 
     .inline-list {
 
+      font-size: 15px;
+      font-weight: 300;
+
       a {
         color: white;
         text-decoration: none;
       }
 
       .active {
-        font-weight: bolder;
-        text-decoration: underline;
+        font-weight: 800;
       }
     }
   }

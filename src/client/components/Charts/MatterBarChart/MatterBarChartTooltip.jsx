@@ -63,7 +63,7 @@ const MatterBarChartTooltip = (props) => {
       <div className="title">{label}</div>
       {
         _.map(rPayload, item => (
-          <div>
+          <div key={item.name}>
             <div className="label-wrap">
               <div className="circle-wrap">
                 <div className="circle" style={{ background: item.fill }} />
