@@ -7,7 +7,7 @@ import auth from './config/auth';
 import db from './database/mysql/models';
 
 const WHITELISTED_EMAILS = process.env.ADMIN_EMAILS.split(',');
-let OrgId = 'app';
+let OrgId = process.env.ORG_ID || 'app';
 
 const configure = (app) => {
 
@@ -32,11 +32,6 @@ const configure = (app) => {
 
   // the callback after google has authenticated the user
   app.get('/auth/google/callback', (req, res, next) => {
-
-    if(req.subdomains.length === 1) {
-      OrgId = req.subdomains[0];
-    }
-
     passport.authenticate('google', (err, user, info) => {
       if (err) { return res.redirect(`/signin?error=${err}`) }
       if (!user) { return res.redirect(`/signin?error=No Valid User`); }
