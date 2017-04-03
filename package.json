@@ -102,7 +102,8 @@
     "webpack-dev-server": "^1.16.2",
     "webpack-hot-middleware": "1.2.0",
     "webpack-isomorphic-tools": "0.8.8",
-    "webpack-livereload-plugin": "0.8.1"
+    "webpack-livereload-plugin": "0.8.1",
+    "winston": "^2.3.1"
   },
   "devDependencies": {
     "babel-core": "^6.18.2",

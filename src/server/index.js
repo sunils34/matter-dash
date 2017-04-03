@@ -11,6 +11,7 @@ import schema from './graphql/schema';
 import configureAuth from './configureAuth';
 import db from './database/mysql/sequelize';
 import sequelizeTables from './database/mysql/models';
+import logger from './lib/logger';
 
 
 const SequelizeStore = sequelizeStore(session);
@@ -66,6 +67,7 @@ app.get('/signin', (req, res) => {
 app.use('/graphql', expressGraphQL((req, res) => {
 
   if(!req.isAuthenticated()) {
+    logger.info('Un-signed in access to /graphql');
     res.json({'error': 'This endpoint is only accessible to a logged in user'})
   } else {
     return {
