@@ -65,6 +65,7 @@ const configure = (app) => {
 
         if (!user) {
           if (WHITELISTED_EMAILS.indexOf(profile.emails[0].value) < 0) {
+            console.log("ERROR: Cant signing user: " + profile.emails[0].value + " " + WHITELISTED_EMAILS);
             return done('This user was not found');
           }
 
