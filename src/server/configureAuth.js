@@ -3,6 +3,7 @@ import {OAuth2Strategy as GoogleStrategy} from 'passport-google-oauth';
 import jwt from 'jsonwebtoken';
 import util from 'util';
 import auth from './config/auth';
+import winston from 'winston';
 
 import db from './database/mysql/models';
 
@@ -65,7 +66,7 @@ const configure = (app) => {
 
         if (!user) {
           if (WHITELISTED_EMAILS.indexOf(profile.emails[0].value) < 0) {
-            console.log("ERROR: Cant signing user: " + profile.emails[0].value + " " + WHITELISTED_EMAILS);
+            winston.warn('User (%s) denied access. Possible values: %s', profile.emails[0].value, WHITELISTED_EMAILS);
             return done('This user was not found');
           }
 
