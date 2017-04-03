@@ -67,7 +67,7 @@ app.get('/signin', (req, res) => {
 app.use('/graphql', expressGraphQL((req, res) => {
 
   if(!req.isAuthenticated()) {
-    logger.info('Un-signed in access to /graphql');
+    logger.warn('Un-signed in access to /graphql');
     res.json({'error': 'This endpoint is only accessible to a logged in user'})
   } else {
     return {
@@ -123,7 +123,8 @@ app.get('*', function (req, res) {
 
 const port = process.env.PORT || 4000;
 
+logger.info('Starting server');
 //sync tables
 sequelizeTables.sync({force: false}).catch(err => console.error(err.stack)).then(() => {
-  app.listen(port, () => console.log('Now browse to localhost:'+port+'/graphql'));
+  app.listen(port, () => logger.info('Now browse to localhost:'+port+'/graphql'));
 });

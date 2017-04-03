@@ -1,19 +1,17 @@
-import logger from 'winston';
+import winston from 'winston';
 
-/*
-logger.configure({
-  transports: [(new (logger.transports.Console)({
-    timestamp: () => (
-      Date.now()
-    ),
-    formatter: options => (
-      // Return string will be passed to logger.
-      options.level.toUpperCase() + ' ' + (options.message ? options.message : '') +
-        (options.meta && Object.keys(options.meta).length ? '\n\t' + JSON.stringify(options.meta) : '')
-    ),
-  }))
-  ]
+const formatter = options => (
+  // Return string will be passed to logger.
+  winston.config.colorize(options.level, 'matter-app ' + options.level + ' ' + (options.message ? options.message : '') +
+    (options.meta && Object.keys(options.meta).length ? '\n\t' + JSON.stringify(options.meta) : ''))
+);
+
+winston.remove(winston.transports.Console);
+winston.add(winston.transports.Console, {
+  timestamp: true,
+  level: 'debug',
+  colorize: true,
+  formatter,
 });
-*/
 
-export default logger;
+export default winston;
