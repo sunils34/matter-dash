@@ -9,9 +9,17 @@ const formatter = options => (
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {
   timestamp: true,
-  level: 'debug',
+  level: 'error',
   colorize: true,
   formatter,
+});
+
+winston.setLevels({
+  error: 4,
+  warn: 3,
+  info: 2,
+  debug: 1,
+  verbose: 0,
 });
 
 export default winston;
