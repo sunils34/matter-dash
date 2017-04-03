@@ -6,8 +6,6 @@ import auth from './config/auth';
 
 import db from './database/mysql/models';
 
-console.log(process.env.ADMIN_EMAILS);
-
 const WHITELISTED_EMAILS = process.env.ADMIN_EMAILS.split(',');
 let OrgId = process.env.ORG_ID || 'app';
 
@@ -67,7 +65,6 @@ const configure = (app) => {
 
         if (!user) {
           if (WHITELISTED_EMAILS.indexOf(profile.emails[0].value) < 0) {
-            console.log(WHITELISTED_EMAILS.length);
             console.log("ERROR: Cant signing user: " + profile.emails[0].value + " " + WHITELISTED_EMAILS);
             return done('This user was not found');
           }
