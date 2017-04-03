@@ -17,6 +17,10 @@ export default new ObjectType({
       type: StringType,
       description: 'Name of the organization'
     },
+    logoUrl: {
+      type: StringType,
+      description: 'Name of the organization'
+    },
     employee_count: {
       type: IntType,
       description: 'Count of employees'

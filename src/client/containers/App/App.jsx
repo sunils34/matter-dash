@@ -10,10 +10,8 @@ window.Department = 'All';
 
 
 class App extends React.Component {
-
   componentWillReceiveProps(newProps) {
-
-    if(this.props.loading && !newProps.loading) {
+    if (this.props.loading && !newProps.loading) {
       this.props.dispatch(appActions.setUser(newProps.user, newProps.organization));
     }
   }
@@ -34,7 +32,7 @@ class App extends React.Component {
       </div>
     );
   }
-};
+}
 
 const CurrentUserAndOrganization = gql`
 query query {
@@ -48,6 +46,7 @@ query query {
     departments,
     employee_count,
     name,
+    logoUrl,
     updatedAt,
   }
 }`;

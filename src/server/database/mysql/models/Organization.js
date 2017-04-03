@@ -10,6 +10,9 @@ export default (Model, DataTypes) => {
     name: {
       type: DataTypes.STRING,
     },
+    logoUrl: {
+      type: DataTypes.STRING,
+    },
   }, {
     indexes: [],
     classMethods: {

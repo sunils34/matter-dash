@@ -6,7 +6,8 @@ import auth from './config/auth';
 
 import db from './database/mysql/models';
 
-const WHITELISTED_EMAILS = ['l.widrich@gmail.com', 'hello@lauramcguigan.com', 'sunils34@gmail.com', 'mferber@xogrp.com'];
+const WHITELISTED_EMAILS = process.env.ADMIN_EMAILS.split(',');
+let OrgId = process.env.ORG_ID || 'app';
 
 const configure = (app) => {
 
@@ -30,10 +31,17 @@ const configure = (app) => {
 
 
   // the callback after google has authenticated the user
-  app.get('/auth/google/callback', passport.authenticate('google', {
-    successRedirect : '/',
-    failureRedirect : '/signin'
-  }));
+  app.get('/auth/google/callback', (req, res, next) => {
+    passport.authenticate('google', (err, user, info) => {
+      if (err) { return res.redirect(`/signin?error=${err}`) }
+      if (!user) { return res.redirect(`/signin?error=No Valid User`); }
+
+      req.login(user, (err) => {
+        if (err) { return next(err); }
+        return res.redirect('/');
+      });
+    })(req, res, next);
+  });
 
   app.get('/api/me', (req, res) => {
     res.json({ user: req.user, auth: req.isAuthenticated()});
@@ -49,37 +57,41 @@ const configure = (app) => {
     // make the code asynchronous
     // User.findOne won't fire until we have all our data back from Google
 
-    const findOrCreateUserGoogleUser = async() => {
+    const findOrCreateUserGoogleUser = async () => {
       if (profile) {
         let user = await db.User.findOne({
-          where: {profileType: profile.provider, profileId: profile.id}
+          where: { profileType: profile.provider, profileId: profile.id },
         });
 
         if (!user) {
           if (WHITELISTED_EMAILS.indexOf(profile.emails[0].value) < 0) {
-            return null;
+            console.log("ERROR: Cant signing user: " + profile.emails[0].value + " " + WHITELISTED_EMAILS);
+            return done('This user was not found');
           }
+
           // create user
           const newUser = {
-            name : profile.displayName,
-            email : profile.emails[0].value,
+            name: profile.displayName,
+            email: profile.emails[0].value,
             profileId: profile.id,
             profileType: profile.provider,
-          }
+          };
           user = await db.User.create(newUser);
 
-          //TODO obtain real organization
-          let organization = await db.Organization.findOne({where: {id:'xogroup'}});
+          // TODO obtain real organization
+          const organization = await db.Organization.findOne({ where: { id: OrgId } });
           await organization.addUser(user);
         }
 
         // if a user is found, log them in
         const userWithJWT = addJWT(user);
-        done(null, userWithJWT);
+        return done(null, userWithJWT);
       }
 
+      return done('Whoops, something went wrong when trying to authenticate you');
+
     };
-    findOrCreateUserGoogleUser().catch(done)
+    return findOrCreateUserGoogleUser().catch(done);
 
   }));
 
