@@ -38,6 +38,7 @@ const configure = (app) => {
       if (!user) { return res.redirect(`/signin?error=No Valid User`); }
 
       req.login(user, (err) => {
+        winston.info("login", {id: user.id});
         if (err) { return next(err); }
         return res.redirect('/');
       });
@@ -77,6 +78,7 @@ const configure = (app) => {
             profileId: profile.id,
             profileType: profile.provider,
           };
+          winston.info("createUser", {id: user.id});
           user = await db.User.create(newUser);
 
           // TODO obtain real organization
