@@ -3,7 +3,7 @@ import {OAuth2Strategy as GoogleStrategy} from 'passport-google-oauth';
 import jwt from 'jsonwebtoken';
 import util from 'util';
 import auth from './config/auth';
-import winston from 'winston';
+import logger from 'winston';
 
 import db from './database/mysql/models';
 
@@ -38,7 +38,7 @@ const configure = (app) => {
       if (!user) { return res.redirect(`/signin?error=No Valid User`); }
 
       req.login(user, (err) => {
-        winston.info("login", {id: user.id});
+        logger.info("user login", {user_id: user.id});
         if (err) { return next(err); }
         return res.redirect('/');
       });
@@ -67,7 +67,7 @@ const configure = (app) => {
 
         if (!user) {
           if (WHITELISTED_EMAILS.indexOf(profile.emails[0].value) < 0) {
-            winston.warn('User (%s) denied access. Possible values: %s', profile.emails[0].value, WHITELISTED_EMAILS);
+            logger.warn('user denied', { user_id: profile.emails[0].value, whitelist: WHITELISTED_EMAILS });
             return done('This user was not found');
           }
 
@@ -78,12 +78,13 @@ const configure = (app) => {
             profileId: profile.id,
             profileType: profile.provider,
           };
-          winston.info("createUser", {id: user.id});
           user = await db.User.create(newUser);
+          logger.info('user create', { id: user.id });
 
           // TODO obtain real organization
           const organization = await db.Organization.findOne({ where: { id: OrgId } });
           await organization.addUser(user);
+          logger.info('user addOrg', { id: user.id, orgId: OrgId });
         }
 
         // if a user is found, log them in
