@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 import Select from 'react-select';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import './ReportsPageChart.css';
+import './ReportsPageAddChartDialog.css';
 import { Row, Column } from '../Grid';
 import MatterBarChart from '../Charts/MatterBarChart/MatterBarChart';
 import MatterLineChart from '../Charts/MatterLineChart/MatterLineChart';
@@ -74,7 +74,7 @@ DataViewIcon.propTypes = {
   active: React.PropTypes.bool,
 };
 
-class ReportsPageChart extends React.Component {
+class ReportsPageAddChartDialog extends React.Component {
 
   constructor(props) {
     super(props);
@@ -239,7 +239,7 @@ class ReportsPageChart extends React.Component {
 }
 
 
-ReportsPageChart.propTypes = {
+ReportsPageAddChartDialog.propTypes = {
   department: React.PropTypes.string,
   measure: React.PropTypes.string,
   chart: React.PropTypes.string,
@@ -281,5 +281,5 @@ mutation updateReport($id: String!, $objects: [JSON]) {
 `;
 
 export default connect(mapStateToProps)(
-  graphql(AddToReportMutation)(ReportsPageChart),
+  graphql(AddToReportMutation)(ReportsPageAddChartDialog),
 );

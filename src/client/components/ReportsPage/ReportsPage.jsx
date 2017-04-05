@@ -11,7 +11,7 @@ import ReactTooltip from 'react-tooltip';
 import DocumentTitle from 'react-document-title';
 import '../../css/select.css';
 import '../../css/dropdown.css';
-import ReportsPageChart from './ReportsPageChart';
+import ReportsPageAddChartDialog from './ReportsPageAddChartDialog';
 import ReportsPageSaveDialog from './ReportsPageSaveDialog';
 import './ReportsPage.css';
 import { Row, Column } from '../Grid';
@@ -253,7 +253,7 @@ let ReportsAddNewGraphContainer = ({ dispatch, unsaved, dialogIsOpen }) => {
         role="dialog"
         className="new-report-modal"
       >
-        <ReportsPageChart />
+        <ReportsPageAddChartDialog />
       </ReactModal>
     </div>
   );
