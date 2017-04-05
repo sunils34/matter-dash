@@ -62,7 +62,6 @@ class MatterBarChart extends React.Component {
       hide = true;
     }
 
-
     return (
       <ResponsiveContainer height={height} width="100%">
         <BarChart data={data} margin={{top: 20, right: 30, left: 20, bottom: 5}}>

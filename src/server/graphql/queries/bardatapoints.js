@@ -53,6 +53,7 @@ const getResults = async (organization, department, measure, timeframe) => {
   if (department !== 'All') {
     stmt += ' AND department = $department ';
   }
+  stmt += ` AND ${measure} IS NOT NULL AND ${measure} <> '' `;
 
   if (timeframe === 'monthly') {
     results = await getLast6Months(organization);
