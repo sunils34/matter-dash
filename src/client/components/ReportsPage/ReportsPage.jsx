@@ -485,6 +485,10 @@ query GetReportsPageInit($id: String){
       label,
       value
     }
+    focuses {
+      label,
+      value
+    }
   }
 }
 `;

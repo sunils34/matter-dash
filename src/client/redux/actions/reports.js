@@ -28,6 +28,11 @@ export function changeReport({ type, value }) {
         type: types.REPORT_DIALOG_CHANGE_DEPARTMENT,
         department: value,
       };
+    case 'focus':
+      return {
+        type: types.REPORT_DIALOG_CHANGE_FOCUS,
+        focus: value,
+      };
     case 'measure':
       return {
         type: types.REPORT_DIALOG_CHANGE_MEASURE,
@@ -91,6 +96,6 @@ export function deleteReport(reportId) {
 export function switchReportViewType(viewType) {
   return {
     viewType,
-    type: types.REPORT_CHANGE_VIEW_TYPE
-  }
+    type: types.REPORT_CHANGE_VIEW_TYPE,
+  };
 }

@@ -79,6 +79,7 @@ class ReportsPageAddChartDialog extends React.Component {
   constructor(props) {
     super(props);
     this.handleChangeDepartment = this.handleChange.bind(this, 'department');
+    this.handleChangeFocus = this.handleChange.bind(this, 'focus');
     this.handleChangeMeasure = this.handleChange.bind(this, 'measure');
     this.handleChangeChart = this.handleChange.bind(this, 'chart');
     this.handleChangeTimeframe = this.handleChange.bind(this, 'timeframe');
@@ -108,6 +109,7 @@ class ReportsPageAddChartDialog extends React.Component {
       type: this.props.chart,
       details: {
         department: this.props.department,
+        focus: this.props.focus,
         measure: this.props.measure,
         timeframe: this.props.timeframe,
       },
@@ -120,8 +122,8 @@ class ReportsPageAddChartDialog extends React.Component {
 
 
   render() {
-    const { department, measure, chart, timeframe, dispatch, isSubmitting } = this.props;
-    const { departments, measures, timeframes } = this.props;
+    const { department, focus, measure, chart, timeframe, dispatch, isSubmitting } = this.props;
+    const { departments, focuses, measures, timeframes } = this.props;
 
     let body = <UnselectedBody />;
     let disabled = true;
@@ -129,8 +131,8 @@ class ReportsPageAddChartDialog extends React.Component {
     let timeframeVal = timeframe;
     let timeframePlaceholder = 'Choose a Timescale';
 
-    if (department && measure) {
-      const query = { department, measure, timeframe };
+    if (department && measure && focus) {
+      const query = { department, focus, measure, timeframe };
       const height = 345;
 
       if (chart === 'bar') {
@@ -164,11 +166,26 @@ class ReportsPageAddChartDialog extends React.Component {
                 <Column>
                   <Select
                     onChange={this.handleChangeDepartment}
-                    placeholder="Choose a Department"
+                    placeholder="Department"
                     name="select-departments"
                     clearable={false}
                     value={department}
                     options={departments}
+                  />
+                </Column>
+              </Row>
+            </Column>
+            <Column>
+              <Row><Column extraClass="description">Focus</Column></Row>
+              <Row>
+                <Column>
+                  <Select
+                    onChange={this.handleChangeFocus}
+                    placeholder="Focus"
+                    name="select-focus"
+                    clearable={false}
+                    value={focus}
+                    options={focuses}
                   />
                 </Column>
               </Row>
@@ -180,7 +197,7 @@ class ReportsPageAddChartDialog extends React.Component {
                   <Select
                     onChange={this.handleChangeMeasure}
                     searchable={false}
-                    placeholder="Choose Measure"
+                    placeholder="Measure"
                     name="select-type"
                     clearable={false}
                     value={measure}
@@ -241,6 +258,7 @@ class ReportsPageAddChartDialog extends React.Component {
 
 ReportsPageAddChartDialog.propTypes = {
   department: React.PropTypes.string,
+  focus: React.PropTypes.string,
   measure: React.PropTypes.string,
   chart: React.PropTypes.string,
   timeframe: React.PropTypes.string,
@@ -250,6 +268,7 @@ ReportsPageAddChartDialog.propTypes = {
 const mapStateToProps = state => (
   {
     department: state.reports.dialog.department,
+    focus: state.reports.dialog.focus,
     measure: state.reports.dialog.measure,
     chart: state.reports.dialog.chart,
     timeframe: state.reports.dialog.timeframe,
@@ -260,6 +279,7 @@ const mapStateToProps = state => (
     measures: state.reports.measures,
     timeframes: state.reports.timeframes,
     departments: state.reports.departments,
+    focuses: state.reports.focuses,
   }
 );
 

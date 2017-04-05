@@ -30,6 +30,7 @@ const companyPageInit = {
     fields: {
       report: { type: ReportType },
       departments: { type: ReportsPageInitType },
+      focuses: { type: ReportsPageInitType },
       measures: { type: ReportsPageInitType },
       timeframes: { type: ReportsPageInitType },
     },
@@ -55,6 +56,11 @@ const companyPageInit = {
       timeframes: [
         { label: 'Monthly', value: 'Monthly' },
         { label: 'Yearly', value: 'Yearly' },
+      ],
+      focuses: [
+        { label: 'Overall', value: 'Overall' },
+        { label: 'Hiring', value: 'Hiring' },
+        { label: 'Churn', value: 'Churn' },
       ],
     };
 

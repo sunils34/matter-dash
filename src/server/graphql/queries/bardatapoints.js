@@ -45,7 +45,7 @@ const getLast6Months = async (organization, limit = 6) => {
   });
 };
 
-const getResults = async (organization, department, measure, timeframe) => {
+const getResults = async (organization, department, focus, measure, timeframe) => {
   let results = [];
   let stmt = `SELECT COUNT (*) as v, ${measure} as k FROM employees where orgId=$orgId `;
   let timeframeStmt = '';
@@ -107,12 +107,17 @@ const barDataPoints = {
     const organization = organizations[0];
     const query = args.query;
     let measure = _.lowerCase(query.measure);
+    const focus = _.lowerCase(query.focus) || 'overall';
     let timeframe = _.lowerCase(query.timeframe);
 
     if (timeframe === 'monthly') {
       timeframe = 'monthly';
     } else {
       timeframe = 'yearly';
+    }
+
+    if (!_.includes(['overall', 'hiring', 'churn'], focus)) {
+      throw new Error('Focus parameter must be either "overall", "hiring", or "churn"');
     }
 
     if (measure === 'ethnicity') {
@@ -127,7 +132,7 @@ const barDataPoints = {
       measure = 'gender';
     }
 
-    const results = await getResults(organization, query.department, measure, timeframe);
+    const results = await getResults(organization, query.department, focus, measure, timeframe);
     const fields = await getFields(measure, organization.id, sequelize);
     return { results, fields };
   },

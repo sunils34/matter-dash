@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {
   REPORT_DIALOG_TOGGLE,
   REPORT_DIALOG_CHANGE_DEPARTMENT,
+  REPORT_DIALOG_CHANGE_FOCUS,
   REPORT_DIALOG_CHANGE_MEASURE,
   REPORT_DIALOG_CHANGE_CHART,
   REPORT_DIALOG_CHANGE_TIMEFRAME,
@@ -17,6 +18,7 @@ import {
 const dialogDefaults = {
   submitting: false,
   department: 'All',
+  focus: 'Overall',
   measure: 'Age',
   chart: 'bar',
   timeframe: 'Yearly',
@@ -55,6 +57,7 @@ export default function reports(state = initialState, action) {
         lastSavedReport: _.cloneDeep(action.data.report),
         measures: action.data.measures,
         departments: action.data.departments,
+        focuses: action.data.focuses,
         timeframes: action.data.timeframes,
         unsaved: false,
       };
@@ -71,6 +74,7 @@ export default function reports(state = initialState, action) {
           ...state.dialog,
           chart: state.report.objects[action.objectIdx].type,
           department: state.report.objects[action.objectIdx].details.department,
+          focus: state.report.objects[action.objectIdx].details.focus,
           measure: state.report.objects[action.objectIdx].details.measure,
           timeframe: state.report.objects[action.objectIdx].details.timeframe,
         },
@@ -107,6 +111,14 @@ export default function reports(state = initialState, action) {
           department: action.department,
         },
       };
+    case REPORT_DIALOG_CHANGE_FOCUS:
+      return {
+        ...state,
+        dialog: {
+          ...state.dialog,
+          focus: action.focus,
+        },
+      };
     case REPORT_DIALOG_CHANGE_CHART:
       return {
         ...state,
@@ -129,6 +141,7 @@ export default function reports(state = initialState, action) {
         type: state.dialog.chart,
         details: {
           department: state.dialog.department,
+          focus: state.dialog.focus,
           measure: state.dialog.measure,
           timeframe: state.dialog.timeframe,
         },
@@ -148,7 +161,7 @@ export default function reports(state = initialState, action) {
       newState.unsaved = true;
       return newState;
     }
-    case REPORT_DELETE_OBJECT:
+    case REPORT_DELETE_OBJECT: {
       const objects = _.cloneDeep(state.report.objects);
       objects[action.objectIdx].deleted = true;
       return {
@@ -159,6 +172,7 @@ export default function reports(state = initialState, action) {
         },
         unsaved: true,
       };
+    }
     case REPORT_RESET:
       return {
         ...state,
@@ -176,7 +190,7 @@ export default function reports(state = initialState, action) {
           addobject: false,
           save: false,
         },
-      }
+      };
     case REPORT_CHANGE_VIEW_TYPE:
       newState = {
         ...state,
