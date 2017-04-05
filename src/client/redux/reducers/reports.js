@@ -25,7 +25,7 @@ const dialogDefaults = {
 const initialState = {
   dialog: _.clone(dialogDefaults),
   dialogOpenStates: {
-    addobject: false,
+    addobject: true,
     save: false,
   },
   report: null,
@@ -45,6 +45,11 @@ export default function reports(state = initialState, action) {
 
       return {
         ...state,
+        dialogOpenStates: {
+          ...state.dialogOpenStates,
+          // by default open the dialog for new reports
+          addobject: action.data.report.id === 'new',
+        },
         report: action.data.report,
         // TODO do we need to do a clone deep here?
         lastSavedReport: _.cloneDeep(action.data.report),
