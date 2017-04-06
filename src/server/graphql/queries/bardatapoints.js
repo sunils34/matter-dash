@@ -45,26 +45,36 @@ const getLast6Months = async (organization, limit = 6) => {
   });
 };
 
+const getFocusFilterTimeStmt = (focus, timeframe) => {
+  const timeFormat = (timeframe === 'monthly') ? '%Y-%m' : '%Y';
+  if (focus === 'churn') {
+    return ` DATE_FORMAT(employees.terminationDate ,'${timeFormat}') = $time`;
+  } else if (focus === 'hiring') {
+    return ` DATE_FORMAT(employees.hireDate ,'${timeFormat}') = $time`;
+  }
+
+  return ` DATE_FORMAT(employees.hireDate, '${timeFormat}') <= $time AND 
+  (employees.terminationDate IS NULL OR employees.terminationDate = '' OR
+   DATE_FORMAT(employees.terminationDate, '${timeFormat}') > $time)
+   `;
+};
+
 const getResults = async (organization, department, focus, measure, timeframe) => {
-  let results = [];
   let stmt = `SELECT COUNT (*) as v, ${measure} as k FROM employees where orgId=$orgId `;
-  let timeframeStmt = '';
+
+  // obtain the time periods we want to obtain
+  const results = (timeframe === 'monthly') ? await getLast6Months(organization) : await getLast5Years(organization);
 
   if (department !== 'All') {
     stmt += ' AND department = $department ';
   }
   stmt += ` AND ${measure} IS NOT NULL AND ${measure} <> '' `;
 
-  if (timeframe === 'monthly') {
-    results = await getLast6Months(organization);
-    timeframeStmt = ' DATE_FORMAT(employees.hireDate ,\'%Y-%m\') <= $time';
-  } else {
-    results = await getLast5Years(organization);
-    timeframeStmt = ' YEAR(hireDate) <= $time';
-  }
+  const focusStmt = getFocusFilterTimeStmt(focus, timeframe);
 
-  stmt += ` AND ${timeframeStmt} GROUP BY ${measure} ORDER BY v ASC`;
+  stmt += ` AND ${focusStmt} GROUP BY ${measure} ORDER BY v ASC`;
 
+  let total = 0;
   for (const idx in results)  {
     const r = results[idx];
     const countResults = await sequelize.query(stmt, {
@@ -73,9 +83,11 @@ const getResults = async (organization, department, focus, measure, timeframe) =
     });
     countResults.forEach((c) => {
       r[c.k] = c.v;
+      total += c.v;
     });
   }
 
+  if (!total) return null;
   return results;
 };
 
@@ -108,6 +120,7 @@ const barDataPoints = {
     const query = args.query;
     let measure = _.lowerCase(query.measure);
     const focus = _.lowerCase(query.focus) || 'overall';
+    const department = query.department || 'All';
     let timeframe = _.lowerCase(query.timeframe);
 
     if (timeframe === 'monthly') {
@@ -132,7 +145,7 @@ const barDataPoints = {
       measure = 'gender';
     }
 
-    const results = await getResults(organization, query.department, focus, measure, timeframe);
+    const results = await getResults(organization, department, focus, measure, timeframe);
     const fields = await getFields(measure, organization.id, sequelize);
     return { results, fields };
   },
