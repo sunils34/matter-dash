@@ -5,7 +5,8 @@ import gql from 'graphql-tag';
 import _ from 'lodash';
 import './MatterBarChart.css';
 import MatterLoadingIndicator from '../../LoadingIndicator';
-import MatterBarChartTooltip from './MatterBarChartTooltip.jsx';
+import MatterBarChartTooltip from './MatterBarChartTooltip';
+import MatterChartLegend from '../MatterChartLegend';
 
 const convertToPercentageData = (data, fields) => {
   const retData = _.map(data, (element) => {
@@ -73,7 +74,7 @@ class MatterBarChart extends React.Component {
           {
             fields.map((field, index) => <Bar animationDuration={animationDuration}unit={unit} key={`bar-${field.name}`} dataKey={field.name} stackId='a' fill={field.color}/>)
           }
-          <Legend iconType="circle" />
+          <Legend content={MatterChartLegend} iconType="circle" />
         </BarChart>
       </ResponsiveContainer>
     );

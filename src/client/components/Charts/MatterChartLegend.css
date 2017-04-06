@@ -1,0 +1,28 @@
+.matter-chart-legend {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .legend-wrap {
+    align-self: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    display: flex;
+
+    .item-wrap {
+      display: flex;
+      align-items: center;
+      margin: 0px 5px;
+      white-space: nowrap;
+      .circle {
+        border-radius: 50px;
+        height: 10px;
+        width: 10px;
+        margin-right: 5px;
+      }
+
+    }
+  }
+
+}
