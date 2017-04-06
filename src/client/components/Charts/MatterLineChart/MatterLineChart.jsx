@@ -37,7 +37,7 @@ class MatterLineChart extends React.Component {
         <LineChart data={dataPoints} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <Tooltip
             isAnimationActive={false}
-            type={focus}
+            labelDescription={focus}
             data={dataPoints}
             content={MatterLineChartTooltip}
           />
