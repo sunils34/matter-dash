@@ -181,6 +181,7 @@ class ReportsPageAddChartDialog extends React.Component {
                 <Column>
                   <Select
                     onChange={this.handleChangeFocus}
+                    searchable={false}
                     placeholder="Focus"
                     name="select-focus"
                     clearable={false}
