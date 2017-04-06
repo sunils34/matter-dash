@@ -63,7 +63,7 @@ const getResults = async (organization, department, focus, measure, timeframe) =
   let stmt = `SELECT COUNT (*) as v, ${measure} as k FROM employees where orgId=$orgId `;
 
   // obtain the time periods we want to obtain
-  const results = (timeframe === 'monthly') ? await getLast6Months(organization) : await getLast5Years(organization);
+  const timeFrames = (timeframe === 'monthly') ? await getLast6Months(organization) : await getLast5Years(organization);
 
   if (department !== 'All') {
     stmt += ' AND department = $department ';
@@ -75,17 +75,32 @@ const getResults = async (organization, department, focus, measure, timeframe) =
   stmt += ` AND ${focusStmt} GROUP BY ${measure} ORDER BY v ASC`;
 
   let total = 0;
-  for (const idx in results)  {
-    const r = results[idx];
+  const possibleValues = {};
+  let results = [];
+  for (const idx in timeFrames)  {
+    const r = timeFrames[idx];
     const countResults = await sequelize.query(stmt, {
       bind: { orgId: organization.id, time: r.time, department, measure },
       type: sequelize.QueryTypes.SELECT,
     });
+    let timeframeTotal = 0;
     countResults.forEach((c) => {
       r[c.k] = c.v;
       total += c.v;
+      timeframeTotal += c.v;
+      possibleValues[c.k] = 0;
     });
+    if (timeframeTotal) {
+      results.push(r);
+    }
   }
+
+  results = _.map(results, item => (
+    {
+      ...possibleValues,
+      ...item,
+    }
+  ));
 
   if (!total) return null;
   return results;

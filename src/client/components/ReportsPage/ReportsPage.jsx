@@ -92,7 +92,7 @@ const ReportsPageHeader = ({ report, isempty, organization, children, dispatch }
   );
 };
 
-const ReportChartTitle = ({ title, type, measure, department, timeframe }) => {
+const ReportChartTitle = ({ title, type, measure, department, timeframe, focus }) => {
   let titleText = title;
 
   if (!titleText) {
@@ -106,7 +106,7 @@ const ReportChartTitle = ({ title, type, measure, department, timeframe }) => {
         } else if (_.lowerCase(timeframe) === 'yearly') {
           periodStmt = 'Year over Year';
         }
-        titleText = `${department} Growth by ${measure} ${periodStmt}`;
+        titleText = `${department} ${focus} by ${measure} ${periodStmt}`;
         break;
       case 'donut':
         titleText = `${measure} Breakdown in ${department}`;
@@ -126,6 +126,7 @@ ReportChartTitle.defaultProps = {
   title: null,
   measure: null,
   department: null,
+  focus: null,
   timeframe: null,
 };
 
@@ -134,6 +135,7 @@ ReportChartTitle.propTypes = {
   type: React.PropTypes.string,
   measure: React.PropTypes.string,
   department: React.PropTypes.string,
+  focus: React.PropTypes.string,
   timeframe: React.PropTypes.string,
 };
 
@@ -371,8 +373,8 @@ class ReportsPage extends React.Component {
       body = _.map(report.objects, (object, idx) => {
         // don't render locally deleted objects
         if (object.deleted) return null;
-        const { department, measure, timeframe } = object.details;
-        const query = { department, measure, timeframe };
+        const { department, measure, timeframe, focus } = object.details;
+        const query = { department, measure, timeframe, focus };
         const key = object.id || idx;
 
         let objectElt = null;
@@ -417,6 +419,7 @@ class ReportsPage extends React.Component {
                   <ReportChartTitle
                     type={object.type}
                     department={department}
+                    focus={focus}
                     measure={measure}
                     timeframe={timeframe}
                   />
