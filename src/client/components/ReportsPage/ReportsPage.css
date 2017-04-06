@@ -1,9 +1,12 @@
 .reports-page {
+   border-bottom: 1px solid #ECECEC;
+   
   .reports-name {
     margin-right: 10px;
     font-size: 27px;
     color: #4A4A4A;
     font-weight: 600;
+   
   }
 
   .reports-options {
@@ -21,9 +24,7 @@
   }
 
   .reports-page-header {
-    border-bottom: 1px solid #DEDEDE;
-    margin-bottom: 20px;
-    height: 60px;
+ 
   }
 
 
