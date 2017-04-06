@@ -106,7 +106,7 @@ const ReportChartTitle = ({ title, type, measure, department, timeframe, focus }
         } else if (_.lowerCase(timeframe) === 'yearly') {
           periodStmt = 'Year over Year';
         }
-        titleText = `${department} ${focus} by ${measure} ${periodStmt}`;
+        titleText = `${department} ${focus || 'Overall'} by ${measure} ${periodStmt}`;
         break;
       case 'donut':
         titleText = `${measure} Breakdown in ${department}`;

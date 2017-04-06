@@ -37,7 +37,7 @@ MatterBarChartTooltipLabel.propTypes = {
 };
 
 const MatterBarChartTooltip = (props) => {
-  const { payload, data, label, unit } = props;
+  const { payload, data, label, unit, labelDescription } = props;
 
   if (!payload.length) {
     return null;
@@ -60,7 +60,7 @@ const MatterBarChartTooltip = (props) => {
 
   return (
     <div className="barchart-tooltip">
-      <div className="title">{label}</div>
+      <div className="title">{label} {labelDescription}</div>
       {
         _.map(rPayload, item => (
           <div key={item.name}>
@@ -78,7 +78,12 @@ const MatterBarChartTooltip = (props) => {
   );
 };
 
+MatterBarChartTooltip.defaultProps = {
+  labelDescription: null,
+};
+
 MatterBarChartTooltip.propTypes = {
+  labelDescription: React.PropTypes.string,
 };
 
 export default MatterBarChartTooltip;

@@ -15,7 +15,7 @@ class MatterLineChart extends React.Component {
 
   render() {
 
-    const { height, loading, bardatapoints, animationDuration } = this.props;
+    const { height, loading, bardatapoints, animationDuration, query } = this.props;
 
     if (loading) {
       const style = {
@@ -30,11 +30,17 @@ class MatterLineChart extends React.Component {
     }
     const dataPoints = bardatapoints.results;
     const fields = bardatapoints.fields;
+    const focus = query.focus || 'Overall';
 
     return (
       <ResponsiveContainer height={height} width="100%">
         <LineChart data={dataPoints} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-          <Tooltip isAnimationActive={false} data={dataPoints} content={MatterLineChartTooltip} />
+          <Tooltip
+            isAnimationActive={false}
+            type={focus}
+            data={dataPoints}
+            content={MatterLineChartTooltip}
+          />
           <XAxis dataKey="name" />
           <YAxis />
           <CartesianGrid strokeDasharray="3 3" />

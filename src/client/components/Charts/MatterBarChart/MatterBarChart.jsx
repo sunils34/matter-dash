@@ -35,7 +35,7 @@ class MatterBarChart extends React.Component {
   }
 
   render() {
-    const { animationDuration, height, bardatapoints, loading } = this.props;
+    const { animationDuration, height, bardatapoints, loading, query } = this.props;
 
     if(loading) {
       var style = {
@@ -51,6 +51,7 @@ class MatterBarChart extends React.Component {
 
     let data = bardatapoints.results;
     let fields = bardatapoints.fields;
+    const focus = query.focus || 'Overall';
 
     let unit = '';
     let domain = [0, 'auto'];
@@ -69,7 +70,7 @@ class MatterBarChart extends React.Component {
           <XAxis dataKey='name'/>
           <YAxis allowDataOverflow={true} scale="linear" type="number" unit={unit} allowDecimals={false} domain={domain} />
           <CartesianGrid strokeDasharray="3" vertical={false}/>
-          <Tooltip animationDuration={0} content={MatterBarChartTooltip}/>
+          <Tooltip animationDuration={0} labelDescription={focus} content={MatterBarChartTooltip}/>
           {
             fields.map((field, index) => <Bar animationDuration={animationDuration}unit={unit} key={`bar-${field.name}`} dataKey={field.name} stackId='a' fill={field.color}/>)
           }
