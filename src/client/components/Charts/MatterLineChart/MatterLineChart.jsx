@@ -3,6 +3,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import MatterLineChartTooltip from './MatterLineChartTooltip';
+import MatterChartLegend from '../MatterChartLegend';
 import MatterLoadingIndicator from '../../LoadingIndicator';
 
 class MatterLineChart extends React.Component {
@@ -37,7 +38,7 @@ class MatterLineChart extends React.Component {
           <XAxis dataKey="name" />
           <YAxis />
           <CartesianGrid strokeDasharray="3 3" />
-          <Legend iconType="circle" />
+          <Legend iconType="circle" content={MatterChartLegend} />
           {
             fields.map(field => <Line animationDuration={animationDuration} type="monotone" key={`bar-${field.name}`} dataKey={field.name} strokeWidth={2} stroke={field.color} />)
           }
