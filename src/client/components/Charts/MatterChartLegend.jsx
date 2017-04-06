@@ -10,7 +10,7 @@ const MatterChartLegend = ({payload}) => {
       <div className="legend-wrap">
         {
           _.map(payload, item => (
-            <div className="item-wrap">
+            <div key={item.value} className="item-wrap">
               <div className="circle" style={{ background: item.color }} />
               <div className="item-value">{item.value}</div>
             </div>
