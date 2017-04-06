@@ -11,6 +11,8 @@ const getFields = async (type, orgId, sequelize) => {
   fields = _.map(fields, (element, idx) => (
     _.extend(element, { color: COLORS[idx % COLORS.length] })
   ));
+
+  //fields = _.concat(fields, { name: 'Unreported', color: '#000000' });
   _.reverse(fields);
   return fields;
 };
