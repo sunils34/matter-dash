@@ -50,12 +50,15 @@ const MatterBarChartTooltip = (props) => {
     return null;
   }
 
-  const rPayload = _.orderBy(_.map(_.cloneDeep(payload), item => (
-    {
-      ...item,
-      value: item.value || 0,
-    }
-  )),
+  const rPayload = _.orderBy(
+    _.map(
+      _.filter(_.cloneDeep(payload), item => (item.dataKey.split('_')[0] !== 'hidden')),
+      // map
+      item => ({
+        ...item,
+        value: item.value || 0,
+      }),
+    ),
   ['value', 'name'], ['asc', 'asc']);
 
   return (

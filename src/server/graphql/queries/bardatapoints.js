@@ -112,6 +112,7 @@ const barDataPoints = {
     name: 'BarDataResults',
     fields: {
       results: { type: new List(GraphQLJSON) },
+      overall: { type: new List(GraphQLJSON) },
       fields: { type: new List(
         new ObjectType({
           name: 'BarDataField',
@@ -137,6 +138,7 @@ const barDataPoints = {
     const focus = _.lowerCase(query.focus) || 'overall';
     const department = query.department || 'All';
     let timeframe = _.lowerCase(query.timeframe);
+    let overall = null;
 
     if (timeframe === 'monthly') {
       timeframe = 'monthly';
@@ -160,9 +162,13 @@ const barDataPoints = {
       measure = 'gender';
     }
 
-    const results = await getResults(organization, department, focus, measure, timeframe);
     const fields = await getFields(measure, organization.id, sequelize);
-    return { results, fields };
+    const results = await getResults(organization, department, focus, measure, timeframe);
+    // include overall data in results
+    if (focus === 'churn') {
+      overall = await getResults(organization, department, 'overall', measure, timeframe);
+    }
+    return { results, fields, overall };
   },
 };
 

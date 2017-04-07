@@ -369,71 +369,86 @@ class ReportsPage extends React.Component {
 
     if (isEmpty) {
       return null;
-    } else {
-      body = _.map(report.objects, (object, idx) => {
-        // don't render locally deleted objects
-        if (object.deleted) return null;
-        const { department, measure, timeframe, focus } = object.details;
-        const query = { department, measure, timeframe, focus };
-        const key = object.id || idx;
+    } 
+    body = _.map(report.objects, (object, idx) => {
+      // don't render locally deleted objects
+      if (object.deleted) return null;
+      const { department, measure, timeframe, focus } = object.details;
+      const query = { department, measure, timeframe, focus };
+      const key = object.id || idx;
+      const height = 400;
 
-        let objectElt = null;
+      let objectElt = null;
 
-        switch (object.type) {
-          case 'line':
+      switch (object.type) {
+        case 'line':
+          objectElt = (
+            <MatterLineChart
+              height={height}
+              query={query}
+              focusType={query.focus || 'Overall'}
+            />);
+          break;
+        case 'bar':
+          if (query.focus === 'Churn') {
             objectElt = (
-              <MatterLineChart
-                height={400}
+              <MatterBarChart
+                type="stackedOverallPercentage"
+                height={height}
                 query={query}
-              />);
-            break;
-          case 'bar':
+                focusType="Churn"
+                stacked={false}
+              />
+            );
+          } else {
             objectElt = (
               <MatterBarChart
                 type="stackedPercentage"
-                height={400}
+                height={height}
                 query={query}
+                focusType={query.focus || 'Overall'}
+                stacked
               />);
-            break;
-          case 'donut':
-          case 'pie':
-            objectElt = (
-              <MatterPieChart
-                legendAlign="right"
-                legendType="small"
-                showTotal
-                height={pieHeight}
-                width={pieWidth}
-                query={query}
-              />);
-            break;
-          default:
-            return null;
-        }
+          }
+          break;
+        case 'donut':
+        case 'pie':
+          objectElt = (
+            <MatterPieChart
+              legendAlign="right"
+              legendType="small"
+              showTotal
+              height={pieHeight}
+              width={pieWidth}
+              query={query}
+            />);
+          break;
+        default:
+          return null;
+      }
 
-        return (
-          <div key={key} className={containerClass}>
-            <div className="align-center align-middle report-object-wrap">
-              <Column extraClass="large-12">
-                <Row center extraClass="dd-wrap report-title-wrap">
-                  <ReportChartTitle
-                    type={object.type}
-                    department={department}
-                    focus={focus}
-                    measure={measure}
-                    timeframe={timeframe}
-                  />
-                  <ReportChartMenu dispatch={dispatch} objectIdx={idx} />
-                </Row>
-                <Row center>
-                  {objectElt}
-                </Row>
-              </Column>
-            </div>
+      return (
+        <div key={key} className={containerClass}>
+          <div className="align-center align-middle report-object-wrap">
+            <Column extraClass="large-12">
+              <Row center extraClass="dd-wrap report-title-wrap">
+                <ReportChartTitle
+                  type={object.type}
+                  department={department}
+                  focus={focus}
+                  measure={measure}
+                  timeframe={timeframe}
+                />
+                <ReportChartMenu dispatch={dispatch} objectIdx={idx} />
+              </Row>
+              <Row center>
+                {objectElt}
+              </Row>
+            </Column>
           </div>
-        );
-      });
-    }
+        </div>
+      );
+    });
 
     return (
         <div className="container reports-page">

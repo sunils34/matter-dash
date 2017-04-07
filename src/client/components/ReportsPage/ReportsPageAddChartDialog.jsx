@@ -136,7 +136,27 @@ class ReportsPageAddChartDialog extends React.Component {
       const height = 345;
 
       if (chart === 'bar') {
-        body = (<MatterBarChart type="stackedPercentage" height={height} legendAlign="right" query={query} />);
+        body = (_.lowerCase(query.focus) === 'churn') ?
+          (
+            <MatterBarChart
+              type="stackedOverallPercentage"
+              height={height}
+              legendAlign="right"
+              query={query}
+              focusType="Churn"
+              stacked={false}
+            />
+          ) :
+          (
+            <MatterBarChart
+              type="stackedPercentage"
+              height={height}
+              legendAlign="right"
+              query={query}
+              focusType={query.focus || 'Overall'}
+              stacked
+            />
+          );
         disabled = false;
       } else if (chart === 'line') {
         body = (<MatterLineChart height={height} legendAlign="right" query={query} />);
