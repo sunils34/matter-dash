@@ -33,10 +33,11 @@ const convertToOverallPercentageData = (data, fields, overall) => {
     const elt = _.extend({}, element);
     const overallElt = _.find(overall, item => item.name === elt.name);
     _.forEach(fields, (f) => {
-      if (elt[f.name]) {
+      if (!elt[f.name]) elt[f.name] = 0;
+      if (overallElt[f.name]) {
         elt[f.name] = _.round((elt[f.name] / (overallElt[f.name] + elt[f.name])) * 100, 1);
-        elt[`hidden_${f.name}_total`] = (100 - elt[f.name]);
       }
+      elt[`hidden_${f.name}_total`] = (100 - elt[f.name]);
     });
     return elt;
   });
