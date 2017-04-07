@@ -23,6 +23,16 @@ const getPeriodStatement = (period) => {
   return '';
 }
 
+const getFocusStmt = (focus) => {
+  if (focus === 'churn') {
+    return ' AND terminationDate';
+  } else if (focus === 'hiring') {
+    return ' AND hireDate';
+  }
+  // overall, include all current employees
+  return ' AND hireDate AND terminationDate IS NULL';
+};
+
 const pieDataPoints = {
   type: new ObjectType({
     name: 'PieDataResults',
@@ -50,6 +60,7 @@ const pieDataPoints = {
     const organization = organizations[0];
     const query = args.query;
     let measure = _.lowerCase(query.measure || query.type);
+    const focus = _.lowerCase(query.focus || 'Overall');
     let results = null;
 
     if (measure === 'ethnicity') {
@@ -64,9 +75,10 @@ const pieDataPoints = {
       measure = 'gender';
     }
 
-    let stmt = `SELECT COUNT (*) as value, ${measure} as name FROM employees WHERE positionStatus = "Active" AND orgId = $orgId `;
+    let stmt = `SELECT COUNT (*) as value, ${measure} as name FROM employees WHERE orgId = $orgId `;
 
     stmt += getPeriodStatement(query.period);
+    stmt += getFocusStmt(focus);
 
     if (query.department !== 'All') {
       stmt += ' AND department = $department ';

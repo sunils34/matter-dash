@@ -165,9 +165,8 @@ class ReportsPageAddChartDialog extends React.Component {
         body = (<MatterPieChart showTotal height={height} legendAlign="right" query={query} />);
         disabled = false;
         timeframeVal = null;
-        timeframePlaceholder = 'Current Snapshot';
-      }
-      else {
+        timeframePlaceholder = 'Current';
+      } else {
         body = <UnselectedBody text="Sorry, this view isn't supported yet" />;
       }
     }
