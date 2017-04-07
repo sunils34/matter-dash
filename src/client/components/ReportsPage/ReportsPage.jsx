@@ -111,7 +111,7 @@ const ReportChartTitle = ({ title, type, measure, department, timeframe, focus }
         titleText = `${department} ${focus || 'Overall'} by ${measure} ${periodStmt}`;
         break;
       case 'donut':
-        titleText = `${measure} Breakdown in ${department}`;
+        titleText = `${focus || 'Overall'} Breakdown by ${measure} for ${department}`;
         break;
       default:
         titleText = '';
