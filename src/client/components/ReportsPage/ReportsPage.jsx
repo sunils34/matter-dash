@@ -103,6 +103,8 @@ const ReportChartTitle = ({ title, type, measure, department, timeframe, focus }
       case 'line':
         if (_.lowerCase(timeframe) === 'monthly') {
           periodStmt = 'Month over Month';
+        } else if (_.lowerCase(timeframe) === 'quarterly') {
+          periodStmt = 'Quarterly';
         } else if (_.lowerCase(timeframe) === 'yearly') {
           periodStmt = 'Year over Year';
         }

@@ -19,9 +19,9 @@ const dialogDefaults = {
   submitting: false,
   department: 'All',
   focus: 'Overall',
-  measure: 'Age',
+  measure: 'Gender',
   chart: 'bar',
-  timeframe: 'Yearly',
+  timeframe: 'Quarterly',
 };
 
 const initialState = {

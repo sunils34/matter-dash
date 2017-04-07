@@ -10,10 +10,25 @@ import _ from 'lodash';
 import sequelize from '../../database/mysql/sequelize';
 import getFields from './fields';
 
-const getLast5Years = async (organization, limit = 6) => {
+const getLast6Years = async (organization, limit = 6) => {
   const stmt = `
   SELECT name as name, name as time FROM
     (select DISTINCT YEAR(hireDate) as name
+     FROM employees
+     WHERE orgId=$orgId
+     ORDER BY name
+     DESC LIMIT ${limit})
+  AS T ORDER BY time ASC;`;
+  return sequelize.query(stmt, {
+    bind: { orgId: organization.id },
+    type: sequelize.QueryTypes.SELECT,
+  });
+};
+
+const getLast6Quarters = async (organization, limit = 6) => {
+  const stmt = `
+  SELECT name as name, name as time FROM
+    (select DISTINCT CONCAT(YEAR(hireDate), ' Q', QUARTER(hireDate)) as name
      FROM employees
      WHERE orgId=$orgId
      ORDER BY name
@@ -45,17 +60,29 @@ const getLast6Months = async (organization, limit = 6) => {
   });
 };
 
+const getTimeframeFilter = (dateFilter, timeframe) => {
+  switch (timeframe) {
+
+    case 'quarterly':
+      return ` CONCAT(YEAR(${dateFilter}), ' Q',  QUARTER(${dateFilter}))`;
+    case 'monthly':
+      return ` DATE_FORMAT(${dateFilter}, '%Y-%m')`;
+    case 'yearly':
+    default:
+      return ` DATE_FORMAT(${dateFilter}, '%Y')`;
+  }
+};
+
 const getFocusFilterTimeStmt = (focus, timeframe) => {
-  const timeFormat = (timeframe === 'monthly') ? '%Y-%m' : '%Y';
   if (focus === 'churn') {
-    return ` DATE_FORMAT(employees.terminationDate ,'${timeFormat}') = $time`;
+    return ` ${getTimeframeFilter('employees.terminationDate', timeframe)} = $time`;
   } else if (focus === 'hiring') {
-    return ` DATE_FORMAT(employees.hireDate ,'${timeFormat}') = $time`;
+    return ` ${getTimeframeFilter('employees.hireDate', timeframe)} = $time`;
   }
 
-  return ` DATE_FORMAT(employees.hireDate, '${timeFormat}') <= $time AND 
+  return ` ${getTimeframeFilter('employees.hireDate', timeframe)} <= $time AND
   (employees.terminationDate IS NULL OR employees.terminationDate = '' OR
-   DATE_FORMAT(employees.terminationDate, '${timeFormat}') > $time)
+   ${getTimeframeFilter('employees.terminationDate', timeframe)} > $time)
    `;
 };
 
@@ -63,7 +90,14 @@ const getResults = async (organization, department, focus, measure, timeframe) =
   let stmt = `SELECT COUNT (*) as v, ${measure} as k FROM employees where orgId=$orgId `;
 
   // obtain the time periods we want to obtain
-  const timeFrames = (timeframe === 'monthly') ? await getLast6Months(organization) : await getLast5Years(organization);
+  let timeFrames = null;
+  if (timeframe === 'monthly') {
+    timeFrames = await getLast6Months(organization);
+  } else if (timeframe === 'quarterly') {
+    timeFrames = await getLast6Quarters(organization);
+  } else {
+    timeFrames = await getLast6Years(organization);
+  }
 
   if (department !== 'All') {
     stmt += ' AND department = $department ';
@@ -142,6 +176,8 @@ const barDataPoints = {
 
     if (timeframe === 'monthly') {
       timeframe = 'monthly';
+    } else if (timeframe === 'quarterly') {
+      timeframe = 'quarterly';
     } else {
       timeframe = 'yearly';
     }
