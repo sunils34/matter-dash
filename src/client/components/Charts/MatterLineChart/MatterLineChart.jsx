@@ -34,16 +34,16 @@ class MatterLineChart extends React.Component {
 
     return (
       <ResponsiveContainer height={height} width="100%">
-        <LineChart data={dataPoints}>
+        <LineChart data={dataPoints} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
           <Tooltip
             isAnimationActive={false}
             labelDescription={focus}
             data={dataPoints}
             content={MatterLineChartTooltip}
           />
-          <XAxis dataKey="name" />
+          <XAxis dataKey="name" tickCount={6}/>
           <YAxis />
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid strokeDasharray="4 3" />
           <Legend iconType="circle" content={MatterChartLegend} />
           {
             fields.map(field => <Line animationDuration={animationDuration} type="monotone" key={`bar-${field.name}`} dataKey={field.name} strokeWidth={2} stroke={field.color} />)

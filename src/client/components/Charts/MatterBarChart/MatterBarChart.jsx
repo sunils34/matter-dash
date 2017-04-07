@@ -66,8 +66,8 @@ class MatterBarChart extends React.Component {
 
     return (
       <ResponsiveContainer height={height} width="100%">
-        <BarChart data={data}>
-          <XAxis dataKey='name'/>
+        <BarChart data={data} margin={{top: 5, right: 30, left: 30, bottom: 5}}>
+          <XAxis dataKey='name' tickCount={6}/>
           <YAxis allowDataOverflow={true} scale="linear" type="number" unit={unit} allowDecimals={false} domain={domain} />
           <CartesianGrid strokeDasharray="3" vertical={false}/>
           <Tooltip animationDuration={0} labelDescription={focus} content={MatterBarChartTooltip}/>
