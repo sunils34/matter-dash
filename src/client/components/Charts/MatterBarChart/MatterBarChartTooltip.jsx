@@ -37,7 +37,7 @@ MatterBarChartTooltipLabel.propTypes = {
 };
 
 const MatterBarChartTooltip = (props) => {
-  const { payload, data, label, unit, labelDescription } = props;
+  const { payload, data, label, unit, labelDescription, chartType } = props;
 
   if (!payload.length) {
     return null;
@@ -61,32 +61,62 @@ const MatterBarChartTooltip = (props) => {
     ),
   ['value', 'name'], ['asc', 'asc']);
 
+  if (chartType === 'stackedOverallPercentage') {
+    body = (
+      <div>
+        {
+          _.map(_.filter(rPayload, item => item.value), item => (
+            <div key={item.name}>
+              <div className="label-wrap large">
+                <div className="circle-wrap">
+                  <div className="circle" style={{ background: item.fill }} />
+                </div>
+                <div className="label">
+                  <span>{item.payload[item.name].total} {item.name} ({item.value}% of total)</span>
+                </div>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    );
+  } else {
+    body = (
+      <div>
+        {
+          _.map(rPayload, item => (
+            <div key={item.name}>
+              <div className="label-wrap">
+                <div className="circle-wrap">
+                  <div className="circle" style={{ background: item.fill }} />
+                </div>
+                <div className="value" style={{ color: item.fill }}>
+                  <span>{item.value}{item.unit}</span>
+                </div>
+                <div className="label">{item.name}</div>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    );
+  }
   return (
     <div className="barchart-tooltip">
       <div className="title">{label} {labelDescription}</div>
-      {
-        _.map(rPayload, item => (
-          <div key={item.name}>
-            <div className="label-wrap">
-              <div className="circle-wrap">
-                <div className="circle" style={{ background: item.fill }} />
-              </div>
-              <div className="value" style={{ color: item.fill }}><span>{item.value}{item.unit}</span></div>
-              <div className="label">{item.name}</div>
-            </div>
-          </div>
-        ))
-      }
+      {body}
     </div>
   );
 };
 
 MatterBarChartTooltip.defaultProps = {
   labelDescription: null,
+  chartType: 'stackedPercentage',
 };
 
 MatterBarChartTooltip.propTypes = {
   labelDescription: React.PropTypes.string,
+  chartType: React.PropTypes.string,
 };
 
 export default MatterBarChartTooltip;
