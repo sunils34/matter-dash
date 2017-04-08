@@ -7,13 +7,14 @@ const MatterChartLegend = ({ payload }) => (
   <div className="matter-chart-legend">
     <div className="legend-wrap">
       {
-        _.map(_.filter(payload, item => (item.dataKey.split('_')[0] !== 'hidden')),
+        _.map(_.filter(payload, item => (!item.payload.hiddenPoint)),
           item => (
-            <div key={item.value} className="item-wrap">
+            <div key={item.payload.name || item.value} className="item-wrap">
               <div className="circle" style={{ background: item.color }} />
               <div className="item-value">{item.value}</div>
             </div>
-        ))
+          )
+        )
       }
     </div>
   </div>

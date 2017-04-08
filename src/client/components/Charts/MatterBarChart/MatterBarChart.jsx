@@ -20,7 +20,11 @@ const convertToPercentageData = (data, fields) => {
     });
     _.forEach(fields, (f) => {
       if (elt[f.name]) {
-        elt[f.name] = _.round((elt[f.name] / total) * 100, 1);
+        elt[f.name] = {
+          name: f.name,
+          value: _.round((elt[f.name] / total) * 100, 1),
+          orig: elt[f.name],
+        };
       }
     });
     return elt;
@@ -35,9 +39,13 @@ const convertToOverallPercentageData = (data, fields, overall) => {
     _.forEach(fields, (f) => {
       if (!elt[f.name]) elt[f.name] = 0;
       if (overallElt[f.name]) {
-        elt[f.name] = _.round((elt[f.name] / (overallElt[f.name] + elt[f.name])) * 100, 1);
+        elt[f.name] = {
+          name: f.name,
+          value:_.round((elt[f.name] / (overallElt[f.name] + elt[f.name])) * 100, 1),
+          total: elt[f.name],
+        };
+        elt[f.name].inverseValue = 100 - elt[f.name].value;
       }
-      elt[`hidden_${f.name}_total`] = (100 - elt[f.name]);
     });
     return elt;
   });
@@ -93,13 +101,13 @@ class MatterBarChart extends React.Component {
           <Tooltip animationDuration={0} labelDescription={focusType} content={MatterBarChartTooltip}/>
           {
             fields.map((field, index) => (
-              <Bar isAnimationActive={false} unit={unit} key={`total-fill-${field.name}`} dataKey={`hidden_${field.name}_total`} stackId={stackId || field.name} fill={color(field.color).alpha(0.2).rgb().string()} hideFromTooltip={true}/>
+              <Bar isAnimationActive={false} unit="hidden" key={`total-fill-${field.name}`} dataKey={`${field.name}.inverseValue`} stackId={stackId || field.name} fill={color(field.color).alpha(0.2).rgb().string()} hiddenPoint />
               )
             )
           }
           {
             fields.map((field, index) => (
-              <Bar animationDuration={animationDuration} unit={unit} key={`bar-${field.name}`} dataKey={field.name} stackId={stackId || field.name} fill={field.color}/>
+              <Bar animationDuration={animationDuration} unit={unit} key={`bar-${field.name}`} dataKey={`${field.name}.value`} name={field.name} stackId={stackId || field.name} fill={field.color}/>
               )
             )
           }

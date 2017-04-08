@@ -52,7 +52,7 @@ const MatterBarChartTooltip = (props) => {
 
   const rPayload = _.orderBy(
     _.map(
-      _.filter(_.cloneDeep(payload), item => (item.dataKey.split('_')[0] !== 'hidden')),
+      _.filter(_.cloneDeep(payload), item => (item.unit !== 'hidden')),
       // map
       item => ({
         ...item,
