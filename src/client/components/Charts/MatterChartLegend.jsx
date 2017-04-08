@@ -13,7 +13,7 @@ const MatterChartLegend = ({ payload }) => (
               <div className="circle" style={{ background: item.color }} />
               <div className="item-value">{item.value}</div>
             </div>
-          )
+          ),
         )
       }
     </div>

@@ -33,23 +33,31 @@ const convertToPercentageData = (data, fields) => {
 };
 
 const convertToOverallPercentageData = (data, fields, overall) => {
+  const domain = [0, 100];
+  let max = 0;
   const retData = _.map(data, (element) => {
     const elt = _.extend({}, element);
     const overallElt = _.find(overall, item => item.name === elt.name);
     _.forEach(fields, (f) => {
       if (!elt[f.name]) elt[f.name] = 0;
       if (overallElt[f.name]) {
+        const value = _.round((elt[f.name] / (overallElt[f.name] + elt[f.name])) * 100, 1);
         elt[f.name] = {
           name: f.name,
-          value:_.round((elt[f.name] / (overallElt[f.name] + elt[f.name])) * 100, 1),
+          value,
           total: elt[f.name],
+          inverseValue: 100 - value,
         };
-        elt[f.name].inverseValue = 100 - elt[f.name].value;
+        if (value > max) max = value;
       }
     });
     return elt;
   });
-  return retData;
+
+
+  if (max < 25) domain[1] = 25;
+  else if (max < 50) domain[1] = 50;
+  return { data: retData, domain };
 };
 
 class MatterBarChart extends React.Component {
@@ -86,9 +94,10 @@ class MatterBarChart extends React.Component {
       unit = '%';
       domain = [0, 100];
     } else if (this.props.type === 'stackedOverallPercentage') {
-      data = convertToOverallPercentageData(data, fields, overall);
+      const res = convertToOverallPercentageData(data, fields, overall);
+      data = res.data;
+      domain = res.domain;
       unit = '%';
-      domain = [0, 100];
     }
     const stackId = stacked ? 'stack' : null;
 
