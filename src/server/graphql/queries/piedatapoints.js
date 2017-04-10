@@ -86,7 +86,7 @@ const pieDataPoints = {
         OR department IN (
           SELECT employeeValue
           FROM EmployeeComparisonMappings
-          WHERE orgId ='app'
+          WHERE orgId = $orgId
           AND employeeField='department'
           AND comparisonField='department'
           AND comparisonValue = $department
@@ -94,7 +94,7 @@ const pieDataPoints = {
         OR payGradeCode IN (
           SELECT employeeValue
           FROM EmployeeComparisonMappings
-          WHERE orgId ='app'
+          WHERE orgId = $orgId
           AND employeeField='payGradeCode'
           AND comparisonField='department'
           AND comparisonValue = $department

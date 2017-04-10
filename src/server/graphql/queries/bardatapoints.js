@@ -106,7 +106,7 @@ const getResults = async (organization, department, focus, measure, timeframe) =
       OR department IN (
         SELECT employeeValue
         FROM EmployeeComparisonMappings
-        WHERE orgId ='app'
+        WHERE orgId =$orgId
         AND employeeField='department'
         AND comparisonField='department'
         AND comparisonValue = $department
@@ -114,7 +114,7 @@ const getResults = async (organization, department, focus, measure, timeframe) =
       OR payGradeCode IN (
         SELECT employeeValue
         FROM EmployeeComparisonMappings
-        WHERE orgId ='app'
+        WHERE orgId =$orgId
         AND employeeField='payGradeCode'
         AND comparisonField='department'
         AND comparisonValue = $department
