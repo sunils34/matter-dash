@@ -50,16 +50,14 @@ const MatterBarChartTooltip = (props) => {
     return null;
   }
 
-  const rPayload = _.orderBy(
-    _.map(
-      _.filter(_.cloneDeep(payload), item => (item.unit !== 'hidden')),
-      // map
-      item => ({
-        ...item,
-        value: item.value || 0,
-      }),
-    ),
-  ['value', 'name'], ['asc', 'asc']);
+  const rPayload = _.map(
+    _.filter(_.cloneDeep(payload), item => (item.unit !== 'hidden')),
+    // map
+    item => ({
+      ...item,
+      value: item.value || 0,
+    }),
+  );
 
   if (chartType === 'stackedOverallPercentage') {
     body = (
