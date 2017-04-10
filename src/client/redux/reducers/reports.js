@@ -73,10 +73,14 @@ export default function reports(state = initialState, action) {
         dialog: {
           ...state.dialog,
           chart: state.report.objects[action.objectIdx].type,
-          department: state.report.objects[action.objectIdx].details.department,
-          focus: state.report.objects[action.objectIdx].details.focus,
-          measure: state.report.objects[action.objectIdx].details.measure,
-          timeframe: state.report.objects[action.objectIdx].details.timeframe,
+          department:
+            state.report.objects[action.objectIdx].details.department || dialogDefaults.department,
+          focus:
+            state.report.objects[action.objectIdx].details.focus || dialogDefaults.focus,
+          measure:
+            state.report.objects[action.objectIdx].details.measure || dialogDefaults.measure,
+          timeframe:
+            state.report.objects[action.objectIdx].details.timeframe || dialogDefaults.timeframe,
         },
         editingObjIdx: action.objectIdx,
       };
