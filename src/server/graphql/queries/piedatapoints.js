@@ -10,13 +10,13 @@ import sequelize from '../../database/mysql/sequelize';
 import getFields from './fields';
 
 const getPeriodStatement = (period) => {
-  if(period == 'Last Quarter') {
+  if (period === 'Last Quarter') {
     return ' AND hireDate <  NOW() - INTERVAL 3 MONTH';
   }
-  if(period == 'Last 6 Months') {
+  if (period === 'Last 6 Months') {
     return ' AND hireDate <  NOW() - INTERVAL 6 MONTH';
   }
-  if(period == 'Last Year') {
+  if (period === 'Last Year') {
     return ' AND hireDate <  NOW() - INTERVAL 12 MONTH';
   }
 
@@ -81,8 +81,28 @@ const pieDataPoints = {
     stmt += getFocusStmt(focus);
 
     if (query.department !== 'All') {
-      stmt += ' AND department = $department ';
+      stmt += ` AND (
+        department = $department
+        OR department IN (
+          SELECT employeeValue
+          FROM EmployeeComparisonMappings
+          WHERE orgId ='app'
+          AND employeeField='department'
+          AND comparisonField='department'
+          AND comparisonValue = $department
+        )
+        OR payGradeCode IN (
+          SELECT employeeValue
+          FROM EmployeeComparisonMappings
+          WHERE orgId ='app'
+          AND employeeField='payGradeCode'
+          AND comparisonField='department'
+          AND comparisonValue = $department
+        )
+      )
+      `;
     }
+
     stmt += ` GROUP BY ${measure}`;
     results = await sequelize.query(stmt, {
       bind: { orgId: organization.id, department: query.department },
