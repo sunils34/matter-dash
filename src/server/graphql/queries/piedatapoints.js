@@ -75,7 +75,7 @@ const pieDataPoints = {
       measure = 'gender';
     }
 
-    let stmt = `SELECT COUNT (*) as value, ${measure} as name FROM employees WHERE orgId = $orgId `;
+    let stmt = `SELECT COUNT (*) as value, ${measure} as name FROM employees WHERE orgId = $orgId  AND ${measure} <> '' `;
 
     stmt += getPeriodStatement(query.period);
     stmt += getFocusStmt(focus);

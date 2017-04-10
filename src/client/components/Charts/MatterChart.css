@@ -1,0 +1,15 @@
+.empty-chart-description {
+  align-items: center;
+  color: #DEDEDE;
+  display: flex;
+  font-size: 23px;
+  height: 400px;
+  justify-content: center;
+  text-align: center;
+}
+
+.reports-page-chart {
+  .empty-chart-description {
+    height: 345px;
+  }
+}

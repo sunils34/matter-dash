@@ -3,11 +3,12 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import _ from 'lodash';
+import color from 'color';
 import './MatterBarChart.css';
 import MatterLoadingIndicator from '../../LoadingIndicator';
 import MatterBarChartTooltip from './MatterBarChartTooltip';
 import MatterChartLegend from '../MatterChartLegend';
-import color from 'color';
+import '../MatterChart.css';
 
 const convertToPercentageData = (data, fields) => {
   const retData = _.map(data, (element) => {
@@ -85,6 +86,13 @@ class MatterBarChart extends React.Component {
     let data = bardatapoints.results;
     let fields = bardatapoints.fields;
     let overall = bardatapoints.overall;
+
+
+    if (!data || !data.length) {
+      return (
+        <div className="empty-chart-description">No data available for the given filters.</div>
+      );
+    }
 
     let unit = '';
     let domain = [0, 'auto'];

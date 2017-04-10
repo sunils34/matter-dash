@@ -32,6 +32,12 @@ class MatterLineChart extends React.Component {
     const dataPoints = bardatapoints.results;
     const fields = bardatapoints.fields;
 
+    if (!dataPoints || !dataPoints.length) {
+      return (
+        <div className="empty-chart-description">No data available for the given filters.</div>
+      );
+    }
+
     return (
       <ResponsiveContainer height={height} width="100%">
         <LineChart data={dataPoints} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>

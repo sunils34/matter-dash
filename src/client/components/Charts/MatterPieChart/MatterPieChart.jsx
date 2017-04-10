@@ -111,6 +111,12 @@ class MatterPieChart extends React.Component {
     const dataPoints = piedatapoints.results;
     const fields = piedatapoints.fields;
 
+    if (!dataPoints || !dataPoints.length) {
+      return (
+        <div className="empty-chart-description">No data available for the given filters.</div>
+      );
+    }
+
     var total = 0;
     _.map(dataPoints, (element) => {
       total += element.value;
