@@ -1,13 +1,13 @@
 import passport from 'passport';
-import {OAuth2Strategy as GoogleStrategy} from 'passport-google-oauth';
+import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
 import jwt from 'jsonwebtoken';
-import util from 'util';
+import _ from 'lodash';
 import auth from './config/auth';
 import logger from 'winston';
 
 import db from './database/mysql/models';
 
-const WHITELISTED_EMAILS = process.env.ADMIN_EMAILS.split(',');
+const WHITELISTED_EMAILS = _.concat(process.env.ADMIN_EMAILS.split(','), (process.env.ORG_ADMINS || '').split(','));
 let OrgId = process.env.ORG_ID || 'app';
 
 const configure = (app) => {
