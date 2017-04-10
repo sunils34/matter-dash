@@ -113,6 +113,7 @@ app.get('/dist/bundle*.js.map', function (req, res) {
 app.get('*', function (req, res) {
 
   if(!req.isAuthenticated()) {
+    logger.info("user unauth redirect");
     res.redirect('/signin');
   }
   else {

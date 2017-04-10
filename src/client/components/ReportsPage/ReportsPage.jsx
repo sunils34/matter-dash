@@ -11,7 +11,7 @@ import ReactTooltip from 'react-tooltip';
 import DocumentTitle from 'react-document-title';
 import '../../css/select.css';
 import '../../css/dropdown.css';
-import ReportsPageChart from './ReportsPageChart';
+import ReportsPageAddChartDialog from './ReportsPageAddChartDialog';
 import ReportsPageSaveDialog from './ReportsPageSaveDialog';
 import './ReportsPage.css';
 import { Row, Column } from '../Grid';
@@ -92,7 +92,7 @@ const ReportsPageHeader = ({ report, isempty, organization, children, dispatch }
   );
 };
 
-const ReportChartTitle = ({ title, type, measure, department, timeframe }) => {
+const ReportChartTitle = ({ title, type, measure, department, timeframe, focus }) => {
   let titleText = title;
 
   if (!titleText) {
@@ -103,13 +103,15 @@ const ReportChartTitle = ({ title, type, measure, department, timeframe }) => {
       case 'line':
         if (_.lowerCase(timeframe) === 'monthly') {
           periodStmt = 'Month over Month';
+        } else if (_.lowerCase(timeframe) === 'quarterly') {
+          periodStmt = 'Quarterly';
         } else if (_.lowerCase(timeframe) === 'yearly') {
           periodStmt = 'Year over Year';
         }
-        titleText = `${department} Growth by ${measure} ${periodStmt}`;
+        titleText = `${department} ${focus || 'Overall'} by ${measure} ${periodStmt}`;
         break;
       case 'donut':
-        titleText = `${measure} Breakdown in ${department}`;
+        titleText = `${focus || 'Overall'} Breakdown by ${measure} for ${department}`;
         break;
       default:
         titleText = '';
@@ -126,6 +128,7 @@ ReportChartTitle.defaultProps = {
   title: null,
   measure: null,
   department: null,
+  focus: null,
   timeframe: null,
 };
 
@@ -134,6 +137,7 @@ ReportChartTitle.propTypes = {
   type: React.PropTypes.string,
   measure: React.PropTypes.string,
   department: React.PropTypes.string,
+  focus: React.PropTypes.string,
   timeframe: React.PropTypes.string,
 };
 
@@ -253,7 +257,7 @@ let ReportsAddNewGraphContainer = ({ dispatch, unsaved, dialogIsOpen }) => {
         role="dialog"
         className="new-report-modal"
       >
-        <ReportsPageChart />
+        <ReportsPageAddChartDialog />
       </ReactModal>
     </div>
   );
@@ -367,70 +371,86 @@ class ReportsPage extends React.Component {
 
     if (isEmpty) {
       return null;
-    } else {
-      body = _.map(report.objects, (object, idx) => {
-        // don't render locally deleted objects
-        if (object.deleted) return null;
-        const { department, measure, timeframe } = object.details;
-        const query = { department, measure, timeframe };
-        const key = object.id || idx;
+    } 
+    body = _.map(report.objects, (object, idx) => {
+      // don't render locally deleted objects
+      if (object.deleted) return null;
+      const { department, measure, timeframe, focus } = object.details;
+      const query = { department, measure, timeframe, focus };
+      const key = object.id || idx;
+      const height = 400;
 
-        let objectElt = null;
+      let objectElt = null;
 
-        switch (object.type) {
-          case 'line':
+      switch (object.type) {
+        case 'line':
+          objectElt = (
+            <MatterLineChart
+              height={height}
+              query={query}
+              focusType={query.focus || 'Overall'}
+            />);
+          break;
+        case 'bar':
+          if (query.focus === 'Attrition') {
             objectElt = (
-              <MatterLineChart
-                height={400}
+              <MatterBarChart
+                type="stackedOverallPercentage"
+                height={height}
                 query={query}
-              />);
-            break;
-          case 'bar':
+                focusType="Attrition"
+                stacked={false}
+              />
+            );
+          } else {
             objectElt = (
               <MatterBarChart
                 type="stackedPercentage"
-                height={400}
+                height={height}
                 query={query}
+                focusType={query.focus || 'Overall'}
+                stacked
               />);
-            break;
-          case 'donut':
-          case 'pie':
-            objectElt = (
-              <MatterPieChart
-                legendAlign="right"
-                legendType="small"
-                showTotal
-                height={pieHeight}
-                width={pieWidth}
-                query={query}
-              />);
-            break;
-          default:
-            return null;
-        }
+          }
+          break;
+        case 'donut':
+        case 'pie':
+          objectElt = (
+            <MatterPieChart
+              legendAlign="right"
+              legendType="small"
+              showTotal
+              height={pieHeight}
+              width={pieWidth}
+              query={query}
+            />);
+          break;
+        default:
+          return null;
+      }
 
-        return (
-          <div key={key} className={containerClass}>
-            <div className="align-center align-middle report-object-wrap">
-              <Column extraClass="large-12">
-                <Row center extraClass="dd-wrap report-title-wrap">
-                  <ReportChartTitle
-                    type={object.type}
-                    department={department}
-                    measure={measure}
-                    timeframe={timeframe}
-                  />
-                  <ReportChartMenu dispatch={dispatch} objectIdx={idx} />
-                </Row>
-                <Row center>
-                  {objectElt}
-                </Row>
-              </Column>
-            </div>
+      return (
+        <div key={key} className={containerClass}>
+          <div className="align-center align-middle report-object-wrap">
+            <Column extraClass="large-12">
+              <Row center extraClass="dd-wrap report-title-wrap">
+                <ReportChartTitle
+                  type={object.type}
+                  department={department}
+                  focus={focus}
+                  measure={measure}
+                  timeframe={timeframe}
+                />
+                <ReportChartMenu dispatch={dispatch} objectIdx={idx} />
+              </Row>
+              <Row center>
+                {objectElt}
+              </Row>
+            </Column>
           </div>
-        );
-      });
-    }
+        </div>
+      );
+    });
 
     return (
         <div className="container reports-page">
@@ -482,6 +502,10 @@ query GetReportsPageInit($id: String){
       value
     }
     timeframes {
+      label,
+      value
+    }
+    focuses {
       label,
       value
     }

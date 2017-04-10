@@ -15,14 +15,21 @@ const ReportsPageInitType = new List(new ObjectType({
   },
 }));
 
-const getDistinctValues = async (orgId, field) =>
-  sequelize.query(
-    `SELECT DISTINCT ${field} as value, ${field} as label
-      FROM employees
-      WHERE orgId=$orgId;`, { bind: { orgId },
-        type: sequelize.QueryTypes.SELECT,
-      });
-
+const getDepartments = async orgId => (
+    sequelize.query(`
+      SELECT t.dept as label, t.dept as value
+      FROM (
+        SELECT DISTINCT (department) as dept
+        FROM employees
+        WHERE orgId=$orgId AND department <> ''
+        UNION
+        DISTINCT SELECT distinct(comparisonValue) dept FROM EmployeeComparisonMappings
+          WHERE comparisonField='department' AND orgId=$orgId
+        ORDER BY dept ASC
+      ) t`, {
+        bind: { orgId }, type: sequelize.QueryTypes.SELECT,
+      })
+);
 
 const companyPageInit = {
   type: new ObjectType({
@@ -30,6 +37,7 @@ const companyPageInit = {
     fields: {
       report: { type: ReportType },
       departments: { type: ReportsPageInitType },
+      focuses: { type: ReportsPageInitType },
       measures: { type: ReportsPageInitType },
       timeframes: { type: ReportsPageInitType },
     },
@@ -44,17 +52,23 @@ const companyPageInit = {
     if (!organizations.length) return null;
     const organization = organizations[0];
     const results = {
-      departments: await getDistinctValues(organization.id, 'department'),
+      departments: await getDepartments(organization.id),
       measures: [
-        { label: 'Age', value: 'Age' },
-        { label: 'Ethnicity', value: 'Ethnicity' },
         { label: 'Gender', value: 'Gender' },
+        { label: 'Ethnicity', value: 'Ethnicity' },
+        { label: 'Age', value: 'Age' },
         { label: 'Location', value: 'Location' },
      /*   { label: 'Pay Grade', value: 'Pay Grade' }, */
       ],
       timeframes: [
-        { label: 'Monthly', value: 'Monthly' },
+        { label: 'Quarterly', value: 'Quarterly' },
         { label: 'Yearly', value: 'Yearly' },
+        { label: 'Monthly', value: 'Monthly' },
+      ],
+      focuses: [
+        { label: 'Overall', value: 'Overall' },
+        { label: 'Hiring', value: 'Hiring' },
+        { label: 'Attrition', value: 'Attrition' },
       ],
     };
 

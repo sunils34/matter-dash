@@ -83,9 +83,12 @@ const getCompanyResults = async (measure = 'gender', department = 'All', year = 
 const getMyCompanyResults = async (organization, measure = 'gender', department = 'All', year = 'latest') => {
   const departmentStmt = department === 'All' ? "<> ''" : ` = "${department}"`;
   const measureField = measure === 'gender' ? 'gender' : 'ethnicity';
-  const yearStmt = year === 'latest' ? '' : ` AND YEAR(hireDate) <= ${year} `;
 
-  // TODO this is very hacky. Plesae ask sunil if you're confused.
+  // If latest, then discount all terminated employees.
+  // If a year is specified, find all active employees during that time
+  const yearStmt = year === 'latest' ? ' AND terminationDate IS NULL' : ` AND YEAR(hireDate) <= ${year} AND (terminationDate IS NULL OR YEAR(terminationDate) > ${year})`;
+
+  // TODO this is very hacky. Please ask sunil if you're confused.
   // Eventually abstract this out instead of hard code mappings
   const stmt = `
       SELECT CONCAT(t.companyName, '-', '2016') as companyKey,

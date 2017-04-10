@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 import Select from 'react-select';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import './ReportsPageChart.css';
+import './ReportsPageAddChartDialog.css';
 import { Row, Column } from '../Grid';
 import MatterBarChart from '../Charts/MatterBarChart/MatterBarChart';
 import MatterLineChart from '../Charts/MatterLineChart/MatterLineChart';
@@ -74,11 +74,12 @@ DataViewIcon.propTypes = {
   active: React.PropTypes.bool,
 };
 
-class ReportsPageChart extends React.Component {
+class ReportsPageAddChartDialog extends React.Component {
 
   constructor(props) {
     super(props);
     this.handleChangeDepartment = this.handleChange.bind(this, 'department');
+    this.handleChangeFocus = this.handleChange.bind(this, 'focus');
     this.handleChangeMeasure = this.handleChange.bind(this, 'measure');
     this.handleChangeChart = this.handleChange.bind(this, 'chart');
     this.handleChangeTimeframe = this.handleChange.bind(this, 'timeframe');
@@ -108,6 +109,7 @@ class ReportsPageChart extends React.Component {
       type: this.props.chart,
       details: {
         department: this.props.department,
+        focus: this.props.focus,
         measure: this.props.measure,
         timeframe: this.props.timeframe,
       },
@@ -120,8 +122,8 @@ class ReportsPageChart extends React.Component {
 
 
   render() {
-    const { department, measure, chart, timeframe, dispatch, isSubmitting } = this.props;
-    const { departments, measures, timeframes } = this.props;
+    const { department, focus, measure, chart, timeframe, dispatch, isSubmitting } = this.props;
+    const { departments, focuses, measures, timeframes } = this.props;
 
     let body = <UnselectedBody />;
     let disabled = true;
@@ -129,23 +131,48 @@ class ReportsPageChart extends React.Component {
     let timeframeVal = timeframe;
     let timeframePlaceholder = 'Choose a Timescale';
 
-    if (department && measure) {
-      const query = { department, measure, timeframe };
+    if (department && measure && focus) {
+      const query = { department, focus, measure, timeframe };
       const height = 345;
 
       if (chart === 'bar') {
-        body = (<MatterBarChart type="stackedPercentage" height={height} legendAlign="right" query={query} />);
+        body = (_.lowerCase(query.focus) === 'attrition') ?
+          (
+            <MatterBarChart
+              type="stackedOverallPercentage"
+              height={height}
+              legendAlign="right"
+              query={query}
+              focusType="Attrition"
+              stacked={false}
+            />
+          ) :
+          (
+            <MatterBarChart
+              type="stackedPercentage"
+              height={height}
+              legendAlign="right"
+              query={query}
+              focusType={query.focus || 'Overall'}
+              stacked
+            />
+          );
         disabled = false;
       } else if (chart === 'line') {
-        body = (<MatterLineChart height={height} legendAlign="right" query={query} />);
+        body = (
+          <MatterLineChart
+            height={height}
+            legendAlign="right" query={query}
+            focusType={query.focus || 'Overall'}
+          />
+        );
         disabled = false;
       } else if (chart === 'donut') {
         body = (<MatterPieChart showTotal height={height} legendAlign="right" query={query} />);
         disabled = false;
         timeframeVal = null;
-        timeframePlaceholder = 'Current Snapshot';
-      }
-      else {
+        timeframePlaceholder = 'As of Today';
+      } else {
         body = <UnselectedBody text="Sorry, this view isn't supported yet" />;
       }
     }
@@ -164,11 +191,27 @@ class ReportsPageChart extends React.Component {
                 <Column>
                   <Select
                     onChange={this.handleChangeDepartment}
-                    placeholder="Choose a Department"
+                    placeholder="Department"
                     name="select-departments"
                     clearable={false}
                     value={department}
                     options={departments}
+                  />
+                </Column>
+              </Row>
+            </Column>
+            <Column>
+              <Row><Column extraClass="description">Focus</Column></Row>
+              <Row>
+                <Column>
+                  <Select
+                    onChange={this.handleChangeFocus}
+                    searchable={false}
+                    placeholder="Focus"
+                    name="select-focus"
+                    clearable={false}
+                    value={focus}
+                    options={focuses}
                   />
                 </Column>
               </Row>
@@ -180,7 +223,7 @@ class ReportsPageChart extends React.Component {
                   <Select
                     onChange={this.handleChangeMeasure}
                     searchable={false}
-                    placeholder="Choose Measure"
+                    placeholder="Measure"
                     name="select-type"
                     clearable={false}
                     value={measure}
@@ -239,8 +282,9 @@ class ReportsPageChart extends React.Component {
 }
 
 
-ReportsPageChart.propTypes = {
+ReportsPageAddChartDialog.propTypes = {
   department: React.PropTypes.string,
+  focus: React.PropTypes.string,
   measure: React.PropTypes.string,
   chart: React.PropTypes.string,
   timeframe: React.PropTypes.string,
@@ -250,6 +294,7 @@ ReportsPageChart.propTypes = {
 const mapStateToProps = state => (
   {
     department: state.reports.dialog.department,
+    focus: state.reports.dialog.focus,
     measure: state.reports.dialog.measure,
     chart: state.reports.dialog.chart,
     timeframe: state.reports.dialog.timeframe,
@@ -260,6 +305,7 @@ const mapStateToProps = state => (
     measures: state.reports.measures,
     timeframes: state.reports.timeframes,
     departments: state.reports.departments,
+    focuses: state.reports.focuses,
   }
 );
 
@@ -281,5 +327,5 @@ mutation updateReport($id: String!, $objects: [JSON]) {
 `;
 
 export default connect(mapStateToProps)(
-  graphql(AddToReportMutation)(ReportsPageChart),
+  graphql(AddToReportMutation)(ReportsPageAddChartDialog),
 );

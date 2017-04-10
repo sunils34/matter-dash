@@ -50,7 +50,7 @@ MatterLineChartTooltipLabel.propTypes = {
 };
 
 const MatterLineChartTooltip = (props) => {
-  const { payload, data, label } = props;
+  const { payload, data, label, labelDescription } = props;
 
   if (!payload.length) {
     return null;
@@ -94,7 +94,7 @@ const MatterLineChartTooltip = (props) => {
 
   body = (
     <div>
-      <div className="name">{label}</div>
+      <div className="name">{label} {labelDescription}</div>
       <div>
         {
           _.map(firstElements, item => (
@@ -138,8 +138,13 @@ const MatterLineChartTooltip = (props) => {
   );
 };
 
+MatterLineChartTooltip.defaultProps = {
+  labelDescription: null,
+};
+
 MatterLineChartTooltip.propTypes = {
   data: React.PropTypes.array.isRequired,
+  labelDescription: React.PropTypes.string,
 };
 
 export default MatterLineChartTooltip;

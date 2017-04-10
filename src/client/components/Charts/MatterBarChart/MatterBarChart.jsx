@@ -7,24 +7,57 @@ import './MatterBarChart.css';
 import MatterLoadingIndicator from '../../LoadingIndicator';
 import MatterBarChartTooltip from './MatterBarChartTooltip';
 import MatterChartLegend from '../MatterChartLegend';
+import color from 'color';
 
 const convertToPercentageData = (data, fields) => {
   const retData = _.map(data, (element) => {
     let total = 0;
     const elt = _.extend({}, element);
-    fields.forEach((f) => {
+    _.forEach(fields, (f) => {
       if (elt[f.name]) {
         total += elt[f.name];
       }
     });
-    fields.forEach((f) => {
+    _.forEach(fields, (f) => {
       if (elt[f.name]) {
-        elt[f.name] = _.round((elt[f.name] / total) * 100, 1);
+        elt[f.name] = {
+          name: f.name,
+          value: _.round((elt[f.name] / total) * 100, 1),
+          orig: elt[f.name],
+        };
       }
     });
     return elt;
   });
   return retData;
+};
+
+const convertToOverallPercentageData = (data, fields, overall) => {
+  const domain = [0, 100];
+  let max = 0;
+  const retData = _.map(data, (element) => {
+    const elt = _.extend({}, element);
+    const overallElt = _.find(overall, item => item.name === elt.name);
+    _.forEach(fields, (f) => {
+      if (!elt[f.name]) elt[f.name] = 0;
+      if (overallElt[f.name]) {
+        const value = _.round((elt[f.name] / (overallElt[f.name] + elt[f.name])) * 100, 1);
+        elt[f.name] = {
+          name: f.name,
+          value,
+          total: elt[f.name],
+          inverseValue: 100 - value,
+        };
+        if (value > max) max = value;
+      }
+    });
+    return elt;
+  });
+
+
+  if (max < 25) domain[1] = 25;
+  else if (max < 50) domain[1] = 50;
+  return { data: retData, domain };
 };
 
 class MatterBarChart extends React.Component {
@@ -35,7 +68,7 @@ class MatterBarChart extends React.Component {
   }
 
   render() {
-    const { animationDuration, height, bardatapoints, loading } = this.props;
+    const { animationDuration, height, bardatapoints, loading, query, stacked, focusType } = this.props;
 
     if(loading) {
       var style = {
@@ -51,28 +84,41 @@ class MatterBarChart extends React.Component {
 
     let data = bardatapoints.results;
     let fields = bardatapoints.fields;
+    let overall = bardatapoints.overall;
 
     let unit = '';
     let domain = [0, 'auto'];
-    let hide = false;
     // stacked percentage
     if (this.props.type === 'stackedPercentage') {
       data = convertToPercentageData(data, fields);
       unit = '%';
       domain = [0, 100];
-      hide = true;
+    } else if (this.props.type === 'stackedOverallPercentage') {
+      const res = convertToOverallPercentageData(data, fields, overall);
+      data = res.data;
+      domain = res.domain;
+      unit = '%';
     }
-
+    const stackId = stacked ? 'stack' : null;
 
     return (
       <ResponsiveContainer height={height} width="100%">
-        <BarChart data={data} margin={{top: 20, right: 30, left: 20, bottom: 5}}>
-          <XAxis dataKey='name'/>
+        <BarChart data={data} margin={{ top: 5, right: 30, left: 30, bottom: 5 }} >
+          <XAxis dataKey='name' tickCount={6} />
           <YAxis allowDataOverflow={true} scale="linear" type="number" unit={unit} allowDecimals={false} domain={domain} />
-          <CartesianGrid strokeDasharray="3" vertical={false}/>
-          <Tooltip animationDuration={0} content={MatterBarChartTooltip}/>
+          <CartesianGrid strokeDasharray="3" vertical={false} />
+          <Tooltip animationDuration={0} labelDescription={focusType} content={MatterBarChartTooltip} chartType={this.props.type}/>
           {
-            fields.map((field, index) => <Bar animationDuration={animationDuration}unit={unit} key={`bar-${field.name}`} dataKey={field.name} stackId='a' fill={field.color}/>)
+            fields.map((field) => (
+              <Bar isAnimationActive={false} unit="hidden" key={`total-fill-${field.name}`} dataKey={`${field.name}.inverseValue`} stackId={stackId || field.name} fill={color(field.color).alpha(0.2).rgb().string()} hiddenPoint />
+              ),
+            )
+          }
+          {
+            fields.map((field, index) => (
+              <Bar animationDuration={animationDuration} unit={unit} key={`bar-${field.name}`} dataKey={`${field.name}.value`} name={field.name} stackId={stackId || field.name} fill={field.color}/>
+              )
+            )
           }
           <Legend content={MatterChartLegend} iconType="circle" />
         </BarChart>
@@ -87,7 +133,8 @@ const GetBarDataPoints = gql`query GetBarDataPoints($query: JSON!){
     fields {
       name
       color
-    }
+    },
+    overall
   }
 }`;
 
@@ -96,14 +143,20 @@ MatterBarChart.defaultProps = {
   animationDuration: 1500,
   height: 300,
   bardatapoints: {},
+  stacked: true,
 };
 
 MatterBarChart.propTypes = {
+   /* eslint-disable react/forbid-prop-types */
   query: React.PropTypes.object.isRequired,
-  loading: React.PropTypes.bool.isRequired,
   bardatapoints: React.PropTypes.object,
+   /* eslint-enable react/forbid-prop-types */
+
+  loading: React.PropTypes.bool.isRequired,
   animationDuration: React.PropTypes.number,
   height: React.PropTypes.number,
+  stacked: React.PropTypes.bool,
+  focusType: React.PropTypes.string.isRequired,
 };
 
 module.exports = graphql(GetBarDataPoints, {

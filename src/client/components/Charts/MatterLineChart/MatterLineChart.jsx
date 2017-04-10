@@ -1,5 +1,6 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import _ from 'lodash';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import MatterLineChartTooltip from './MatterLineChartTooltip';
@@ -15,7 +16,7 @@ class MatterLineChart extends React.Component {
 
   render() {
 
-    const { height, loading, bardatapoints, animationDuration } = this.props;
+    const { height, loading, bardatapoints, animationDuration, query, focusType } = this.props;
 
     if (loading) {
       const style = {
@@ -33,11 +34,16 @@ class MatterLineChart extends React.Component {
 
     return (
       <ResponsiveContainer height={height} width="100%">
-        <LineChart data={dataPoints} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-          <Tooltip isAnimationActive={false} data={dataPoints} content={MatterLineChartTooltip} />
-          <XAxis dataKey="name" />
+        <LineChart data={dataPoints} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+          <Tooltip
+            isAnimationActive={false}
+            labelDescription={focusType}
+            data={dataPoints}
+            content={MatterLineChartTooltip}
+          />
+          <XAxis dataKey="name" tickCount={6}/>
           <YAxis />
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid strokeDasharray="4 3" />
           <Legend iconType="circle" content={MatterChartLegend} />
           {
             fields.map(field => <Line animationDuration={animationDuration} type="monotone" key={`bar-${field.name}`} dataKey={field.name} strokeWidth={2} stroke={field.color} />)
@@ -55,11 +61,15 @@ MatterLineChart.defaultProps = {
 };
 
 MatterLineChart.propTypes = {
+   /* eslint-disable react/forbid-prop-types */
+  query: React.PropTypes.object.isRequired,
+  bardatapoints: React.PropTypes.object,
+   /* eslint-enable react/forbid-prop-types */
+
   animationDuration: React.PropTypes.number,
   loading: React.PropTypes.bool.isRequired,
-  bardatapoints: React.PropTypes.object,
   height: React.PropTypes.number,
-  query: React.PropTypes.object.isRequired,
+  focusType: React.PropTypes.string.isRequired,
 };
 
 

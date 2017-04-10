@@ -2,6 +2,7 @@ import OrganizationType from '../types/OrganizationType';
 import Organization from '../../database/mysql/models/Organization';
 import User from '../../database/mysql/models/User';
 import sequelize from '../../database/mysql/sequelize';
+import getFieldNames from 'graphql-list-fields';
 import _ from 'lodash';
 
 import {
@@ -11,29 +12,37 @@ import {
 const organization = {
   type: OrganizationType,
   args: {},
-  async resolve(parent, args, {db}) {
-
-    if(parent.request.user) {
+  async resolve(parent, args, context, info) {
+    const fields = getFieldNames(info);
+    if (parent.request.user) {
       const user = parent.request.user;
-      const organizations = await user.getOrganizations({raw: true});
+      const organizations = await user.getOrganizations({ raw: true });
 
-      //TODO for now assume only one org per user exists
-      if(organizations.length) {
-        var organization = organizations[0];
+      // TODO for now assume only one org per user exists
+      if (organizations.length) {
+        const org = organizations[0];
 
-        var results = await sequelize.query('SELECT COUNT (*) as count FROM employees WHERE positionStatus=\'Active\' AND orgId = ?', {
-          replacements: [organization.id], type: sequelize.QueryTypes.SELECT
-        });
+        if (_.includes(fields, 'employee_count')) {
+          const e = await sequelize.query('SELECT COUNT (*) as count FROM employees WHERE positionStatus=\'Active\' AND orgId = ?', {
+            replacements: [org.id], type: sequelize.QueryTypes.SELECT,
+          });
 
-        if(results.length && results[0].count) {
-          organization.employee_count = results[0].count;
+          if (e.length && e[0].count) {
+            org.employee_count = e[0].count;
+          }
         }
 
-        var results = await sequelize.query('SELECT DISTINCT(department) FROM employees WHERE orgId = ?', {
-          replacements: [organization.id], type: sequelize.QueryTypes.SELECT
-        });
-        organization.departments = _.map(results, 'department');
-        return organization;
+        if (_.includes(fields, 'departments')) {
+          const d = await sequelize.query(`
+            SELECT DISTINCT (department) from employees WHERE orgId=$orgId AND department <> ''
+            UNION DISTINCT SELECT distinct(comparisonValue) FROM EmployeeComparisonMappings
+              WHERE comparisonField='department' AND orgId=$orgId
+            ORDER BY department ASC`, {
+              bind: { orgId: org.id }, type: sequelize.QueryTypes.SELECT,
+            });
+          org.departments = _.map(d, 'department');
+        }
+        return org;
       }
     }
     return null;
