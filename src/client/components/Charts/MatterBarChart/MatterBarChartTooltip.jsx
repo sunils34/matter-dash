@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import './MatterBarChartTooltip.css';
 
-const MatterBarChartTooltipLabel = ({item, prevItem, total, small}) => {
+const MatterBarChartTooltipLabel = ({ item, prevItem, total, small }) => {
   const prevItemTotal = prevItem[item.name] || 0;
   const itemTotal = item.value || 0;
   const representationPercent = _.round((item.value / total) * 100) || 0;
@@ -65,14 +65,18 @@ const MatterBarChartTooltip = (props) => {
     body = (
       <div>
         {
-          _.map(_.filter(rPayload, item => item.value), item => (
+          _.map(rPayload, item => (
             <div key={item.name}>
               <div className="label-wrap large">
                 <div className="circle-wrap">
                   <div className="circle" style={{ background: item.fill }} />
                 </div>
                 <div className="label">
-                  <span>{item.payload[item.name].total} {item.name} ({item.value}% of total)</span>
+                  <span>{item.payload[item.name].total || 0} {item.name}</span>
+                  {
+                    (item.value > 0) &&
+                    <span> ({item.value}% of total)</span>
+                  }
                 </div>
               </div>
             </div>

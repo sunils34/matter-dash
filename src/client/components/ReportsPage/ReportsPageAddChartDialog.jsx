@@ -136,14 +136,14 @@ class ReportsPageAddChartDialog extends React.Component {
       const height = 345;
 
       if (chart === 'bar') {
-        body = (_.lowerCase(query.focus) === 'churn') ?
+        body = (_.lowerCase(query.focus) === 'attrition') ?
           (
             <MatterBarChart
               type="stackedOverallPercentage"
               height={height}
               legendAlign="right"
               query={query}
-              focusType="Churn"
+              focusType="Attrition"
               stacked={false}
             />
           ) :
@@ -165,7 +165,7 @@ class ReportsPageAddChartDialog extends React.Component {
         body = (<MatterPieChart showTotal height={height} legendAlign="right" query={query} />);
         disabled = false;
         timeframeVal = null;
-        timeframePlaceholder = 'Current';
+        timeframePlaceholder = 'As of Today';
       } else {
         body = <UnselectedBody text="Sorry, this view isn't supported yet" />;
       }

@@ -21,10 +21,10 @@ const getPeriodStatement = (period) => {
   }
 
   return '';
-}
+};
 
 const getFocusStmt = (focus) => {
-  if (focus === 'churn') {
+  if (focus === 'attrition') {
     return ' AND terminationDate';
   } else if (focus === 'hiring') {
     return ' AND hireDate';

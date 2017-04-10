@@ -61,7 +61,7 @@ const companyPageInit = {
       focuses: [
         { label: 'Overall', value: 'Overall' },
         { label: 'Hiring', value: 'Hiring' },
-        { label: 'Churn', value: 'Churn' },
+        { label: 'Attrition', value: 'Attrition' },
       ],
     };
 

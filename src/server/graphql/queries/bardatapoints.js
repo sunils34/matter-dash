@@ -74,7 +74,7 @@ const getTimeframeFilter = (dateFilter, timeframe) => {
 };
 
 const getFocusFilterTimeStmt = (focus, timeframe) => {
-  if (focus === 'churn') {
+  if (focus === 'attrition') {
     return ` ${getTimeframeFilter('employees.terminationDate', timeframe)} = $time`;
   } else if (focus === 'hiring') {
     return ` ${getTimeframeFilter('employees.hireDate', timeframe)} = $time`;
@@ -169,7 +169,7 @@ const barDataPoints = {
     const organization = organizations[0];
     const query = args.query;
     let measure = _.lowerCase(query.measure);
-    const focus = _.lowerCase(query.focus) || 'overall';
+    const focus = _.lowerCase(query.focus).replace('churn', 'attrition') || 'overall';
     const department = query.department || 'All';
     let timeframe = _.lowerCase(query.timeframe);
     let overall = null;
@@ -182,8 +182,8 @@ const barDataPoints = {
       timeframe = 'yearly';
     }
 
-    if (!_.includes(['overall', 'hiring', 'churn'], focus)) {
-      throw new Error('Focus parameter must be either "overall", "hiring", or "churn"');
+    if (!_.includes(['overall', 'hiring', 'attrition'], focus)) {
+      throw new Error('Focus parameter must be either "overall", "hiring", or "attrition"');
     }
 
     if (measure === 'ethnicity') {
@@ -201,7 +201,7 @@ const barDataPoints = {
     const fields = await getFields(measure, organization.id, sequelize);
     const results = await getResults(organization, department, focus, measure, timeframe);
     // include overall data in results
-    if (focus === 'churn') {
+    if (focus === 'attrition') {
       overall = await getResults(organization, department, 'overall', measure, timeframe);
     }
     return { results, fields, overall };

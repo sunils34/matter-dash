@@ -392,13 +392,13 @@ class ReportsPage extends React.Component {
             />);
           break;
         case 'bar':
-          if (query.focus === 'Churn') {
+          if (query.focus === 'Attrition') {
             objectElt = (
               <MatterBarChart
                 type="stackedOverallPercentage"
                 height={height}
                 query={query}
-                focusType="Churn"
+                focusType="Attrition"
                 stacked={false}
               />
             );
