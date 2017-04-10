@@ -15,14 +15,21 @@ const ReportsPageInitType = new List(new ObjectType({
   },
 }));
 
-const getDistinctValues = async (orgId, field) =>
-  sequelize.query(
-    `SELECT DISTINCT ${field} as value, ${field} as label
-      FROM employees
-      WHERE orgId=$orgId;`, { bind: { orgId },
-        type: sequelize.QueryTypes.SELECT,
-      });
-
+const getDepartments = async orgId => (
+    sequelize.query(`
+      SELECT t.dept as label, t.dept as value
+      FROM (
+        SELECT DISTINCT (department) as dept
+        FROM employees
+        WHERE orgId=$orgId AND department <> ''
+        UNION
+        DISTINCT SELECT distinct(comparisonValue) dept FROM EmployeeComparisonMappings
+          WHERE comparisonField='department' AND orgId=$orgId
+        ORDER BY dept ASC
+      ) t`, {
+        bind: { orgId }, type: sequelize.QueryTypes.SELECT,
+      })
+);
 
 const companyPageInit = {
   type: new ObjectType({
@@ -45,7 +52,7 @@ const companyPageInit = {
     if (!organizations.length) return null;
     const organization = organizations[0];
     const results = {
-      departments: await getDistinctValues(organization.id, 'department'),
+      departments: await getDepartments(organization.id),
       measures: [
         { label: 'Gender', value: 'Gender' },
         { label: 'Ethnicity', value: 'Ethnicity' },

@@ -100,7 +100,27 @@ const getResults = async (organization, department, focus, measure, timeframe) =
   }
 
   if (department !== 'All') {
-    stmt += ' AND department = $department ';
+    // use comparison mapping to query off pay grade or department
+    stmt += ` AND (
+      department = $department
+      OR department IN (
+        SELECT employeeValue
+        FROM EmployeeComparisonMappings
+        WHERE orgId ='app'
+        AND employeeField='department'
+        AND comparisonField='department'
+        AND comparisonValue = $department
+      )
+      OR payGradeCode IN (
+        SELECT employeeValue
+        FROM EmployeeComparisonMappings
+        WHERE orgId ='app'
+        AND employeeField='payGradeCode'
+        AND comparisonField='department'
+        AND comparisonValue = $department
+      )
+    )
+  `;
   }
   stmt += ` AND ${measure} IS NOT NULL AND ${measure} <> '' `;
 

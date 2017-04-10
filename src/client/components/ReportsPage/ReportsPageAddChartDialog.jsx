@@ -159,7 +159,13 @@ class ReportsPageAddChartDialog extends React.Component {
           );
         disabled = false;
       } else if (chart === 'line') {
-        body = (<MatterLineChart height={height} legendAlign="right" query={query} />);
+        body = (
+          <MatterLineChart
+            height={height}
+            legendAlign="right" query={query}
+            focusType={query.focus || 'Overall'}
+          />
+        );
         disabled = false;
       } else if (chart === 'donut') {
         body = (<MatterPieChart showTotal height={height} legendAlign="right" query={query} />);
