@@ -80,8 +80,9 @@ app.use('/graphql', expressGraphQL((req, res) => {
   }
 }));
 
-// Serve static assets
+// Serve static assets from client and server public directories
 app.use(express.static(path.join(appdir, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/dist/core.js', function (req, res) {
   res.header("Content-Type", "application/javascript");
