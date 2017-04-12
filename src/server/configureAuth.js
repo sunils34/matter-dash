@@ -25,11 +25,10 @@ const configure = (app) => {
   app.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
 
   app.get('/auth/logout', (req, res) => {
-    req.logout();
-    res.redirect('/');
+    req.session.destroy(() => (
+      res.redirect('/signin')
+    ));
   });
-
-
 
   // the callback after google has authenticated the user
   app.get('/auth/google/callback', (req, res, next) => {
@@ -38,9 +37,11 @@ const configure = (app) => {
       if (!user) { return res.redirect(`/signin?error=No Valid User`); }
 
       req.login(user, (err) => {
-        logger.info("user login", {user_id: user.id});
+        logger.info('user login', { user_id: user.id });
         if (err) { return next(err); }
-        return res.redirect('/');
+        req.session.save(() => (
+          res.redirect('/')
+        ));
       });
     })(req, res, next);
   });
