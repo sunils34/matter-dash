@@ -4,14 +4,20 @@ import { Link } from 'react-router';
 import dateformat from 'dateformat';
 import './HeaderBar.css';
 import { Column, Row } from '../Grid';
+import HeaderBarUserMenu from './HeaderBarUserMenu';
+import './HeaderBarUserMenu.css';
+
 
 let HeaderOrgDetails = ({ id, name, updatedAt, logoUrl }) => {
   if (!id || !name || !updatedAt) return null;
+
   return (
     <Column className="hide-for-small-only">
       <Row right middle className="org-header">
         <Column>
-          <Row className="org-name" right>{name}</Row>
+          <Row className="org-name" right>
+            <HeaderBarUserMenu orgName={name} />
+          </Row>
           <Row className="org-updated" right>Last Updated: {dateformat(updatedAt, 'mmmm d, yyyy')}</Row>
         </Column>
         <Column className="large-1 medium-1">
