@@ -90,6 +90,7 @@ app.get('/signin', (req, res) => {
 });
 
 app.use('/graphql', expressGraphQL((req, res) => {
+  // TODO CSRF protection
   if (!req.isAuthenticated()) {
     logger.warn('Un-signed in access to /graphql');
     res.json({ error: 'This endpoint is only accessible to a logged in user' });
