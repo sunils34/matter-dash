@@ -1,3 +1,4 @@
+import { EventTypes } from 'redux-segment';
 import * as types from '../actionTypes/comparison';
 
 export function dataFetched(gender, ethnicity, filters) {
@@ -15,6 +16,18 @@ export function sort(measure, value, order = 'desc') {
     measure,
     value,
     order,
+    meta: {
+      analytics: {
+        eventType: EventTypes.track,
+        eventPayload: {
+          properties: {
+            measure,
+            value,
+            order,
+          },
+        },
+      },
+    },
   };
 }
 
@@ -23,5 +36,16 @@ export function changeFilter(filter, value) {
     type: types.COMPARISON_CHANGE_FILTER,
     filter,
     value,
+    meta: {
+      analytics: {
+        eventType: EventTypes.track,
+        eventPayload: {
+          properties: {
+            filter,
+            value,
+          },
+        },
+      },
+    },
   };
 }

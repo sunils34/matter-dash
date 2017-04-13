@@ -1,14 +1,13 @@
-import {createStore, applyMiddleware, compose} from 'redux';
-import promiseMiddleware from '../middleware/promiseMiddleware';
-import DevTools from '../../containers/devTools';
+import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
+import promiseMiddleware from '../middleware/promiseMiddleware';
 import rootReducer from '../reducers';
 import { reduxTimeout } from '../utils/timeout';
 
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const finalCreateStore = composeEnhancers(
-    applyMiddleware(thunk, promiseMiddleware, reduxTimeout())
+    applyMiddleware(thunk, promiseMiddleware, reduxTimeout()),
 )(createStore);
 
 export default function configureStore(initialState, apollo) {
