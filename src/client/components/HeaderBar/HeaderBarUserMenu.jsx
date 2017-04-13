@@ -9,7 +9,6 @@ class HeaderBarUserMenu extends React.Component {
     };
     this.toggle = this.toggle.bind(this);
     this.close = this.toggle.bind(this);
-    this.logout = this.toggle.bind(this);
   }
 
   toggle() {
@@ -18,11 +17,6 @@ class HeaderBarUserMenu extends React.Component {
 
   close() {
     this.setState({ isMenuOpen: false });
-  }
-
-  logout() {
-    // logout
-    window.location = '/auth/logout';
   }
 
   render() {
@@ -45,10 +39,10 @@ class HeaderBarUserMenu extends React.Component {
     return (
       <DropdownMenu {...menuOptions}>
         <div className="dd-wrap">
-          <div className="menu-item logout" onClick={this.logout}>
+          <a className="menu-item logout" href="/auth/logout">
             <div>Log Out</div>
             <div className="material-icons">exit_to_app</div>
-          </div>
+          </a>
         </div>
       </DropdownMenu>
     );
