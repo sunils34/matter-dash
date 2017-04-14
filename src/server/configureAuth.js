@@ -7,7 +7,7 @@ import auth from './config/auth';
 
 import db from './database/mysql/models';
 
-const WHITELISTED_EMAILS = _.concat(process.env.ADMIN_EMAILS.split(','), (process.env.ORG_ADMINS || '').split(','));
+const WHITELISTED_EMAILS = _.concat(process.env.MATTER_ADMINS.split(','), (process.env.ORG_ADMINS || '').split(','));
 const OrgId = process.env.ORG_ID || 'app';
 
 const configure = (app) => {
@@ -78,17 +78,22 @@ const configure = (app) => {
         });
 
         if (!user) {
-          if (WHITELISTED_EMAILS.indexOf(profile.emails[0].value) < 0) {
+          const email = profile.emails[0].value;
+          if (WHITELISTED_EMAILS.indexOf(email) < 0) {
             logger.warn('user denied', { user_id: profile.emails[0].value, whitelist: WHITELISTED_EMAILS });
             return done(null, false, {message:'It looks like we can\'t quite find you in our system.  Want to try another email?'});
           }
 
+          const role = _.includes(process.env.MATTER_ADMINS, email) ? 'super_admin' : 'admin';
+
           // create user
           const newUser = {
             name: profile.displayName,
-            email: profile.emails[0].value,
+            email,
+            emailConfirmed: true,
             profileId: profile.id,
             profileType: profile.provider,
+            role,
           };
           user = await db.User.create(newUser);
           logger.info('user create', { id: user.id });
