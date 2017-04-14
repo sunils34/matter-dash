@@ -2,27 +2,26 @@ import passport from 'passport';
 import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
 import jwt from 'jsonwebtoken';
 import _ from 'lodash';
-import auth from './config/auth';
 import logger from 'winston';
+import auth from './config/auth';
 
 import db from './database/mysql/models';
 
 const WHITELISTED_EMAILS = _.concat(process.env.ADMIN_EMAILS.split(','), (process.env.ORG_ADMINS || '').split(','));
-let OrgId = process.env.ORG_ID || 'app';
+const OrgId = process.env.ORG_ID || 'app';
 
 const configure = (app) => {
-
-  function addJWT(user){
+  function addJWT(user) {
     const token = jwt.sign({ email: user.email }, auth.jwt.secret, {
-      expiresIn: 86400000 //24 hours
+      expiresIn: 86400000, //24 hours
     });
-    return Object.assign({}, user.toJSON(), {token});
+    return Object.assign({}, user.toJSON(), { token });
   }
 
   app.use(passport.initialize());
   app.use(passport.session());
 
-  app.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
+  app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
   app.get('/auth/logout', (req, res) => {
     req.session.destroy(() => (
@@ -33,13 +32,25 @@ const configure = (app) => {
   // the callback after google has authenticated the user
   app.get('/auth/google/callback', (req, res, next) => {
     passport.authenticate('google', (err, user, info) => {
-      if (err) { return res.redirect(`/signin?error=${err}`) }
-      if (!user) { return res.redirect(`/signin?error=No Valid User`); }
+      if (err) {
+        req.flash('error', err);
+        req.session.save(() => {
+          res.redirect('/signin');
+        });
+      }
+      if (!user) {
+        const message = info.message || 'We were unable to authentication you as a valid user';
+        logger.debug('flash error', message);
+        req.flash('error', message);
+        req.session.save(() => {
+          res.redirect('/signin');
+        });
+      }
 
-      req.login(user, (err) => {
+      req.login(user, (e) => {
         logger.info('user login', { user_id: user.id });
-        if (err) { return next(err); }
-        req.session.save(() => (
+        if (e) { return next(e); }
+        return req.session.save(() => (
           res.redirect('/')
         ));
       });
@@ -69,7 +80,7 @@ const configure = (app) => {
         if (!user) {
           if (WHITELISTED_EMAILS.indexOf(profile.emails[0].value) < 0) {
             logger.warn('user denied', { user_id: profile.emails[0].value, whitelist: WHITELISTED_EMAILS });
-            return done('This user was not found');
+            return done(null, false, {message:'It looks like we can\'t quite find you in our system.  Want to try another email?'});
           }
 
           // create user

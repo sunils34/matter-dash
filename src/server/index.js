@@ -3,6 +3,7 @@ import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
 import session from 'express-session';
+import flash from 'express-flash';
 import expressGraphQL from 'express-graphql';
 import sequelizeStore from 'connect-sequelize';
 import expressReactViews from 'express-react-views';
@@ -43,6 +44,7 @@ if (env === 'prod') {
 }
 
 app.use(session(sessionDetails));
+app.use(flash({ locals: 'flash' }));
 app.set('views', path.join(__dirname, '/views'));
 app.engine('html', require('ejs').renderFile);
 
@@ -81,6 +83,7 @@ app.get('/dist/bundle*.js.map', (req, res) => {
 configureAuth(app);
 
 app.get('/signin', (req, res) => {
+  logger.info('user load signin');
   if (req.isAuthenticated()) {
     // redirect to the app
     res.redirect('/');
