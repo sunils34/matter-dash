@@ -13,7 +13,7 @@ import configureAuth from './configureAuth';
 import db from './database/mysql/sequelize';
 import sequelizeTables from './database/mysql/models';
 import logger from './lib/logger';
-import { isAuthenticated, isNotAuthenticated } from './lib/middleware';
+import { isAuthenticated, isNotAuthenticated, isSuperAdmin } from './lib/middleware';
 
 
 const SequelizeStore = sequelizeStore(session);
@@ -86,6 +86,25 @@ configureAuth(app);
 app.get('/signin', isNotAuthenticated, (req, res) => {
   logger.info('user load signin');
   res.render('pages/signin.ejs');
+});
+
+app.get('/admin/impersonate', isSuperAdmin, (req, res) => {
+  if (req.query.user_id) {
+    logger.info('user admin impersonate', { admin: req.user.email, impersonating: req.query.user_id });
+    req.session.passport.user.impersonate = req.query.user_id;
+    req.session.save(() => {
+      res.redirect('/');
+    });
+  } else {
+    res.json({'error': 'Invalid user id to impersonate'});
+  }
+});
+
+app.get('/admin/impersonate/stop', isAuthenticated, (req, res) => {
+  delete req.session.passport.user.impersonate;
+  req.session.save(() => {
+    res.redirect('/');
+  });
 });
 
 app.use('/graphql', expressGraphQL((req, res) => {
