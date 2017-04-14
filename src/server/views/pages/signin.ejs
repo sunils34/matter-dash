@@ -8,7 +8,6 @@
     <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,800" rel="stylesheet">
     <link href="/css/signin.css" rel="stylesheet">
-    <link href="/css/grid.css" rel="stylesheet">
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script> 
@@ -16,12 +15,13 @@
 
       </style>
     <![endif]-->
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <meta name="google-signin-client_id" content="<%= process.env.GOOGLE_CLIENT_ID  %>">
 
   </head>
   <body>
+    <div id="alert" data-alert class="alert-box alert"></div>
     <div class="container">
       <div class="copy-bg">
         <div class="copy-wrap">
@@ -43,5 +43,12 @@
           </a>
         </div>
       </div>
+      <script>
+        var error = "<%= messages.error %>";
+        var info = "<%= messages.info %>";
+        if(error) $('#alert').addClass('error').html(error).fadeIn(1000);
+        else if(info) $('#alert').addClass('info').html(info).fadeIn();
+        $('#alert').delay(5000).fadeOut('slow');
+      </script>
   </body>
 </html>
