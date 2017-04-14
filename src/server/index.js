@@ -88,7 +88,7 @@ app.get('/signin', isNotAuthenticated, (req, res) => {
   res.render('pages/signin.ejs');
 });
 
-app.get('/admin/impersonate', isSuperAdmin, (req, res) => {
+app.get('/admin/sudo', isSuperAdmin, (req, res) => {
   if (req.query.user_id) {
     logger.info('user admin impersonate', { admin: req.user.email, impersonating: req.query.user_id });
     req.session.passport.user.impersonate = req.query.user_id;
@@ -100,7 +100,7 @@ app.get('/admin/impersonate', isSuperAdmin, (req, res) => {
   }
 });
 
-app.get('/admin/impersonate/stop', isAuthenticated, (req, res) => {
+app.get('/admin/sudo/logout', isAuthenticated, (req, res) => {
   delete req.session.passport.user.impersonate;
   req.session.save(() => {
     res.redirect('/');

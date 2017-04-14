@@ -11,7 +11,7 @@ const user = {
         email: u.email,
         name: u.name,
         createdAt: u.created_at,
-        impersonating: u.impersonating,
+        impersonating: u.impersonating || false,
       };
     }
     return null;
