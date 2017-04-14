@@ -1,28 +1,21 @@
-import {
-  GraphQLSchema as Schema,
-  GraphQLObjectType as ObjectType,
-} from 'graphql';
-
 import UserType from '../types/UserType';
-import User from '../../database/mysql/models/User';
 
 const user = {
   type: UserType,
   args: {},
-  resolve(parent, args, {db}) {
-    if(parent.request.user) {
-      const user = parent.request.user;
+  resolve(parent) {
+    if (parent.request.user) {
+      const u = parent.request.user;
       return {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        createdAt: user.created_at,
+        id: u.id,
+        email: u.email,
+        name: u.name,
+        createdAt: u.created_at,
+        impersonating: u.impersonating || false,
       };
     }
-    else {
-      return null;
-    }
-  }
-}
+    return null;
+  },
+};
 
 export default user;

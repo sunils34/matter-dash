@@ -232,10 +232,11 @@ class OverviewChartsBar extends React.Component {
             <MatterBarChart
               type="stackedPercentage"
               componentWillUpdate={onPieChartUpdate}
+              focusType="Overall"
               legendAlign='left' title="Gender" query={_.extend({}, query, {measure: 'gender'})} />
           </div>
           <div className='large-5 columns'>
-            <MatterBarChart type="stackedPercentage" height={345} legendAlign='right' title="Ethnicity" query={_.extend({}, query, {measure: 'ethnicity'})}/>
+            <MatterBarChart focusType="Overall" type="stackedPercentage" height={345} legendAlign='right' title="Ethnicity" query={_.extend({}, query, {measure: 'ethnicity'})}/>
           </div>
         </div>
       </div>

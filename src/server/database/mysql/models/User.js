@@ -71,6 +71,10 @@ export default (Model, DataTypes) => {
       }*/
       },
     },
+    role: {
+      type: DataTypes.STRING,
+      defaultValue: 'user',
+    },
   }, {
     classMethods: {
       associate: (models) => {

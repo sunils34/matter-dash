@@ -13,6 +13,7 @@ import configureAuth from './configureAuth';
 import db from './database/mysql/sequelize';
 import sequelizeTables from './database/mysql/models';
 import logger from './lib/logger';
+import { isAuthenticated, isNotAuthenticated, isSuperAdmin } from './lib/middleware';
 
 
 const SequelizeStore = sequelizeStore(session);
@@ -82,14 +83,28 @@ app.get('/dist/bundle*.js.map', (req, res) => {
 // set up oauth and login middleware
 configureAuth(app);
 
-app.get('/signin', (req, res) => {
+app.get('/signin', isNotAuthenticated, (req, res) => {
   logger.info('user load signin');
-  if (req.isAuthenticated()) {
-    // redirect to the app
-    res.redirect('/');
+  res.render('pages/signin.ejs');
+});
+
+app.get('/admin/sudo', isSuperAdmin, (req, res) => {
+  if (req.query.user_id) {
+    logger.info('user admin impersonate', { admin: req.user.email, impersonating: req.query.user_id });
+    req.session.passport.user.impersonate = req.query.user_id;
+    req.session.save(() => {
+      res.redirect('/');
+    });
   } else {
-    res.render('pages/signin.ejs');
+    res.json({'error': 'Invalid user id to impersonate'});
   }
+});
+
+app.get('/admin/sudo/logout', isAuthenticated, (req, res) => {
+  delete req.session.passport.user.impersonate;
+  req.session.save(() => {
+    res.redirect('/');
+  });
 });
 
 app.use('/graphql', expressGraphQL((req, res) => {
@@ -108,14 +123,9 @@ app.use('/graphql', expressGraphQL((req, res) => {
   };
 }));
 
-app.get('*', (req, res) => {
-  if (!req.isAuthenticated()) {
-    logger.info('user unauth redirect');
-    res.redirect('/signin');
-  } else {
-    const indexPath = `${appdir}/index.html`;
-    res.sendFile(indexPath);
-  }
+app.get('*', isAuthenticated, (req, res) => {
+  const indexPath = `${appdir}/index.html`;
+  res.sendFile(indexPath);
 });
 
 const port = process.env.PORT || 4000;

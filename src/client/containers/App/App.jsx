@@ -4,9 +4,30 @@ import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
 import HeaderBar from '../../components/HeaderBar/HeaderBar';
 import * as appActions from '../../redux/actions/app';
+import './App.css';
 
 window.Period = 'All';
 window.Department = 'All';
+
+let ImpersonationHeader = ({impersonating, name, email}) => {
+  if (!impersonating) return null;
+
+  return (
+    <div className="impersonation-header">
+      <div>You're Impersonating <b>{name}</b> <b>({email})</b></div>
+      <a href="/admin/sudo/logout" className="impersonation-stop">Stop Impersonating</a>
+    </div>
+  );
+}
+
+ImpersonationHeader = connect(state => (
+  {
+    impersonating: state.app.user.impersonating,
+    email: state.app.user.email,
+    name: state.app.user.name,
+  }
+))(ImpersonationHeader);
+
 
 
 class App extends React.Component {
@@ -27,6 +48,7 @@ class App extends React.Component {
 
     return (
       <div>
+        <ImpersonationHeader />
         <HeaderBar location={this.props.location}/>
         {React.cloneElement(this.props.children, { user, organization })}
       </div>
@@ -40,6 +62,7 @@ query query {
     id,
     email
     name,
+    impersonating,
   }
   organization {
     id,
