@@ -114,11 +114,16 @@ app.use('/graphql', expressGraphQL((req, res) => {
     res.json({ error: 'This endpoint is only accessible to a logged in user' });
     return false;
   }
+
+  const context = {
+    user: req.user,
+  };
+
   return {
     schema,
     graphiql: process.env.NODE_ENV === 'development',
     rootValue: { request: req },
-    context: req.session,
+    context,
     pretty: true,
   };
 }));

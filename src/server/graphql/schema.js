@@ -1,41 +1,28 @@
-import {
-  GraphQLSchema as Schema,
-  GraphQLObjectType as ObjectType,
-} from 'graphql';
+import { merge } from 'lodash';
+import { makeExecutableSchema } from 'graphql-tools';
+import { schema as userSchema, resolvers as userResolvers } from './UserSchema';
 
-import organization from './queries/organization';
-import user from './queries/user';
-import piedatapoints from './queries/piedatapoints';
-import bardatapoints from './queries/bardatapoints';
-import reports from './queries/reports/all';
-import comparisonEeo from './queries/comparison/eeo';
-import comparisonCompanies from './queries/comparison/companies';
-import comparisonFilters from './queries/comparison/filters';
-import reportsPageInit from './queries/reports/pageinit';
-import createOrUpdateReport from './mutations/reports/createOrUpdate';
-import deleteReport from './mutations/reports/delete';
+const rootSchema = [`
+  type Query {
+    me: User
+  }
 
+  schema {
+    query: Query
+  }
+`];
 
-export default new Schema({
-  query: new ObjectType({
-    name: 'Query',
-    fields: {
-      user,
-      organization,
-      reports,
-      comparisonEeo,
-      comparisonCompanies,
-      comparisonFilters,
-      piedatapoints,
-      bardatapoints,
-      reportsPageInit,
-    },
-  }),
-  mutation: new ObjectType({
-    name: 'Mutations',
-    fields: () => ({
-      createOrUpdateReport,
-      deleteReport,
-    }),
-  }),
+const rootResolvers = {
+  Query: {
+  },
+};
+
+const schema = [...rootSchema, ...userSchema];
+const resolvers = merge(rootResolvers, userResolvers);
+
+const executableSchema = makeExecutableSchema({
+  typeDefs: schema,
+  resolvers,
 });
+
+export default executableSchema;
