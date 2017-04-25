@@ -2,9 +2,19 @@ import logger from 'winston';
 
 export function isAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
+    if (!req.user.organizationId) {
+      return res.redirect('/signup');
+    }
     return next();
   }
   logger.info('user unauth redirect');
+  return res.redirect('/signin');
+}
+
+export async function isUserAuthenticatedWithoutOrg(req, res, next) {
+  if (req.isAuthenticated() && !await req.user.getOrganization()) {
+    return next();
+  }
   return res.redirect('/signin');
 }
 

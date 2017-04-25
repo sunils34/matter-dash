@@ -7,9 +7,8 @@ export default (Model, DataTypes) => {
       defaultValue: shortid.generate,
       primaryKey: true,
     },
-    name: {
-      type: DataTypes.STRING,
-    },
+    name: { type: DataTypes.STRING },
+    subdomain: { type: DataTypes.STRING, unique: 'compositeIndex' },
     logoUrl: {
       type: DataTypes.STRING,
     },
@@ -17,8 +16,6 @@ export default (Model, DataTypes) => {
     indexes: [],
     classMethods: {
       associate: (models) => {
-        // Associate the organization and user
-        Organization.belongsToMany(models.User, { through: 'UserOrganizations' });
       },
     },
   }, { tableName: 'organizations' });

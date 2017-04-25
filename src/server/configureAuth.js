@@ -34,7 +34,7 @@ const configure = (app) => {
     passport.authenticate('google', (err, user, info) => {
       if (err) {
         req.flash('error', err);
-        req.session.save(() => {
+        return req.session.save(() => {
           res.redirect('/signin');
         });
       }
@@ -42,12 +42,12 @@ const configure = (app) => {
         const message = info.message || 'We were unable to authentication you as a valid user';
         logger.debug('flash error', message);
         req.flash('error', message);
-        req.session.save(() => {
+        return req.session.save(() => {
           res.redirect('/signin');
         });
       }
 
-      req.login(user, (e) => {
+      return req.login(user, (e) => {
         logger.info('user login', { user_id: user.id });
         if (e) { return next(e); }
         return req.session.save(() => (
@@ -98,11 +98,6 @@ const configure = (app) => {
           };
           user = await db.User.create(newUser);
           logger.info('user create', { id: user.id });
-
-          // TODO obtain real organization
-          const organization = await db.Organization.findOne({ where: { id: OrgId } });
-          await organization.addUser(user);
-          logger.info('user addOrg', { id: user.id, orgId: OrgId });
         }
 
         // if a user is found, log them in

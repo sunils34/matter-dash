@@ -1,0 +1,83 @@
+body {
+  font-family: 'Nunito Sans', sans-serif;
+  background: #8386ed;
+  padding-top: 50px;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo {
+  display: flex;
+  margin: auto;
+}
+
+.signup-wrap {
+  padding: 20px;
+  background: white;
+  border: 1px solid #DEDEDE;
+  box-shadow: 0 0 5px 0 rgba(0,0,0,0.04);
+  border-radius: 4px 4px 4px 0 0 4px;
+  margin: 20px;
+}
+
+.signup-wrap .headers {
+  text-align: center;
+}
+
+.signup-wrap .headers h4 {
+  color: #898A8C;
+}
+
+.form-control {
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  outline: none;
+  display: block;
+  width: 100%;
+  padding: 7px;
+  border: none;
+  border-bottom: 2px solid #C8C8C8;
+  background: transparent;
+  margin-bottom: 10px;
+  font: 15px Arial, Helvetica, sans-serif;
+  height: 40px;
+  box-shadow: none;
+  border-radius: 0px;
+  -webkit-appearance: none;
+}
+
+.form-control:focus, .form-control:active, .form-control:focus:active {
+  box-shadow: none;
+  border-color: #8386ed;
+}
+
+
+.form-group {
+  display: flex;
+  padding-top: 10px;
+}
+
+.form-inline-label {
+  padding-top: 10px;
+}
+
+.form-submit {
+  background: #8386ed;
+  border-radius: 4px;
+  border: none;
+  outline: none;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #fff;
+  display: flex;
+  margin: auto;
+  justify-content: center;
+  margin-top: 20px;
+  width: 250px;
+}

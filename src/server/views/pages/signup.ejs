@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="format-detection" content="telephone=no">
+    <title>Matter - Signup</title>
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,800" rel="stylesheet">
+    <link href="/css/pages/signup.css" rel="stylesheet">
+    <link href="/css/grid.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script> 
+      <style>
+
+      </style>
+    <![endif]-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div id="alert" data-alert class="alert-box alert"></div>
+    <div class="container">
+      <div>
+        <img class="logo" src="/images/matter-logo.svg" alt="logo" />
+        <div class="signup-wrap">
+          <div class="headers">
+            <h2>Create Your Employee Dashboard Today</h2>
+            <h4>Set up for free. Launch it when you're ready!</h4>
+          </div>
+          <div>
+            <form id="startform" class='form-horizontal' action='/signup' method="POST">
+              <input id="company_name" name="company_name" placeholder="Company Name" type="text" class="form-control input-md">
+              <div class="form-group">
+                <input id="subdomain" name="subdomain" placeholder="<company id>" type="text" class="form-control input-md">
+                <div class="form-inline-label">.matterapp.io</div>
+              </div>
+              <button id="submit" type="submit" class="form-submit">Let's get started</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

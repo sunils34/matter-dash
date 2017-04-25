@@ -14,6 +14,7 @@ import db from './database/mysql/sequelize';
 import sequelizeTables from './database/mysql/models';
 import logger from './lib/logger';
 import { isAuthenticated, isNotAuthenticated, isSuperAdmin } from './lib/middleware';
+import routes from './lib/routes';
 
 
 const SequelizeStore = sequelizeStore(session);
@@ -82,11 +83,13 @@ app.get('/dist/bundle*.js.map', (req, res) => {
 
 // set up oauth and login middleware
 configureAuth(app);
+routes(app);
 
 app.get('/signin', isNotAuthenticated, (req, res) => {
   logger.info('user load signin');
   res.render('pages/signin.ejs');
 });
+
 
 app.get('/admin/sudo', isSuperAdmin, (req, res) => {
   if (req.query.user_id) {

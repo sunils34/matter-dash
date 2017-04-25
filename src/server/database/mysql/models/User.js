@@ -17,9 +17,9 @@ export default (Model, DataTypes) => {
   const User = Model.define('users', {
     id: {
       type: DataTypes.STRING,
-      defaultValue: function gen() {
-        return `u_${shortid.generate()}`;
-      },
+      defaultValue: () => (
+        `u_${shortid.generate()}`
+      ),
       primaryKey: true,
     },
     name: {
@@ -79,8 +79,7 @@ export default (Model, DataTypes) => {
     classMethods: {
       associate: (models) => {
         // Associate the organization and user
-        User.belongsToMany(models.Organization, { through: 'UserOrganizations' });
-        User.hasMany(models.Report, { as: 'Reports', foreignKey: 'userId' });
+        User.belongsTo(models.Organization);
       },
     },
     indexes: [
