@@ -4,7 +4,9 @@ export default (Model, DataTypes) => {
   const Organization = Model.define('organizations', {
     id: {
       type: DataTypes.STRING,
-      defaultValue: shortid.generate,
+      defaultValue: () => (
+        `o_${shortid.generate()}`
+      ),
       primaryKey: true,
     },
     name: { type: DataTypes.STRING },
@@ -16,6 +18,8 @@ export default (Model, DataTypes) => {
     indexes: [],
     classMethods: {
       associate: (models) => {
+        // Associate Organization with users
+        Organization.hasMany(models.User, { as: 'Employees' });
       },
     },
   }, { tableName: 'organizations' });

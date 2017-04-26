@@ -58,7 +58,7 @@ class App extends React.Component {
 
 const CurrentUserAndOrganization = gql`
 query query {
-  user {
+  me {
     id,
     email
     name,
