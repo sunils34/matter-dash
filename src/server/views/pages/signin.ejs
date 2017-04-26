@@ -43,12 +43,6 @@
           </a>
         </div>
       </div>
-      <script>
-        var error = "<%= messages.error %>";
-        var info = "<%= messages.info %>";
-        if(error) $('#alert').addClass('error').html(error).fadeIn(1000);
-        else if(info) $('#alert').addClass('info').html(info).fadeIn();
-        $('#alert').delay(5000).fadeOut('slow');
-      </script>
+      <% include ../partials/footer %>
   </body>
 </html>

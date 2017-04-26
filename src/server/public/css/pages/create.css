@@ -15,7 +15,7 @@ body {
   margin: auto;
 }
 
-.signup-wrap {
+.create-wrap {
   padding: 20px;
   background: white;
   border: 1px solid #DEDEDE;
@@ -24,11 +24,11 @@ body {
   margin: 20px;
 }
 
-.signup-wrap .headers {
+.create-wrap .headers {
   text-align: center;
 }
 
-.signup-wrap .headers h4 {
+.create-wrap .headers h4 {
   color: #898A8C;
 }
 

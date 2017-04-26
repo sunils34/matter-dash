@@ -140,23 +140,3 @@ div {
   line-height: 34px;
 }
 
-.alert {
-  background-color: white;
-  border-radius: 0.6rem;
-  border: 1px solid rgba(10, 10, 10, 0.25);
-  border-left-width: 0.3125rem;
-  color: #0a0a0a;
-  display: none;
-  margin: 15px auto;
-  padding: 1.3rem;
-  padding: 1rem;
-  position: relative;
-  width: 80%;
-  z-index: 100;
-}
-
-.alert.error {
-  border-left-color: #cc4b37;
-  background-color: #f7e4e1;
-  color: #0a0a0a;
-}

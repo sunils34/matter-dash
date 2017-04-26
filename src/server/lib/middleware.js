@@ -3,7 +3,7 @@ import logger from 'winston';
 export function isAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     if (!req.user.organizationId) {
-      return res.redirect('/signup');
+      return res.redirect('/create');
     }
     return next();
   }

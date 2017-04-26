@@ -1,17 +1,24 @@
 import db from '../database/mysql/models';
 
 export default {
-  signup: async (req, res) => {
+  create: async (req, res) => {
     if (req.route.methods.get) {
-      res.render('pages/signup.ejs');
-    } else {
-      const { company_name, subdomain } = req.body;
-      const org = await db.Organization.create({
-        name: company_name,
-        subdomain,
-      });
-      await req.user.setOrganization(org);
-      res.redirect('/');
+      return res.render('pages/create.ejs');
     }
+
+    const { company_name, subdomain } = req.body;
+    if (await db.Organization.findOne({ where: { subdomain } })) {
+      req.flash('error', 'This org subdomain is already taken');
+      return req.session.save(() => {
+        res.redirect('/signup');
+      });
+    }
+
+    const org = await db.Organization.create({
+      name: company_name,
+      subdomain,
+    });
+    await req.user.setOrganization(org);
+    return res.redirect('/');
   },
 };
