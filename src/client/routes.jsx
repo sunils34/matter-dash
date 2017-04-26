@@ -1,6 +1,7 @@
 import { Route, IndexRedirect, Redirect } from 'react-router';
 import React from 'react';
 import App from './containers/App/App';
+import Admin from './containers/Admin/Admin';
 import OverviewSection from './components/OverviewSection/OverviewSection';
 import ReportsPage from './components/ReportsPage/ReportsPage';
 import ReportsPageStart from './components/ReportsPage/ReportsPageStart';
@@ -13,8 +14,8 @@ function refreshBugsnag() {
 
 const Routes = (
   <Route path="/" component={App} onChange={refreshBugsnag}>
-    <IndexRedirect to="/dashboard" />
-    <Route path="/dashboard" component={OverviewSection} />
+    <IndexRedirect to="/admin" />
+    <Route path="/admin" component={Admin} />
     <Route path="/reports" component={ReportsPageStart} />
     <Route path="/report/:id" component={ReportsPage} />
     <Route path="/comparison" component={Comparison} />

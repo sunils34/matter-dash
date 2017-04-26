@@ -6,7 +6,7 @@ import { browserHistory, Router } from 'react-router';
 import store from './redux/store/store';
 import Routes from './routes';
 import './app.css';
-import './css/foundation.css'
+import './css/foundation.css';
 
 
 // TODO ADD CSRF TOKEN
@@ -15,7 +15,7 @@ const nInterface = createNetworkInterface({
   opts: {
     credentials: 'same-origin',
     headers: {
-      'X-CSRF-Token': 'xyz',
+      'X-CSRF-Token': window.CSRF_TOKEN,
       token: 'supersecret',
     },
   },

@@ -30,6 +30,7 @@
           </div>
           <div>
             <form id="startform" class='form-horizontal' action='/create' method="POST">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
               <input id="company_name" name="company_name" placeholder="Company Name" type="text" class="form-control input-md">
               <div class="form-group">
                 <input id="subdomain" name="subdomain" placeholder="<company id>" type="text" class="form-control input-md">

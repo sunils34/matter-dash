@@ -33,7 +33,7 @@ ImpersonationHeader = connect(state => (
 class App extends React.Component {
   componentWillReceiveProps(newProps) {
     if (this.props.loading && !newProps.loading) {
-      this.props.dispatch(appActions.setUser(newProps.user, newProps.organization));
+      this.props.dispatch(appActions.setUser(newProps.me, newProps.organization));
     }
   }
 
@@ -43,7 +43,7 @@ class App extends React.Component {
       return null;
     }
 
-    const user = this.props.user;
+    const user = this.props.me;
     const organization = this.props.organization;
 
     return (
@@ -66,11 +66,10 @@ query query {
   }
   organization {
     id,
-    departments,
-    employee_count,
     name,
-    logoUrl,
-    updatedAt,
+    users {
+      id
+    }
   }
 }`;
 
@@ -79,10 +78,10 @@ export default compose(
     // stateToProps
     (state) => ({ })),
   graphql(CurrentUserAndOrganization, {
-    props: ({ data: { loading, user, organization } }) => ({
+    props: ({ data: { loading, me, organization } }) => ({
       loading,
-      user,
-      organization
+      me,
+      organization,
     }),
   }),
 )(App);

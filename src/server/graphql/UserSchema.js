@@ -12,6 +12,9 @@ type User {
 
   # email address of user
   email: String!
+
+  # whether we're impersonating a user
+  impersonating: Boolean
 }
 `];
 

@@ -20,9 +20,6 @@ type Organization {
 
 export const resolvers = {
   Query: {
-    me: (root, args, context) => (
-      context.user
-    ),
     organization: async (root, args, context) => {
       const org = await context.user.getOrganization();
       return {

@@ -4,7 +4,7 @@ import db from '../database/mysql/models';
 export default {
   create: async (req, res) => {
     if (req.route.methods.get) {
-      return res.render('pages/create.ejs');
+      return res.render('pages/create.ejs', { csrfToken: req.csrfToken() });
     }
 
     const { company_name } = req.body;

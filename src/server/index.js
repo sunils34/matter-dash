@@ -2,11 +2,13 @@ import 'babel-polyfill';
 import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import flash from 'express-flash';
 import expressGraphQL from 'express-graphql';
 import sequelizeStore from 'connect-sequelize';
 import expressReactViews from 'express-react-views';
+import csrf from 'csurf';
 
 import schema from './graphql/schema';
 import configureAuth from './configureAuth';
@@ -30,6 +32,8 @@ const store = new SequelizeStore(db, {}, 'sessions');
 app.use(bodyParser({ limit: '50mb' }));
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+app.use(cookieParser());
+app.use(csrf({ cookie: true }));
 
 
 const sessionDetails = {
@@ -60,7 +64,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/dist/core.js', (req, res) => {
   res.header('Content-Type', 'application/javascript');
-  res.send('');
+  res.send(`window.CSRF_TOKEN='${req.csrfToken()}'`);
 });
 
 app.get('/dist/bundle*', (req, res) => {
