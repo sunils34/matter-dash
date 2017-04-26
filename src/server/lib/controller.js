@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import db from '../database/mysql/models';
 
 export default {
@@ -6,7 +7,9 @@ export default {
       return res.render('pages/create.ejs');
     }
 
-    const { company_name, subdomain } = req.body;
+    const { company_name } = req.body;
+    const subdomain = _.toLower(req.body.subdomain);
+
     if (await db.Organization.findOne({ where: { subdomain } })) {
       req.flash('error', 'This org subdomain is already taken');
       return req.session.save(() => {
